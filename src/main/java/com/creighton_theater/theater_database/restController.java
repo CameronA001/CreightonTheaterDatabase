@@ -21,11 +21,17 @@ public class restController {
         String sql = "SELECT * FROM student";
         return jdbcTemplate.queryForList(sql);
     }
+    
+    @GetMapping("/filterBy")
+    public List<Map<String, Object>> filterBy(String column, String value) {
+        try{
+            String sql = "SELECT * FROM student WHERE " + column + " = ?";
+            return jdbcTemplate.queryForList(sql, new Object[]{value});
+        }
+        catch(Exception e){
+            return null;
+        }
 
-    @GetMapping("/filterByGrade")
-    public List<Map<String, Object>> filterByGrade(int grade) {
-        String sql = "SELECT * FROM student WHERE grade = ?";
-        return jdbcTemplate.queryForList(sql, new Object[]{grade});
     }
 }
 

@@ -1,8 +1,17 @@
+
+
+/**
+ * --baltic-blue: #005ca9ff;
+--ink-black: #04080fff;
+--porcelain: #fdfffcff;
+--verdigris: #18a999ff;
+--muted-teal: #69a197ff;
+ */
 table {
 	width: 100%;
 	border-collapse: collapse;
 	margin: 25px 0;
-	background-color: white;
+	background-color: var(--porcelain);
 }
 
 h1 {
@@ -12,7 +21,7 @@ h1 {
 }
 
 body {
-	background-color: lightblue;
+	background-color: var(--porcelain);
 }
 
 th,
@@ -22,7 +31,7 @@ td {
 }
 
 .home-buttons {
-	background-color: #4CAF50;
+	background-color: #005ca9ff;
 	border: none;
 	padding: 10px 20px;
 	text-align: center;

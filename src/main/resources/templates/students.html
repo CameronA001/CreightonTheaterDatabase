@@ -7,9 +7,17 @@
 </head>
 
 <body>
-    <h1 style="text-align: center;">STUDENTS PAGE</h1>
     <button onclick="location.href='/'">Home</button>
-    <table id="student-table">
+    <h1 style="text-align: center;">STUDENTS PAGE</h1>
+    <input type="text" placeholder = "Search by value" id="filter-input">
+    <button onclick = "processFilter()">Go!</button>
+    <select id="filter-column">
+        <option value="netID">NetID</option>
+        <option value="name">Name</option>
+        <option value="grade">Grade</option>
+        <option value="allergiesSensitivities">Allergies/Sensitivities</option>
+    </select>
+    <table>
         <thead>
             <tr>
                 <th>NetID</th>
@@ -27,3 +35,4 @@
 
 
 </body>
+    <script>window.onload = loadStudents;</script>
