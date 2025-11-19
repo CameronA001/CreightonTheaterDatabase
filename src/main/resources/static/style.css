@@ -5,7 +5,12 @@ table {
     background-color: white;
 }
 
+h1{
+	text-decoration: underline;
+	text-align: center;
+	font-weight: bolder;
 
+}
 
 body{
     background-color: lightblue;
@@ -29,4 +34,13 @@ th, td {
 			margin: 4px 2px;
 			cursor: pointer;
 			border-radius: 4px;
+			margin-bottom: 35px;
+				width: 50%;
+}
+
+.buttons-container{
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	margin-top: 30px;
 }
