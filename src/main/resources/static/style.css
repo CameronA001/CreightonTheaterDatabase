@@ -1,46 +1,63 @@
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 25px 0;
-    background-color: white;
+	width: 100%;
+	border-collapse: collapse;
+	margin: 25px 0;
+	background-color: white;
 }
 
-h1{
+h1 {
 	text-decoration: underline;
 	text-align: center;
 	font-weight: bolder;
-
 }
 
-body{
-    background-color: lightblue;
+body {
+	background-color: lightblue;
 }
 
-th, td {
-    border: 1px solid black;
-    text-align: center;
+th,
+td {
+	border: 1px solid black;
+	text-align: center;
 }
 
-.home-button{
-    background-color: #4CAF50;
-			/* Green */
-			border: none;
-			color: white;
-			padding: 10px 20px;
-			text-align: center;
-			text-decoration: none;
-			display: inline-block;
-			font-size: 16px;
-			margin: 4px 2px;
-			cursor: pointer;
-			border-radius: 4px;
-			margin-bottom: 35px;
-				width: 50%;
+.home-buttons {
+	background-color: #4CAF50;
+	border: none;
+	padding: 10px 20px;
+	text-align: center;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border-radius: 4px;
+	margin-bottom: 35px;
+	width: 50%;
+	font-family: 'Times New Roman', Times, serif;
+	text-decoration: underline;
+	font-variant: small-caps;
+	font-weight: bold;
+	color: black;	
+	&:hover {
+		background-color: darkgreen;
+		color: white;	
+	}
 }
 
-.buttons-container{
+.buttons-container {
 	align-items: center;
 	display: flex;
 	flex-direction: column;
 	margin-top: 30px;
+}
+
+.netid-select {
+    border: none;
+    background: transparent;
+    font: inherit;
+    padding: 0;
+    cursor: pointer;
+}
+.netid-select:focus {
+    outline: none;
 }
