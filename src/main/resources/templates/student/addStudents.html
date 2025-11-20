@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/studentScript.js"> </script>
+</head>
+
+<body class="page-background" onload = "validateNetID()" >
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="location.href='/student/loadpage'" class="basicButton" style = "font-size: smaller; margin-bottom: var(--space-md);">Back to Student List</button>
+    <h1 style="text-align: center;">ADD STUDENT PAGE</h1>
+    
+    <form id="add-student-form">
+        <label for="netId" class="addElementLabel">NetID:</label>
+        <input type="text" id="netID" name="netID"required>
+        <br><br>
+
+        <label for="firstName" class="addElementLabel">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required><br><br>
+
+        <label for="lastName" class="addElementLabel">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required><br><br>
+
+        <label for="grade" class="addElementLabel">Grade:</label>
+        <input type="text" id="gradeLevel" name="gradeLevel" required><br><br>
+
+        <label for="pronouns" class="addElementLabel">Pronouns:</label>
+        <input type="text" id="pronouns" name="pronouns"><br><br>
+
+        <label for="specialNotes" class="addElementLabel">Special Notes:</label>
+        <input type="text" id="specialNotes" name="specialNotes"><br><br>
+
+        <label for="email" class="addElementLabel">Email:</label>
+        <input type="email" id="email" name="email"><br><br>
+
+        <label for="allergies" class="addElementLabel">Allergies/Sensitivities:</label>
+        <input type="text" id="allergies" name="allergies_sensitivities"><br><br>
+
+        <button type="button" onclick = "addStudent()" class = "basicButton">Add Student</button>
+    </form>
+
+    

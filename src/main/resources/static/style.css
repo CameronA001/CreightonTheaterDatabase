@@ -1,72 +1,320 @@
+/* -------------------------------------------------
+   COLOR VARIABLES
+------------------------------------------------- */
+:root {
+	--baltic-blue: #005ca9ff;
+	--ink-black: #04080fff;
+	--porcelain: #fdfffcff;
+	--verdigris: #18a999ff;
+	--muted-teal: #69a197ff;
 
+	/* Dynamic spacing variables */
+	--space-sm: clamp(0.25rem, 0.5vw, 0.75rem);
+	--space-md: clamp(0.5rem, 1vw, 1.25rem);
+	--space-lg: clamp(1rem, 2vw, 2.5rem);
+	--space-xl: clamp(2rem, 4vw, 4rem);
 
-/**
- * --baltic-blue: #005ca9ff;
---ink-black: #04080fff;
---porcelain: #fdfffcff;
---verdigris: #18a999ff;
---muted-teal: #69a197ff;
- */
-table {
-	width: 100%;
-	border-collapse: collapse;
-	margin: 25px 0;
+	/* Dynamic font sizes */
+	--font-sm: clamp(0.8rem, 1.2vw, 1rem);
+	--font-md: clamp(1rem, 1.5vw, 1.25rem);
+	--font-lg: clamp(1.25rem, 2vw, 2rem);
+}
+
+/* -------------------------------------------------
+   GLOBAL + PAGE
+------------------------------------------------- */
+
+.page-background {
 	background-color: var(--porcelain);
+	padding: var(--space-lg);
+	place-items: center;
 }
 
 h1 {
 	text-decoration: underline;
 	text-align: center;
 	font-weight: bolder;
+	margin-bottom: var(--space-xl);
+	font-family: 'Times New Roman', Times, serif;
+	font-size: var(--font-lg);
 }
 
-body {
-	background-color: var(--porcelain);
+/* -------------------------------------------------
+   TABLES
+------------------------------------------------- */
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: var(--space-lg) 0;
+	font-size: var(--font-md);
 }
 
 th,
 td {
 	border: 1px solid black;
 	text-align: center;
+	background-color: white;
+	padding: var(--space-sm);
 }
 
+td {
+	height: clamp(24px, 4vw, 40px);
+}
+
+/* -------------------------------------------------
+   SELECT DROPDOWN (NETID SELECT)
+------------------------------------------------- */
+
+.netid-select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+
+	background-color: lightskyblue;
+	border: 1px solid black;
+	border-radius: 8px;
+
+	padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-md);
+	font-size: var(--font-md);
+	font-weight: bolder;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	color: #333;
+	cursor: pointer;
+	outline: none;
+
+	transition: all 0.25s ease;
+	background-repeat: no-repeat;
+	background-position: right var(--space-md) center;
+
+	/* Re-add arrow */
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='black' d='M0 0l5 6 5-6z'/></svg>");
+}
+
+.netid-select:hover {
+	border-color: black;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.netid-select:focus {
+	outline: black solid 1px;
+	background-color: #a0d8ef;
+}
+
+select option {
+	padding: var(--space-sm);
+	border: 0.5px solid black;
+}
+
+/*
+FILTER SELECT
+*/
+.filter-select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+
+	background-color: #e6e6e6;
+	/* light gray instead of blue */
+	border: 1px solid black;
+	border-radius: 8px;
+
+	padding: clamp(0.25rem, 0.6vw, 0.45rem) clamp(1.5rem, 2vw, 2rem) clamp(0.25rem, 0.6vw, 0.45rem) clamp(0.5rem, 1vw, 0.75rem);
+
+	font-size: clamp(0.85rem, 1.2vw, 1rem);
+	color: #333;
+	cursor: pointer;
+	outline: none;
+
+	transition: all 0.25s ease;
+	background-repeat: no-repeat;
+	background-position: right clamp(0.4rem, 1vw, 0.75rem) center;
+
+	/* arrow */
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='black' d='M0 0l5 6 5-6z'/></svg>");
+}
+
+.filter-select:hover {
+	border-color: black;
+	background-color: #d7d7d7;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.filter-select:focus {
+	outline: black solid 1px;
+	background-color: #cfcfcf;
+}
+
+/* Optional: option styling */
+.filter-select option {
+	padding: 8px;
+	border: 0.5px solid black;
+}
+
+
+/* -------------------------------------------------
+   HOME BUTTONS
+------------------------------------------------- */
+
 .home-buttons {
-	background-color: #005ca9ff;
+	background-color: var(--baltic-blue);
 	border: none;
-	padding: 10px 20px;
+	padding: var(--space-md) var(--space-lg);
 	text-align: center;
 	display: inline-block;
-	font-size: 16px;
-	margin: 4px 2px;
+	font-size: var(--font-md);
+	margin: var(--space-sm) 0;
 	cursor: pointer;
-	border-radius: 4px;
-	margin-bottom: 35px;
-	width: 50%;
+	border-radius: 8px;
+	width: clamp(200px, 100%, 400px);
+
 	font-family: 'Times New Roman', Times, serif;
 	text-decoration: underline;
 	font-variant: small-caps;
 	font-weight: bold;
-	color: black;	
-	&:hover {
-		background-color: darkgreen;
-		color: white;	
-	}
+	color: rgb(167, 217, 234);
+
+	transition: 0.25s ease;
 }
 
+.home-buttons:hover {
+	background-color: lightskyblue;
+	color: black;
+}
+
+/* Buttons container */
 .buttons-container {
 	align-items: center;
 	display: flex;
 	flex-direction: column;
-	margin-top: 30px;
+	margin-top: var(--space-lg);
 }
 
-.netid-select {
-    border: none;
-    background: transparent;
-    font: inherit;
-    padding: 0;
-    cursor: pointer;
+/* -------------------------------------------------
+   SEARCH BAR
+------------------------------------------------- */
+
+.search-bar {
+	width: 100%;
+	max-width: 350px;
+
+	padding: clamp(0.4rem, 1vw, 0.75rem) clamp(1.5rem, 2vw, 2rem);
+	font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+
+	background-color: lightgray;
+	border: 1px solid #333;
+	border-radius: 10px;
+
+	outline: none;
+	transition: 0.25s ease;
+
+	/* Icon inside the input */
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'></circle><line x1='21' y1='21' x2='16.65' y2='16.65'></line></svg>");
+	background-repeat: no-repeat;
+	background-position: 8px center;
+	background-size: 18px;
+
+	padding-left: clamp(2.5rem, 4vw, 3.2rem);
+	/* space for icon */
+	margin-bottom: var(--space-md);
 }
-.netid-select:focus {
-    outline: none;
+
+.search-bar::placeholder {
+	color: #333;
+	opacity: 0.8;
+}
+
+.search-bar:focus {
+	background-color: #a0d8ef;
+	/* slightly darker sky blue */
+	border-color: black;
+	box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+}
+
+.search-bar::placeholder {
+	color: #333;
+	opacity: 0.8;
+}
+
+.search-bar:focus {
+	background-color: #a0d8ef;
+	/* slightly darker sky blue */
+	border-color: black;
+	box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+}
+
+/* -------------------------------------------------
+basic button 
+------------------------------------------------- */
+
+.basicButton {
+	background-color: lightskyblue;
+	color: black;
+	border: black solid 2px;
+
+	padding: var(--space-sm) var(--space-lg);
+	border-radius: 8px;
+
+	font-size: var(--font-md);
+	font-family: 'Times New Roman', Times, serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: 0.25s ease;
+
+}
+
+.basicButton:hover {
+	background-color: var(--verdigris);
+	transform: translateY(-2px);
+}
+
+.basicButton:active {
+	transform: translateY(0px);
+}
+
+/* -------------------------------------------------
+   addElementLabels
+------------------------------------------------- */
+.addElementLabel {
+    display: block;
+    font-family: 'Times New Roman', Times, serif;
+font-size: clamp(1.2rem, 1.5vw, 1.5rem);
+	text-decoration: underline;
+
+	align-items: center;
+
+    margin-bottom: clamp(0.25rem, 0.6vw, 0.5rem);
+    color: #04080f;
+    font-weight: bold;
+}
+
+/**
+ * -------------------------------------------------
+   INPUTS
+------------------------------------------------- */
+
+input.formInput {
+    width: 100%;                 /* full width of container */
+    padding: 10px 15px;          /* inner spacing */
+    margin-bottom: 15px;         /* spacing between inputs */
+    border: 1px solid #ccc;      /* light gray border */
+    border-radius: 8px;          /* rounded corners */
+    font-size: 1rem;             /* text size */
+    color: #333;                 /* text color */
+    background-color: #f9f9f9;  /* subtle background */
+    transition: border-color 0.3s, box-shadow 0.3s; /* smooth focus effect */
+}
+
+/* Focus effect */
+input.formInput:focus {
+    border-color: #005ca9;       /* your baltic-blue color */
+    box-shadow: 0 0 5px rgba(0, 92, 169, 0.5);
+    outline: none;               /* remove default outline */
+}
+
+/* Optional: placeholder styling */
+input.formInput::placeholder {
+    color: #888;
+    font-style: italic;
 }

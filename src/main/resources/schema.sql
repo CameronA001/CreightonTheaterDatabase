@@ -11,8 +11,7 @@ CREATE TABLE IF NOT EXISTS student (
   email VARCHAR(45) DEFAULT NULL,
   allergies_sensitivities VARCHAR(45) DEFAULT NULL,
   PRIMARY KEY (netID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;
 -- -----------------------------------------------------
 -- Table `actor`
 -- -----------------------------------------------------
@@ -46,10 +45,8 @@ CREATE TABLE IF NOT EXISTS actor (
   photo BLOB DEFAULT NULL,
   PRIMARY KEY (netID),
   INDEX fk_ACTOR_STUDENT1_idx (netID ASC),
-  CONSTRAINT fk_ACTOR_STUDENT1 FOREIGN KEY (netID)
-    REFERENCES student(netID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
+  CONSTRAINT fk_ACTOR_STUDENT1 FOREIGN KEY (netID) REFERENCES student(netID)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;
 -- -----------------------------------------------------
 -- Table `shows`
 -- -----------------------------------------------------
@@ -60,8 +57,7 @@ CREATE TABLE IF NOT EXISTS shows (
   genre VARCHAR(45) DEFAULT NULL,
   playWright VARCHAR(45) DEFAULT NULL,
   PRIMARY KEY (showID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;
 -- -----------------------------------------------------
 -- Table `characters`
 -- -----------------------------------------------------
@@ -71,12 +67,9 @@ CREATE TABLE IF NOT EXISTS characters (
   netID VARCHAR(8) NOT NULL,
   PRIMARY KEY (showID, characterName, netID),
   INDEX fk_CHARACTERS_ACTOR1_idx (netID ASC),
-  CONSTRAINT fk_CHARACTERS_ACTOR1 FOREIGN KEY (netID)
-    REFERENCES actor(netID),
-  CONSTRAINT fk_CHARACTERS_SHOW1 FOREIGN KEY (showID)
-    REFERENCES shows(showID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
+  CONSTRAINT fk_CHARACTERS_ACTOR1 FOREIGN KEY (netID) REFERENCES actor(netID),
+  CONSTRAINT fk_CHARACTERS_SHOW1 FOREIGN KEY (showID) REFERENCES shows(showID)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;
 -- -----------------------------------------------------
 -- Table `crew`
 -- -----------------------------------------------------
@@ -93,10 +86,8 @@ CREATE TABLE IF NOT EXISTS crew (
   notes VARCHAR(45) DEFAULT NULL,
   PRIMARY KEY (crewID),
   INDEX fk_CREW_STUDENT_idx (crewID ASC),
-  CONSTRAINT fk_CREW_STUDENT FOREIGN KEY (crewID)
-    REFERENCES student(netID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
+  CONSTRAINT fk_CREW_STUDENT FOREIGN KEY (crewID) REFERENCES student(netID)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;
 -- -----------------------------------------------------
 -- Table `scene`
 -- -----------------------------------------------------
@@ -110,10 +101,8 @@ CREATE TABLE IF NOT EXISTS scene (
   crewNetID VARCHAR(8) NOT NULL,
   PRIMARY KEY (sceneName),
   INDEX fk_SCENE_SHOW1_idx (showID ASC),
-  CONSTRAINT fk_SCENE_SHOW1 FOREIGN KEY (showID)
-    REFERENCES shows(showID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
+  CONSTRAINT fk_SCENE_SHOW1 FOREIGN KEY (showID) REFERENCES shows(showID)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;
 -- -----------------------------------------------------
 -- Table `character_in_scene`
 -- -----------------------------------------------------
@@ -133,14 +122,10 @@ CREATE TABLE IF NOT EXISTS character_in_scene (
   INDEX fk_CHARACTERS_has_SCENE_SCENE1_idx (sceneName ASC),
   INDEX fk_CHARACTER_IN_SCENE_CREW1_idx (crewID ASC),
   INDEX fk_CHARACTER_IN_SCENE_CHARACTERS1_idx (showID ASC, characterName ASC, netID ASC),
-  CONSTRAINT fk_CHARACTER_IN_SCENE_CHARACTERS1 FOREIGN KEY (showID, characterName, netID)
-    REFERENCES characters(showID, characterName, netID),
-  CONSTRAINT fk_CHARACTER_IN_SCENE_CREW1 FOREIGN KEY (crewID)
-    REFERENCES crew(crewID),
-  CONSTRAINT fk_CHARACTERS_has_SCENE_SCENE1 FOREIGN KEY (sceneName)
-    REFERENCES scene(sceneName)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
+  CONSTRAINT fk_CHARACTER_IN_SCENE_CHARACTERS1 FOREIGN KEY (showID, characterName, netID) REFERENCES characters(showID, characterName, netID),
+  CONSTRAINT fk_CHARACTER_IN_SCENE_CREW1 FOREIGN KEY (crewID) REFERENCES crew(crewID),
+  CONSTRAINT fk_CHARACTERS_has_SCENE_SCENE1 FOREIGN KEY (sceneName) REFERENCES scene(sceneName)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;
 -- -----------------------------------------------------
 -- Table `crew_in_show`
 -- -----------------------------------------------------
@@ -151,12 +136,9 @@ CREATE TABLE IF NOT EXISTS crew_in_show (
   PRIMARY KEY (showID),
   INDEX fk_STUDENT_has_SHOW_SHOW1_idx (showID ASC),
   INDEX fk_CREW_IN_SHOW_CREW1_idx (crewID ASC),
-  CONSTRAINT fk_CREW_IN_SHOW_CREW1 FOREIGN KEY (crewID)
-    REFERENCES crew(crewID),
-  CONSTRAINT fk_STUDENT_has_SHOW_SHOW1 FOREIGN KEY (showID)
-    REFERENCES shows(showID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
+  CONSTRAINT fk_CREW_IN_SHOW_CREW1 FOREIGN KEY (crewID) REFERENCES crew(crewID),
+  CONSTRAINT fk_STUDENT_has_SHOW_SHOW1 FOREIGN KEY (showID) REFERENCES shows(showID)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;
 -- -----------------------------------------------------
 -- Table `previous_roles`
 -- -----------------------------------------------------
@@ -166,8 +148,6 @@ CREATE TABLE IF NOT EXISTS previous_roles (
   PRIMARY KEY (netID),
   INDEX fk_PREVIOUS_ROLES_STUDENT1_idx (netID ASC),
   INDEX fk_PREVIOUS_ROLES_SHOW1_idx (showID ASC),
-  CONSTRAINT fk_PREVIOUS_ROLES_SHOW1 FOREIGN KEY (showID)
-    REFERENCES shows(showID),
-  CONSTRAINT fk_PREVIOUS_ROLES_STUDENT1 FOREIGN KEY (netID)
-    REFERENCES student(netID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  CONSTRAINT fk_PREVIOUS_ROLES_SHOW1 FOREIGN KEY (showID) REFERENCES shows(showID),
+  CONSTRAINT fk_PREVIOUS_ROLES_STUDENT1 FOREIGN KEY (netID) REFERENCES student(netID)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb3;

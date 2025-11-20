@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/studentScript.js"> </script>
+    <script src = "/script.js"></script>
+</head>
+
+<body onload = "loadStudents(), populateFilterDropdown()" class ="page-background">
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <h1 style="text-align: center;">STUDENTS PAGE</h1>
+    <input type="text" placeholder="Search by value" id="filter-input" class="search-bar">
+    <select id="filter-column" onchange="clearInput('filter-input'); loadStudents()" class="filter-select"></select>
+    
+    <button onclick="location.href='/addStudent'" style = "float: right;" class = "basicButton">Add Student</button>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>NetID</th>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Pronouns</th>
+                <th>Special Notes</th>
+                <th>Email</th>
+                <th>Allergies/Sensitivities</th>
+            </tr>
+        </thead>
+        <tbody id="student-table-body">
+        </tbody>
+    </table>
+
+    <script>
+        //dynamically updates the page as the user types into filter-input
+        const filterInput = document.getElementById("filter-input");
+        filterInput.addEventListener("input", () => {
+            processFilter("student");
+        });</script>
+</body>
