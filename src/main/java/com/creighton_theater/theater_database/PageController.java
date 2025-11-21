@@ -1,5 +1,6 @@
 package com.creighton_theater.theater_database;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,33 @@ public class PageController {
         return "student/editStudents";
     }
 
+    @GetMapping("/student/{netID}/characters")
+    public String showPage(@PathVariable("netID") String netID, Model model) {
+
+        String sql = "SELECT * FROM characters WHERE netID = ?";
+        List<Map<String, Object>> character = jdbcTemplate.queryForList(sql, netID);
+        model.addAttribute("roles", character);
+        return "characters/character";
+    }
+
+    @GetMapping("/characters/loadpage")
+    public String charactersPage() {
+        return "characters/character";
+    }
+
     @GetMapping("/")
     public String landingPage() {
         return "index";
+    }
+
+    @GetMapping("/characters/editpage")
+    public String editCharactersPage(@PathVariable("characterName") String characterName, Model model) {
+        return "characters/editCharacters";      
     }
 
     @GetMapping("/actors/loadpage")
     public String actorsPage() {
         return "actors";
     }
+
 }
