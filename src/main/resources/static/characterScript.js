@@ -17,7 +17,6 @@ function loadCharacters() {
                                     ${character.characterName}
                                 </option>
                                 <option value="delete">Delete Character</option>
-                                <option value="edit">Edit Character</option>
                             </select>
                         </td>
                         <td>${character.showName}</td>
@@ -39,9 +38,6 @@ function handleCharacterDropdown(selectedValue, characterName) {
   if (selectedValue === "") {
     return;
   }
-  if (selectedValue === "edit") {
-    window.location.href = `/characters/edit?characterName=${characterName}`;
-  }
   if (selectedValue === "delete") {
     window.location.href = `/characters/delete?characterName=${characterName}`;
   }
@@ -62,7 +58,7 @@ function processFilter() {
     .then((data) => {
       const tableBody = document.getElementById(`character-table-body`);
       tableBody.innerHTML = "";
-
+      console.log("penis");
       data.forEach((character) => {
         const row = document.createElement("tr");
         row.innerHTML = `<td>
@@ -72,7 +68,6 @@ function processFilter() {
                                     ${character.characterName}
                                 </option>
                                 <option value="delete">Delete Character</option>
-                                <option value="edit">Edit Character</option>
                             </select>
                         </td>
                         <td>${character.showName}</td>
@@ -116,3 +111,50 @@ function populateFilterDropdown() {
     select.appendChild(optionElement);
   });
 }
+
+function getShowIDFromName(showName) {
+  return fetch(`/shows/getShowID?showName=${encodeURIComponent(showName)}`)
+    .then((response) => response.json())
+    .then((data) => {
+      return data.showID;
+    });
+}
+
+
+async function addCharacter() {
+    const characterName = document.getElementById("characterName").value;
+    const netID = document.getElementById("netID").value;
+
+    const showID = await getShowIDFromName(document.getElementById("showName").value);
+
+    const params = new URLSearchParams();
+    params.append("characterName", characterName);
+    params.append("netID", netID);
+    params.append("showID", showID);
+
+    fetch("/characters/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: params.toString()
+    })
+    .then(response => {
+        return response.json().then(data => ({ status: response.status, body: data }));
+    })
+    .then(({ status, body }) => {
+        if (status === 200) {
+            alert(body.message); 
+            window.location.href = "/characters/loadpage"; 
+        } else {
+            alert("Error adding character: " + body.message);
+        }
+    })
+    .catch(error => {
+        console.error("Network or JS error:", error);
+        alert("Error adding character: " + error.message);
+    });
+}
+
+
+

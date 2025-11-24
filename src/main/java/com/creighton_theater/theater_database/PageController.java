@@ -9,12 +9,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PageController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @GetMapping("/")
+    public String landingPage() {
+        return "index";
+    }
 
     @GetMapping("/student/loadpage")
     public String studentPage() {
@@ -43,20 +49,20 @@ public class PageController {
         return "characters/character";
     }
 
+
+    /*-----------------------------------------
+    CHARACTER PAGES
+    -----------------------------------------*/
     @GetMapping("/characters/loadpage")
     public String charactersPage() {
         return "characters/character";
     }
 
-    @GetMapping("/")
-    public String landingPage() {
-        return "index";
+    @GetMapping("/characters/addpage")
+    public String addCharactersPage() {
+        return "characters/addCharacters";
     }
 
-    @GetMapping("/characters/editpage")
-    public String editCharactersPage(@PathVariable("characterName") String characterName, Model model) {
-        return "characters/editCharacters";      
-    }
 
     @GetMapping("/actors/loadpage")
     public String actorsPage() {
