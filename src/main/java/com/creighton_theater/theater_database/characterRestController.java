@@ -54,6 +54,7 @@ public class characterRestController {
             return null;
         }
     }
+    
     @PostMapping("/edit")
     public String editCharacter(
             @RequestParam("NewCharacterName") String newCharacterName,

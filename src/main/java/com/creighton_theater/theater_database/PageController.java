@@ -27,6 +27,8 @@ public class PageController {
         return "student/students";
     }
 
+    
+
     @GetMapping("/addStudent")
     public String addStudentPage() {
         return "student/addStudents";
@@ -63,10 +65,13 @@ public class PageController {
         return "characters/addCharacters";
     }
 
+    /*----------------
+    ACTOR PAGES
+    ----------------*/
 
     @GetMapping("/actors/loadpage")
     public String actorsPage() {
-        return "actors";
+        return "actor/actors";
     }
 
 }

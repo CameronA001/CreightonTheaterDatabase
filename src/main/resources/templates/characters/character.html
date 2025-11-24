@@ -5,6 +5,7 @@
     <title>Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
     <script src="/characterScript.js"></script>
+
 </head>
 
 <body onload = " populateFilterDropdown(); loadCharacters(); processFilter();" class ="page-background">
@@ -12,7 +13,7 @@
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <h1 style="text-align: center;">CHARACTERS PAGE</h1>
     <input type="text" placeholder="Search by value" id="filter-input" class="search-bar">
-    <select id="filter-column" onchange="clearInput('filter-input');" class="filter-select"></select>
+    <select id="filter-column" onchange="clearInput('filter-input'); processFilter();" class="filter-select"></select>
     <button onclick="location.href='/characters/addpage'" style = "float: right;" class = "basicButton">Add Character</button>
 
     <table>

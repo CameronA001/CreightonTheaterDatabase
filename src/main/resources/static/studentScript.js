@@ -1,39 +1,49 @@
 function loadStudents() {
-  fetch("/student/getAll")
-    .then((response) => response.json())
-    .then((data) => {
-      const tableBody = document.getElementById("student-table-body");
-      tableBody.innerHTML = "";
+    const urlParams = new URLSearchParams(window.location.search);
+    const netID = urlParams.get("netID");
 
-      data.forEach((student) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-                        <td>
-                            <select class="netid-select"
-                                    onchange="handleNetIdDropdown(this.value, '${student.netID}')">
-                                <option value="">
-                                    ${student.netID}
-                                </option>
-                                <option value="roles">Previous Roles</option>
-                                <option value="shows">Previous Shows</option>
-                                <option value="crewActor">Crew/Actor Page</option>
-                                <option value="delete")">Delete Student</option>
-                                <option value="edit">Edit Student</option>
-                            </select>
-                        </td>
-                        <td>${student.firstName} ${student.lastName}</td>
-                        <td>${student.gradeLevel}</td>
-                        <td>${student.pronouns}</td>
-                        <td>${student.specialNotes}</td>
-                        <td>${student.email}</td>
-                        <td>${student.allergies_sensitivities}</td>
-                    `;
-        tableBody.appendChild(row);
-      });
-    })
-    .catch((error) => console.error("Error fetching student data:", error));
+    fetch("/student/getAll")
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById("student-table-body");
+            tableBody.innerHTML = "";
 
+            // If netID exists, filter data in JS; otherwise show all
+            const filteredData = netID ? data.filter(s => s.netID === netID) : data;
+
+            filteredData.forEach(student => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>
+                        <select class="netid-select"
+                                onchange="handleNetIdDropdown(this.value, '${student.netID}')">
+                            <option value="">${student.netID}</option>
+                            <option value="roles">Previous Roles</option>
+                            <option value="shows">Previous Shows</option>
+                            <option value="crewActor">Crew/Actor Page</option>
+                            <option value="delete">Delete Student</option>
+                            <option value="edit">Edit Student</option>
+                        </select>
+                    </td>
+                    <td>${student.firstName} ${student.lastName}</td>
+                    <td>${student.gradeLevel}</td>
+                    <td>${student.pronouns}</td>
+                    <td>${student.specialNotes}</td>
+                    <td>${student.email}</td>
+                    <td>${student.allergies_sensitivities}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Only set filter input if netID exists
+            if (netID) {
+                document.getElementById("filter-column").value = "netID";
+                document.getElementById("filter-input").value = netID;
+            }
+        })
+        .catch(error => console.error("Error fetching student data:", error));
 }
+
 
 //this function processes the filter request and updates the table accordingly
 function processFilter(page) {
@@ -62,7 +72,7 @@ function processFilter(page) {
         });
 }
 
-function clearInput(elementId,page){
+function clearInput(elementId){
     document.getElementById(elementId).value = "";
 }
 

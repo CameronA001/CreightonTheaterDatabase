@@ -82,8 +82,8 @@ function processFilter() {
 const FILTER_DROPDOWN_MAP = {
   character: [
     { value: "netID,characters", label: "NetID" },
-    { value: "firstName,characters", label: "First Name" },
-    { value: "lastName,characters", label: "Last Name" },
+    { value: "firstName,student", label: "First Name" },
+    { value: "lastName,student", label: "Last Name" },
     { value: "showID,shows", label: "Show ID" },
     { value: "characterName,characters", label: "Character Name" },
     { value: "showName,shows", label: "Show Name" },
@@ -156,5 +156,7 @@ async function addCharacter() {
     });
 }
 
-
+function clearInput(elementId){
+    document.getElementById(elementId).value = "";
+}
 

@@ -25,6 +25,6 @@ function processFilter(page) {
         });
 }
 
-function clearInput(elementId,page){
+function clearInput(elementId){
     document.getElementById(elementId).value = "";
 }

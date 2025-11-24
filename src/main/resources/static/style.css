@@ -54,6 +54,7 @@ th,
 td {
 	border: 1px solid black;
 	text-align: center;
+	padding: 8px;
 	background-color: white;
 	padding: var(--space-sm);
 }
@@ -308,9 +309,9 @@ input.formInput {
 
 /* Focus effect */
 input.formInput:focus {
-    border-color: #005ca9;       /* your baltic-blue color */
+    border-color: #005ca9;
     box-shadow: 0 0 5px rgba(0, 92, 169, 0.5);
-    outline: none;               /* remove default outline */
+    outline: none;
 }
 
 /* Optional: placeholder styling */
@@ -318,3 +319,26 @@ input.formInput::placeholder {
     color: #888;
     font-style: italic;
 }
+
+/*
+WIDE TABLES
+*/
+.wide-table-container {
+  overflow-x: auto;        
+  width: 100%;  
+}
+
+.styled-table {
+  border-collapse: collapse;
+  min-width: 1800px;
+}
+/*sticks first column*/
+.sticky {
+  position: sticky;
+  left: 0;
+  background: lightskyblue; 
+  z-index: 2;
+  border-right: 1px solid black; 
+}
+
+

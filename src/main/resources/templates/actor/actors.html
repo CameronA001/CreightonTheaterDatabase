@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/actorScript.js"></script>
+</head>
+
+<body onload="loadActors();" class="page-background">
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <h1 style="text-align: center;">Actor Page</h1>
+    <input type="text" placeholder="Search by value" id="filter-input" class="search-bar">
+
+    <div class="wide-table-container">
+    <table class="styled-table" style="border-collapse:collapse">
+        <thead>
+            <tr>
+            <th class="sticky">NetID</th>
+            <th>Years Acting Experience</th>
+            <th>Skin Tone</th>
+            <th>Piercings</th>
+            <th>Hair Color</th>
+            <th>Previous Injuries</th>
+            <th>Special Notes</th>
+            <th>Height</th>
+            <th>Ring Size</th>
+            <th>Shoe Size</th>
+            <th>Head Circ</th>
+            <th>Neck Base</th>
+            <th>Chest</th>
+            <th>Waist</th>
+            <th>High Hip</th>
+            <th>Low Hip</th>
+            <th>Armseye to Armseye (Front)</th>
+            <th>Neck to Waist (Front)</th>
+            <th>Armseye to Armseye (Back)</th>
+            <th>Neck to Waist (Back)</th>
+            <th>Center Back to Wrist</th>
+            <th>Outsleeve to Wrist</th>
+            <th>Outseam Below Knee</th>
+            <th>Outseam to Ankle</th>
+            <th>Outseam to Floor</th>
+            <th>Other Notes</th>
+            <th>Photo</th>
+
+
+            </tr>
+        </thead>
+        <tbody id="actor-table-body">
+        </tbody>
+    </table>
+    </div>
+        <script>
+        //dynamically updates the page as the user types into filter-input
+        const filterInput = document.getElementById("filter-input");
+        filterInput.addEventListener("input", () => {
+            processFilter();
+        });</script>
+
+
+</body>
