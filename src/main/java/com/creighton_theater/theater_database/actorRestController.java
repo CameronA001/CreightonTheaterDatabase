@@ -18,6 +18,7 @@ public class actorRestController {
 
     @GetMapping("/getAll")
     public List<Map<String, Object>> getAllActors() {
+        System.out.println("penis");
         String sql = "SELECT * FROM actor";
         return jdbcTemplate.queryForList(sql);
     }

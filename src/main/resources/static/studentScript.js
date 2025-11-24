@@ -17,10 +17,11 @@ function loadStudents() {
                     <td>
                         <select class="netid-select"
                                 onchange="handleNetIdDropdown(this.value, '${student.netID}')">
-                            <option value="">${student.netID}</option>
+                            <option value="" selected>${student.netID}</option>
                             <option value="roles">Previous Roles</option>
                             <option value="shows">Previous Shows</option>
-                            <option value="crewActor">Crew/Actor Page</option>
+                            <option value="crew">CrewPage</option>
+                            <option value="actor">ActorPage</option>
                             <option value="delete">Delete Student</option>
                             <option value="edit">Edit Student</option>
                         </select>
@@ -87,13 +88,16 @@ function handleNetIdDropdown(selectedValue, netID) {
     window.location.href = `/student/${netID}/shows`;
   }
   if (selectedValue === "crewActor") {
-    window.location.href = `/student/${netID}/crewActor`;
+    window.location.href = `/actors/loadpage?netID=${netID}`;
   }
   if( selectedValue === "delete") {
     deleteStudent(netID);
   }
   if (selectedValue === "edit") {
     window.location.href = `/student/${netID}/editPage`;
+  }
+  if (selectedValue === "actor") {
+    window.location.href = `/actors/loadpage?netID=${netID}`;
   }
 }
 

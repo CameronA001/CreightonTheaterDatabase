@@ -1,4 +1,7 @@
 function loadActors() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const netID = urlParams.get("netID");
+
   fetch("/actors/getAll")
     .then((response) => response.json())
     .then((data) => {
@@ -45,17 +48,26 @@ function loadActors() {
       });
     })
     .catch((error) => console.error("Error fetching actor data:", error));
+
+        if (netID) {
+      console.log("true");
+      document.getElementById("filter-input").value = netID;
+      processFilter();
+    }
 }
 
 function processFilter() {
 
+
+
     const filterValue = document.getElementById("filter-input").value;
 
-    fetch(`actors/filterBy?value=${filterValue}`)
+    fetch(`/actors/filterBy?value=${filterValue}`)
         .then(res => res.json())
         .then(data => {
             const tableBody = document.getElementById(`actor-table-body`);
             tableBody.innerHTML = "";
+
 
             data.forEach(actor => {
                 const row = document.createElement("tr");
@@ -95,6 +107,7 @@ function processFilter() {
                 tableBody.appendChild(row);
             });
         });
+
 }
 
 

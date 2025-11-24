@@ -7,9 +7,10 @@
     <script src="/actorScript.js"></script>
 </head>
 
-<body onload="loadActors();" class="page-background">
+<body onload="loadActors(); processFilter();" class="page-background">
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <h1 style="text-align: center;">Actor Page</h1>
+    <label for ="filter-input" style="margin-right: 10px;">Filter By Net ID:</label>
     <input type="text" placeholder="Search by value" id="filter-input" class="search-bar">
 
     <div class="wide-table-container">

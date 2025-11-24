@@ -38,7 +38,7 @@ public class characterRestController {
         return jdbcTemplate.queryForList(sql);
     }
 
-    @GetMapping("/filterBy")
+     @GetMapping("/filterBy")
     public List<Map<String, Object>> filterBy(
             @RequestParam String column,
             @RequestParam String value,

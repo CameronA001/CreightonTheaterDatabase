@@ -13,7 +13,7 @@ function loadCharacters() {
         row.innerHTML = `<td>
                             <select class="netid-select"
                             onchange="handleCharacterDropdown(this.value, '${character.characterName}')" id = "dropdown">
-                                <option value="">
+                                <option value="" selected>
                                     ${character.characterName}
                                 </option>
                                 <option value="delete">Delete Character</option>
