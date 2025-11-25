@@ -14,74 +14,30 @@ function updatePlaceholder() {
   input.placeholder = `Search by ${selectedLabel}`;
 }
 
-function findNameAndNetID(column, netID, page) {
+function findNetIDFromName(value, firstLastNet, page) {
 
-  return fetch(`/student/filterBy?column=${column}&value=${netID}`)
+
+  return fetch(`/student/filterBy?column=${firstLastNet}&value=${value}`)
     .then((res) => res.json())
     .then((data) => {
       const select = document.getElementById("student-select");
 
-      // Clear old results
       select.innerHTML = "";
 
-      // Populate all matches
       data.forEach(student => {
-        const option = document.createElement("option");
-        option.value = student.netID;
-        option.textContent = `${student.firstName} ${student.lastName} (${student.netID})`;
-        select.appendChild(option);
-      });
 
-      if (data.length > 0) {
-        document.getElementById(`add${page}Button`).disabled = false;
-        if (data.length > 4) {
-          select.size = 4; // limit size to 4 if more than 4 entries
-        } 
-        else {
-        select.size = data.length;
-        }
-      } else {
-        select.size = 0; 
-        document.getElementById(`add${page}Button`).disabled = true;
-      }
+  const option = document.createElement("option");
 
-      // Return number of matching entries
-      return data.length;
-    })
-    .catch((error) => {
-      console.error("Error fetching student data:", error);
+          option.value = JSON.stringify({
+            netID: student.netID,
+            firstName: student.firstName,
+            lastName: student.lastName
+          });
 
-      return 0;  // return 0 on error
-    });
+          option.textContent = `${student.firstName} ${student.lastName} (${student.netID})`;
+          select.appendChild(option);
+        });
 
-
-}
-
-
-function findNetIDFromName(name, firstLast, docElementId, page) {
-
-
-  return fetch(`/student/filterBy?column=${firstLast}&value=${name}`)
-    .then((res) => res.json())
-    .then((data) => {
-      const select = document.getElementById("student-select");
-
-      // Clear old results
-      select.innerHTML = "";
-
-              const option = document.createElement("option");
-      // Populate all matches
-      data.forEach(student => {
-        option.value = JSON.stringify({
-    netID: student.netID,
-    firstName: student.firstName,
-    lastName: student.lastName
-  });
-
-        );
-        option.textContent = `${student.firstName} ${student.lastName} (${student.netID})`;
-        select.appendChild(option);
-      });
 
       if (data.length > 0) {
         document.getElementById(`add${page}Button`).disabled = false;
@@ -107,8 +63,17 @@ function findNetIDFromName(name, firstLast, docElementId, page) {
 
 }
 
-function addSetNetID() {
-  const input = document.getElementById("netIDInput");
+function addSetNetID(docElementId) {
+
+      const firstNameField = document.getElementById("firstName");
+      const lastNameField = document.getElementById("lastName");
+      const netIDField = document.getElementById("netIDInput");
+
+      if (docElementId === "netIDInput" && data.length === 1) {
+        firstNameField.value = data[0].firstName;
+        lastNameField.value = data[0].lastName;
+      }
+
   const selectedOption = document.getElementById("student-select").value;
   input.value = selectedOption;
 }

@@ -8,7 +8,7 @@
     <script src = "/script.js"></script>
 </head>
 
-<body class="page-background" onload="findNameAndNetID('NetID','', 'Character');">
+<body class="page-background" onload="findNetIDFromName('', 'netID', 'Character');">
 
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <button onclick="location.href='/characters/loadpage'" class="basicButton"
@@ -21,10 +21,13 @@
         <label for="netID" class="addElementLabel">NetID:</label>
         <input type="text" id="netIDInput" name="netID" class="formInput" required>
 
-        <label></label>
-        <input type = "text" id = "firstName" name = "firstName"></form>
+        <label for="firstName" class="addElementLabel">First Name:</label>
+        <input type = "text" id = "firstName" name = "firstName" class = "formInput"></form>
 
-        <select size = "findNameAndNetID().value" id="student-select" onclick="addSetNetID()"></select>
+        <label for="lastName" class="addElementLabel">Last Name:</label>
+        <input type = "text" id = "lastName" name = "lastName" class = "formInput"></form>
+
+        <select size = "findNetIDFromName().value" id="student-select" onclick="addSetNetID()"></select>
         <option value="netID"></option>
 
         <label for="characterName" class="addElementLabel">Character Name:</label>
@@ -46,13 +49,32 @@
 
     </form>
     <script>
-        /*add event listener to netID input to auto-fill student select dropdown*/
-                document.getElementById("netIDInput").addEventListener("input", function () {
-        const netID = this.value.trim();
-        if (netID !== "") {
-            findNameAndNetID('NetID', netID, "Character");
-            document.getElementById("student-select").hidden = false;
-        }
-        });
+        // NetID input listener (your existing code)
+document.getElementById("netIDInput").addEventListener("input", function () {
+    const netID = this.value.trim();
+    if (netID !== "") {
+        findNetIDFromName(netID, "netID", "Character");
+        document.getElementById("student-select").hidden = false;
+    }
+});
+
+// First Name input listener
+document.getElementById("firstName").addEventListener("input", function () {
+    const firstName = this.value.trim();
+    if (firstName !== "") {
+        findNetIDFromName(firstName, "firstName", "Character");
+        document.getElementById("student-select").hidden = false;
+    }
+});
+
+// Last Name input listener
+document.getElementById("lastName").addEventListener("input", function () {
+    const lastName = this.value.trim();
+    if (lastName !== "") {
+        findNetIDFromName(lastName, "lastName", "Character");
+        document.getElementById("student-select").hidden = false;
+    }
+});
+
     </script>
 </body>
