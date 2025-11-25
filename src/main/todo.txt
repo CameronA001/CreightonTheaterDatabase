@@ -1,0 +1,19 @@
+-fix editStudent page (netID so that it updates across all tables)
+-Fix delete student so that it fixes all foreign key references as well
+
+-Something to view shows by date
+-When you search, you still need the select on netID
+
+-On addCharacter page, make verify that a show exists with dropdown select thing before adding
+
+-same thing with addActor, make sure the student exists and prevent button fromb eing pressed
+
+- dressing list for character
+        -clothing, accessories, laundry instructions
+        -Make it so that you can copy characters to new shows
+        -Show dressing list for actor/character
+        -If actor connected to multiple characters
+        -Connect to costume database
+-could be one costume assigned to multiple characters
+- Search by name on actor page
+-Add ability to go to actor from actor

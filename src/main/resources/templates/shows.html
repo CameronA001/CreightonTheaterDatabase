@@ -5,13 +5,14 @@
     <title>Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
     <script src="/actorScript.js"></script>
+    <script src="/script.js"></script>
 </head>
 
 <body onload="loadActors(); processFilter();" class="page-background">
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <h1 style="text-align: center;">Actor Page</h1>
     <label for ="filter-input" style="margin-right: 10px;">Filter By Net ID:</label>
-    <input type="text" placeholder="Search by value" id="filter-input" class="search-bar">
+    <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
 
     <div class="wide-table-container">
     <table class="styled-table" style="border-collapse:collapse">

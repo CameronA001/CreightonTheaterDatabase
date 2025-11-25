@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/actorScript.js"></script>
+    <script src = "/script.js"></script>  
+</head>
+
+<body class="page-background" onload="findNameAndNetID('', 'Actor');">
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="location.href='/actors/loadpage'" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">Back to Actor List</button>
+
+    <h1 style="text-align: center;">ADD ACTOR PAGE</h1>
+
+    <form id="add-actor-form">
+        <label for="netID" class="addElementLabel">NetID:</label>
+        <input type="text" id="netIDInput" name="netID" class="formInput" required>
+        <select size = "findStudentFromNetID().value" id="student-select" onclick="addSetNetID()"></select>
+        <option value="netID"></option>
+
+        <label for="yearsActingExperience" class="addElementLabel">Years Acting Experience:</label>
+        <input type="text" id="yearsActingExperience" name="yearsActingExperience" class="formInput">
+
+        <label for="skinTone" class="addElementLabel">Skin Tone:</label>
+        <input type="text" id="skinTone" name="skinTone" class="formInput">
+
+        <label for="piercings" class="addElementLabel">Piercings:</label>
+        <input type="text" id="piercings" name="piercings" class="formInput">
+
+        <label for="hairColor" class="addElementLabel">Hair Color:</label>
+        <input type="text" id="hairColor" name="hairColor" class="formInput">
+
+        <label for="previousInjuries" class="addElementLabel">Previous Injuries:</label>
+        <input type="text" id="previousInjuries" name="previousInjuries" class="formInput">
+
+        <label for="specialNotes" class="addElementLabel">Special Notes:</label>
+        <input type="text" id="specialNotes" name="specialNotes" class="formInput">
+
+        <label for="height" class="addElementLabel">Height:</label>
+        <input type="text" id="height" name="height" class="formInput">
+
+        <label for="ringSize" class="addElementLabel">Ring Size:</label>
+        <input type="text" id="ringSize" name="ringSize" class="formInput">
+
+        <label for="shoeSize" class="addElementLabel">Shoe Size:</label>
+        <input type="text" id="shoeSize" name="shoeSize" class="formInput">
+
+        <label for="headCirc" class="addElementLabel">Head Circumference:</label>
+        <input type="text" id="headCirc" name="headCirc" class="formInput">
+
+        <label for="neckBase" class="addElementLabel">Neck Base:</label>
+        <input type="text" id="neckBase" name="neckBase" class="formInput">
+
+        <label for="chest" class="addElementLabel">Chest:</label>
+        <input type="text" id="chest" name="chest" class="formInput">
+
+        <label for="waist" class="addElementLabel">Waist:</label>
+        <input type="text" id="waist" name="waist" class="formInput">
+
+        <label for="highHip" class="addElementLabel">High Hip:</label>
+        <input type="text" id="highHip" name="highHip" class="formInput">
+
+        <label for="lowHip" class="addElementLabel">Low Hip:</label>
+        <input type="text" id="lowHip" name="lowHip" class="formInput">
+
+        <label for="armseyeToArmseyeFront" class="addElementLabel">Armseye to Armseye (Front):</label>
+        <input type="text" id="armseyeToArmseyeFront" name="armseyeToArmseyeFront" class="formInput">
+
+        <label for="neckToWaistFront" class="addElementLabel">Neck to Waist (Front):</label>
+        <input type="text" id="neckToWaistFront" name="neckToWaistFront" class="formInput">
+
+        <label for="armseyeToArmseyeBack" class="addElementLabel">Armseye to Armseye (Back):</label>
+        <input type="text" id="armseyeToArmseyeBack" name="armseyeToArmseyeBack" class="formInput">
+
+        <label for="neckToWaistBack" class="addElementLabel">Neck to Waist (Back):</label>
+        <input type="text" id="neckToWaistBack" name="neckToWaistBack" class="formInput">
+
+        <label for="centerBackToWrist" class="addElementLabel">Center Back to Wrist:</label>
+        <input type="text" id="centerBackToWrist" name="centerBackToWrist" class="formInput">
+
+        <label for="outsleeveToWrist" class="addElementLabel">Outsleeve to Wrist:</label>
+        <input type="text" id="outsleeveToWrist" name="outsleeveToWrist" class="formInput">
+
+        <label for="outseamBelowKnee" class="addElementLabel">Outseam Below Knee:</label>
+        <input type="text" id="outseamBelowKnee" name="outseamBelowKnee" class="formInput">
+
+        <label for="outseamToAnkle" class="addElementLabel">Outseam to Ankle:</label>
+        <input type="text" id="outseamToAnkle" name="outseamToAnkle" class="formInput">
+
+        <label for="outseamToFloor" class="addElementLabel">Outseam to Floor:</label>
+        <input type="text" id="outseamToFloor" name="outseamToFloor" class="formInput">
+
+        <label for="otherNotes" class="addElementLabel">Other Notes:</label>
+        <input type="text" id="otherNotes" name="otherNotes" class="formInput">
+
+        <label for="photo" class="addElementLabel">Photo URL:</label>
+        <input type="text" id="photo" name="photo" class="formInput">
+
+
+        <button type="button" onclick="addActor()" class="basicButton" id = "addActorButton">
+            Add Actor
+        </button>
+
+    </form>
+    <script>
+        /*add event listener to netID input to auto-fill student select dropdown*/
+                document.getElementById("netIDInput").addEventListener("input", function () {
+        const netID = this.value.trim();
+        if (netID !== "") {
+            findStudentFromNetID(netID, "Actor");
+            document.getElementById("student-select").hidden = false;
+        }
+        });
+    </script>
+</body>

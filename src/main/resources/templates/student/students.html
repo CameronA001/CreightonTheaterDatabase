@@ -12,8 +12,8 @@
 
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <h1 style="text-align: center;">STUDENTS PAGE</h1>
-    <input type="text" placeholder="Search by value" id="filter-input" class="search-bar">
-    <select id="filter-column" onchange="clearInput('filter-input'); loadStudents()" class="filter-select"></select>
+    <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
+    <select id="filter-column" onchange="clearInput('filter-input'); loadStudents(); updatePlaceholder();" class="filter-select"></select>
     
     <button onclick="location.href='/addStudent'" style = "float: right;" class = "basicButton">Add Student</button>
     

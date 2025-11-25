@@ -5,9 +5,10 @@
     <title>Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
     <script src="/characterScript.js"></script>
+    <script src = "/script.js"></script>
 </head>
 
-<body class="page-background">
+<body class="page-background" onload="findNameAndNetID('NetID','', 'Character');">
 
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <button onclick="location.href='/characters/loadpage'" class="basicButton"
@@ -17,6 +18,15 @@
 
     <form id="add-character-form">
 
+        <label for="netID" class="addElementLabel">NetID:</label>
+        <input type="text" id="netIDInput" name="netID" class="formInput" required>
+
+        <label></label>
+        <input type = "text" id = "firstName" name = "firstName"></form>
+
+        <select size = "findNameAndNetID().value" id="student-select" onclick="addSetNetID()"></select>
+        <option value="netID"></option>
+
         <label for="characterName" class="addElementLabel">Character Name:</label>
         <input type="text" id="characterName" name="characterName" class="formInput" required>
         <br><br>
@@ -25,16 +35,24 @@
         <input type="text" id="showName" name="showName" class="formInput" required>
         <br><br>
 
-        
 
-        <label for="netID" class="addElementLabel">NetID:</label>
-        <input type="text" id="netID" name="netID" class="formInput" required>
 
+       
         <button type="button" onclick="addCharacter()"
-                class="basicButton">
+                class="basicButton" id = "addCharacterButton">
             Add Character
         </button>
 
-    </form>
 
+    </form>
+    <script>
+        /*add event listener to netID input to auto-fill student select dropdown*/
+                document.getElementById("netIDInput").addEventListener("input", function () {
+        const netID = this.value.trim();
+        if (netID !== "") {
+            findNameAndNetID('NetID', netID, "Character");
+            document.getElementById("student-select").hidden = false;
+        }
+        });
+    </script>
 </body>

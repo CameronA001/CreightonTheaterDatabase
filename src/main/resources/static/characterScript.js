@@ -2,6 +2,13 @@ function loadCharacters() {
   const urlParams = new URLSearchParams(window.location.search);
   const netID = urlParams.get("netID");
 
+    if (netID) {
+    document.getElementById("filter-column").value = "netID,characters";
+    document.getElementById("filter-input").value = netID;
+    processFilter();
+  }
+
+  else{
   fetch(`/characters/getAll`)
     .then((response) => response.json())
     .then((data) => {
@@ -20,6 +27,7 @@ function loadCharacters() {
                             </select>
                         </td>
                         <td>${character.showName}</td>
+                        <td>${character.showSemester}</td>
                         <td>${character.firstName} ${character.lastName}</td>
                         <td>${character.netID}</td>
                         <td>${character.showID}</td>`;
@@ -27,11 +35,9 @@ function loadCharacters() {
       });
     })
     .catch((error) => console.error("Error fetching character data:", error));
-  if (netID != null) {
-    document.getElementById("filter-column").value = "netID,characters";
-    document.getElementById("filter-input").value = netID;
-    processFilter("characters");
   }
+    
+
 }
 
 function handleCharacterDropdown(selectedValue, characterName) {
@@ -58,7 +64,6 @@ function processFilter() {
     .then((data) => {
       const tableBody = document.getElementById(`character-table-body`);
       tableBody.innerHTML = "";
-      console.log("penis");
       data.forEach((character) => {
         const row = document.createElement("tr");
         row.innerHTML = `<td>
@@ -87,6 +92,7 @@ const FILTER_DROPDOWN_MAP = {
     { value: "showID,shows", label: "Show ID" },
     { value: "characterName,characters", label: "Character Name" },
     { value: "showName,shows", label: "Show Name" },
+    {value: "yearSemester,shows", label: "Show Semester" }
   ],
 };
 
@@ -120,43 +126,33 @@ function getShowIDFromName(showName) {
     });
 }
 
-
-async function addCharacter() {
-    const characterName = document.getElementById("characterName").value;
-    const netID = document.getElementById("netID").value;
-
-    const showID = await getShowIDFromName(document.getElementById("showName").value);
-
-    const params = new URLSearchParams();
-    params.append("characterName", characterName);
-    params.append("netID", netID);
-    params.append("showID", showID);
-
-    fetch("/characters/add", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: params.toString()
-    })
-    .then(response => {
-        return response.json().then(data => ({ status: response.status, body: data }));
-    })
-    .then(({ status, body }) => {
-        if (status === 200) {
-            alert(body.message); 
-            window.location.href = "/characters/loadpage"; 
-        } else {
-            alert("Error adding character: " + body.message);
-        }
-    })
-    .catch(error => {
-        console.error("Network or JS error:", error);
-        alert("Error adding character: " + error.message);
-    });
-}
-
 function clearInput(elementId){
     document.getElementById(elementId).value = "";
+}
+
+
+
+
+async function addCharacter() {
+  const formData = new URLSearchParams();
+  formData.append("characterName", document.getElementById("characterName").value);
+  formData.append("showName", document.getElementById("showName").value);
+  formData.append("netID", document.getElementById("netIDInput").value);
+
+  const response = await fetch("/characters/add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: formData.toString(),
+  });
+
+  if (response.ok) {
+    alert("Character added successfully!");
+    document.getElementById("add-character-form").reset();
+    window.location.href = "/characters/loadpage";
+  } else {
+    alert("Error adding character.");
+  }
 }
 

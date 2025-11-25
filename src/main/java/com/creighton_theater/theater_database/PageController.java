@@ -74,4 +74,9 @@ public class PageController {
         return "actor/actors";
     }
 
+    @GetMapping("/actor/add")
+    public String addActorPage() {
+        return "actor/addActors";
+    }
+
 }
