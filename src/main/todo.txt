@@ -5,8 +5,8 @@
 -When you search, you still need the select on netID
 
 -On addCharacter page, make verify that a show exists with dropdown select thing before adding
+-Find out how to add photo file
 
--same thing with addActor, make sure the student exists and prevent button fromb eing pressed
 
 - dressing list for character
         -clothing, accessories, laundry instructions
@@ -15,5 +15,4 @@
         -If actor connected to multiple characters
         -Connect to costume database
 -could be one costume assigned to multiple characters
-- Search by name on actor page
 -Add ability to go to actor from actor

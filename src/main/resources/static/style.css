@@ -1,29 +1,15 @@
-/* -------------------------------------------------
-   COLOR VARIABLES
-------------------------------------------------- */
 :root {
 	--baltic-blue: #005ca9ff;
-	--ink-black: #04080fff;
-	--porcelain: #fdfffcff;
-	--verdigris: #18a999ff;
-	--muted-teal: #69a197ff;
 
-	/* Dynamic spacing variables */
 	--space-sm: clamp(0.25rem, 0.5vw, 0.75rem);
 	--space-md: clamp(0.5rem, 1vw, 1.25rem);
 	--space-lg: clamp(1rem, 2vw, 2.5rem);
 	--space-xl: clamp(2rem, 4vw, 4rem);
 
-	/* Dynamic font sizes */
 	--font-sm: clamp(0.8rem, 1.2vw, 1rem);
 	--font-md: clamp(1rem, 1.5vw, 1.25rem);
 	--font-lg: clamp(1.25rem, 2vw, 2rem);
-
 }
-
-/* -------------------------------------------------
-   GLOBAL + PAGE
-------------------------------------------------- */
 
 .page-background {
 	background: #F2EFEA;
@@ -32,23 +18,18 @@
 }
 
 h1 {
-  text-decoration: underline;
-  text-align: center;
-  font-weight: bolder;
-  margin-bottom: var(--space-xl);
-  font-family: 'Times New Roman', Times, serif;
-  font-size: var(--font-lg);
-  background: rgb(255, 255, 255);
-  padding: 20px 40px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  display: center;
+	text-decoration: underline;
+	text-align: center;
+	font-weight: bolder;
+	margin-bottom: var(--space-xl);
+	font-family: 'Times New Roman', Times, serif;
+	font-size: var(--font-lg);
+	background: rgb(255, 255, 255);
+	padding: 20px 40px;
+	border-radius: 15px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+	display: center;
 }
-
-
-/* -------------------------------------------------
-   TABLES
-------------------------------------------------- */
 
 table {
 	width: 100%;
@@ -61,28 +42,21 @@ th,
 td {
 	border: 1px solid black;
 	text-align: center;
-	padding: 8px;
-	background-color: white;
 	padding: var(--space-sm);
+	background-color: white;
 }
 
 td {
 	height: clamp(24px, 4vw, 40px);
 }
 
-/* -------------------------------------------------
-   SELECT DROPDOWN (NETID SELECT)
-------------------------------------------------- */
-
 .netid-select {
 	appearance: none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
-
 	background-color: lightskyblue;
 	border: 1px solid black;
 	border-radius: 8px;
-
 	padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-md);
 	font-size: var(--font-md);
 	font-weight: bolder;
@@ -90,12 +64,9 @@ td {
 	color: #333;
 	cursor: pointer;
 	outline: none;
-
 	transition: all 0.25s ease;
 	background-repeat: no-repeat;
 	background-position: right var(--space-md) center;
-
-	/* Re-add arrow */
 	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='black' d='M0 0l5 6 5-6z'/></svg>");
 }
 
@@ -114,37 +85,25 @@ select option {
 	border: 0.5px solid black;
 }
 
-/*
-FILTER SELECT
-*/
 .filter-select {
 	appearance: none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
-	
 	background-color: #d7d7d7;
 	border: 1px solid black;
 	border-radius: 8px;
 	font-family: "times new roman", Times, serif;
 	font-weight: bolder;
-
 	padding: clamp(0.25rem, 0.6vw, 0.45rem) clamp(1.5rem, 2vw, 2rem) clamp(0.25rem, 0.6vw, 0.45rem) clamp(0.5rem, 1vw, 0.75rem);
-
 	font-size: clamp(0.85rem, 1.2vw, 1rem);
 	color: #333;
 	cursor: pointer;
 	outline: none;
-
 	transition: all 0.25s ease;
 	background-repeat: no-repeat;
 	background-position: right clamp(0.4rem, 1vw, 0.75rem) center;
-
-	/* arrow */
 	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='black' d='M0 0l5 6 5-6z'/></svg>");
-
-
 }
-
 
 .filter-select:hover {
 	border-color: black;
@@ -157,16 +116,10 @@ FILTER SELECT
 	background-color: lightskyblue;
 }
 
-/* Optional: option styling */
 .filter-select option {
 	padding: 8px;
 	border: 0.5px solid black;
 }
-
-
-/* -------------------------------------------------
-   HOME BUTTONS
-------------------------------------------------- */
 
 .home-buttons {
 	background-color: var(--baltic-blue);
@@ -184,7 +137,6 @@ FILTER SELECT
 	font-variant: small-caps;
 	font-weight: bold;
 	color: rgb(167, 217, 234);
-
 	transition: 0.25s ease;
 }
 
@@ -196,93 +148,73 @@ FILTER SELECT
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Buttons container */
 .buttons-container {
 	align-items: center;
 	display: flex;
 	flex-direction: column;
 	margin-top: var(--space-lg);
-
-  background: white;
-  padding: 30px 40px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-
+	background: white;
+	padding: 30px 40px;
+	border-radius: 16px;
+	box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
 }
 
-/* -------------------------------------------------
-   SEARCH BAR
-------------------------------------------------- */
-
 .search-bar {
-    width: 100%;
-    max-width: 350px;
-    padding: clamp(0.4rem, 1vw, 0.75rem) clamp(1.5rem, 2vw, 2rem);
-    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
-
-    background-color: #f0f0f0; /* soft neutral background */
-    border: 1px solid black;
-    border-radius: 12px;
-    outline: none;
-
-    transition: all 0.3s ease;
-
-    /* Search icon inside input */
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'></circle><line x1='21' y1='21' x2='16.65' y2='16.65'></line></svg>");
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    background-size: 18px;
-
-    padding-left: clamp(2.5rem, 4vw, 3.2rem); /* space for icon */
-    margin-bottom: var(--space-md);
+	width: 100%;
+	max-width: 350px;
+	padding: clamp(0.4rem, 1vw, 0.75rem) clamp(1.5rem, 2vw, 2rem);
+	font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+	background-color: #f0f0f0;
+	border: 1px solid black;
+	border-radius: 12px;
+	outline: none;
+	transition: all 0.3s ease;
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'></circle><line x1='21' y1='21' x2='16.65' y2='16.65'></line></svg>");
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	background-size: 18px;
+	padding-left: clamp(2.5rem, 4vw, 3.2rem);
+	margin-bottom: var(--space-md);
 }
 
 .search-bar::placeholder {
-    color: #666;
-    opacity: 0.8;
-    font-style: italic;
-    transition: color 0.3s ease;
+	color: #666;
+	opacity: 0.8;
+	font-style: italic;
+	transition: color 0.3s ease;
 }
 
 .search-bar:hover {
-    background-color: #e8f4fb;
-    border-color: #888;
+	background-color: #e8f4fb;
+	border-color: #888;
 }
 
 .search-bar:focus {
-    background-color: #a0d8ef;
-    border-color: #1a73e8;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px) scale(1.03);
+	background-color: #a0d8ef;
+	border-color: #1a73e8;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	transform: translateY(-2px) scale(1.03);
 }
 
 .search-bar:focus::placeholder {
-    color: #333;
+	color: #333;
 }
-
-
-/* -------------------------------------------------
-basic button 
-------------------------------------------------- */
 
 .basicButton {
 	background-color: lightskyblue;
 	color: black;
 	border: black solid 2px;
-
 	padding: var(--space-sm) var(--space-lg);
 	border-radius: 8px;
-
 	font-size: var(--font-md);
 	font-family: 'Times New Roman', Times, serif;
 	font-weight: bold;
 	text-transform: uppercase;
 	cursor: pointer;
 	transition: 0.25s ease;
-
 }
 
 .basicButton:hover {
@@ -305,26 +237,16 @@ basic button
 	transform: translateY(0px);
 }
 
-/* -------------------------------------------------
-   addElementLabels
-------------------------------------------------- */
 .addElementLabel {
 	display: block;
 	font-family: 'Times New Roman', Times, serif;
 	font-size: clamp(1.2rem, 1.5vw, 1.5rem);
 	text-decoration: underline;
-
 	align-items: center;
-
 	margin-bottom: clamp(0.25rem, 0.6vw, 0.5rem);
 	color: #04080f;
 	font-weight: bold;
 }
-
-/**
- * -------------------------------------------------
-   INPUTS
-------------------------------------------------- */
 
 input.formInput {
 	width: 100%;
@@ -336,25 +258,19 @@ input.formInput {
 	color: black;
 	background-color: #f9f9f9;
 	transition: border-color 0.3s, box-shadow 0.3s;
-		/* smooth focus effect */
 }
 
-/* Focus effect */
 input.formInput:focus {
 	border-color: #005ca9;
 	box-shadow: 0 0 5px rgba(0, 92, 169, 0.5);
 	outline: none;
 }
 
-/* Optional: placeholder styling */
 input.formInput::placeholder {
 	color: #888;
 	font-style: italic;
 }
 
-/*
-WIDE TABLES
-*/
 .wide-table-container {
 	overflow-x: auto;
 	width: 100%;
@@ -365,7 +281,6 @@ WIDE TABLES
 	min-width: 1800px;
 }
 
-/*sticks first column*/
 .sticky {
 	position: sticky;
 	left: 0;
@@ -375,9 +290,67 @@ WIDE TABLES
 }
 
 select option {
-  padding: 8px 12px;
-  background-color: #FFFFFF;      /* clean base */
-  color: #333;                    /* readable text */
-  border-bottom: 1px solid #E5E7EB; /* subtle divider line */
-  font-size: 15px;
+	padding: 8px 12px;
+	background-color: #FFFFFF;
+	color: #333;
+	border-bottom: 1px solid #E5E7EB;
+	font-size: 15px;
 }
+
+#student-select {
+	display: block;
+	margin: 1rem auto;
+	width: 300px;
+	max-width: 90%;
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
+	border: 1px solid #333;
+	border-radius: 8px;
+	background-color: #f0f0f0;
+	color: #333;
+	box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+	cursor: pointer;
+}
+
+#student-select:hover,
+#student-select:focus {
+	border-color: #007bff;
+	outline: none;
+	background-color: #e6f0ff;
+}
+.input-with-button {
+	display: flex;
+	align-items: center; 
+	gap: 5px; 
+	width: 100%;
+	max-width: 400px;
+	margin-bottom: var(--space-md); /* spacing below input */
+}
+
+.input-with-button input.formInput {
+	flex: 1; 
+	height: 36px; 
+}
+
+.square-button {
+	width: 36px;       
+	height: 36px;      
+	background-color: lightskyblue;
+	border: 1px solid black;
+	border-radius: 6px; 
+	cursor: pointer;
+	font-size: 1.2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transition: 0.2s ease;
+}
+
+.square-button:hover {
+	background-color: #1d6eff;
+	color: white;
+	transform: scale(1.05);
+}
+
+

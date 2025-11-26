@@ -3,11 +3,11 @@
     <meta charset="UTF-8">
     <title>Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
-    <script src="/actorScript.js"></script>
+        <script src="/actorScript.js"></script>
     <script src = "/script.js"></script>  
 </head>
 
-<body class="page-background" onload="findNameAndNetID('', 'Actor');">
+<body class="page-background" onload="findNetIDFromName('', 'netID', 'Actor'); addEventListeners('Actor');">
 
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <button onclick="location.href='/actors/loadpage'" class="basicButton"
@@ -16,10 +16,25 @@
     <h1 style="text-align: center;">ADD ACTOR PAGE</h1>
 
     <form id="add-actor-form">
-        <label for="netID" class="addElementLabel">NetID:</label>
-        <input type="text" id="netIDInput" name="netID" class="formInput" required>
-        <select size = "findStudentFromNetID().value" id="student-select" onclick="addSetNetID()"></select>
-        <option value="netID"></option>
+        <div class="input-with-button">
+            <label for="netID" class="addElementLabel">NetID:</label>
+            <input type="text" id="netIDInput" name="netID" class="formInput" required>
+            <button type="button" class="square-button"
+                onclick="clearInput('netIDInput'); clearInput('firstName'); clearInput('lastName'); findNetIDFromName('', 'netID', 'Character');">×</button>
+        </div>
+
+
+        <label for="firstName" class="addElementLabel">First Name:</label>
+        <input type="text" id="firstName" name="firstName" class="formInput">
+
+        <label for="lastName" class="addElementLabel">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" class="formInput">
+
+        <div style="text-align: center;">
+            <select size="5" id="student-select" onclick="addSetNetID(this, 'Actor')"></select>
+            <option value="netID"></option>
+        </div>
+
 
         <label for="yearsActingExperience" class="addElementLabel">Years Acting Experience:</label>
         <input type="text" id="yearsActingExperience" name="yearsActingExperience" class="formInput">
@@ -96,23 +111,12 @@
         <label for="otherNotes" class="addElementLabel">Other Notes:</label>
         <input type="text" id="otherNotes" name="otherNotes" class="formInput">
 
-        <label for="photo" class="addElementLabel">Photo URL:</label>
-        <input type="text" id="photo" name="photo" class="formInput">
-
 
         <button type="button" onclick="addActor()" class="basicButton" id = "addActorButton">
             Add Actor
         </button>
 
     </form>
-    <script>
-        /*add event listener to netID input to auto-fill student select dropdown*/
-                document.getElementById("netIDInput").addEventListener("input", function () {
-        const netID = this.value.trim();
-        if (netID !== "") {
-            findStudentFromNetID(netID, "Actor");
-            document.getElementById("student-select").hidden = false;
-        }
-        });
-    </script>
+
+
 </body>

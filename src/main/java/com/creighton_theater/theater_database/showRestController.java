@@ -15,9 +15,10 @@ public class showRestController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @GetMapping("/getShowID")
-    public Map<String, Object> getShowID(@RequestParam String showName) {
-        String sql = "SELECT showID FROM shows WHERE showName LIKE ?";
+    @GetMapping("/getShowName")
+    public Map<String, Object> getShowName(@RequestParam String showName) {
+        String sql = "SELECT showID, showName FROM shows WHERE showName LIKE ?";
         return jdbcTemplate.queryForMap(sql, showName);
     }
+
 }

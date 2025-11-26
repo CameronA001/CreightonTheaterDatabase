@@ -105,8 +105,64 @@ function processFilter() {
     });
 }
 
-function addActorSetNetID() {
-  const input = document.getElementById("netIDInput");
-  const selectedOption = document.getElementById("student-select").value;
-  input.value = selectedOption;
+function appendIfNotEmpty(formData, key, elementId) {
+    const val = document.getElementById(elementId).value;
+    if (val !== "") formData.append(key, val);
 }
+
+async function addActor() {
+    const formData = new URLSearchParams();
+
+    appendIfNotEmpty(formData, "netID", "netIDInput");
+    appendIfNotEmpty(formData, "skinTone", "skinTone");
+    appendIfNotEmpty(formData, "piercings", "piercings");
+    appendIfNotEmpty(formData, "hairColor", "hairColor");
+    appendIfNotEmpty(formData, "previousInjuries", "previousInjuries");
+    appendIfNotEmpty(formData, "specialNotes", "specialNotes");
+    appendIfNotEmpty(formData, "height", "height");
+    appendIfNotEmpty(formData, "ringSize", "ringSize");
+    appendIfNotEmpty(formData, "shoeSize", "shoeSize");
+    appendIfNotEmpty(formData, "headCirc", "headCirc");
+    appendIfNotEmpty(formData, "neckBase", "neckBase");
+    appendIfNotEmpty(formData, "chest", "chest");
+    appendIfNotEmpty(formData, "waist", "waist");
+    appendIfNotEmpty(formData, "highHip", "highHip");
+    appendIfNotEmpty(formData, "lowHip", "lowHip");
+    appendIfNotEmpty(formData, "armseyeToArmseyeFront", "armseyeToArmseyeFront");
+    appendIfNotEmpty(formData, "neckToWaistFront", "neckToWaistFront");
+    appendIfNotEmpty(formData, "armseyeToArmseyeBack", "armseyeToArmseyeBack");
+    appendIfNotEmpty(formData, "neckToWaistBack", "neckToWaistBack");
+    appendIfNotEmpty(formData, "centerBackToWrist", "centerBackToWrist");
+    appendIfNotEmpty(formData, "outsleeveToWrist", "outsleeveToWrist");
+    appendIfNotEmpty(formData, "outseamBelowKnee", "outseamBelowKnee");
+    appendIfNotEmpty(formData, "outseamToAnkle", "outseamToAnkle");
+    appendIfNotEmpty(formData, "outseamToFloor", "outseamToFloor");
+    appendIfNotEmpty(formData, "otherNotes", "otherNotes");
+
+  const response = await fetch("/actors/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: formData.toString(),
+});
+
+const text = await response.text();
+
+if (response.ok) {
+    alert(text); // "Actor added successfully"
+    document.getElementById("add-actor-form").reset();
+    window.location.href = "/actors/loadpage";
+} else {
+    alert("Error adding actor: " + text); // now you’ll see the actual error
+}
+
+
+  if (response.ok) {
+    alert("Actor added successfully!");
+    document.getElementById("add-actor-form").reset();
+    window.location.href = "/actors/loadpage";
+  } else {
+    alert("Error adding actor.");
+  }
+}
+
+

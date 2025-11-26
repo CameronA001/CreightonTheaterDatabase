@@ -16,7 +16,6 @@ function updatePlaceholder() {
 
 function findNetIDFromName(value, firstLastNet, page) {
 
-
   return fetch(`/student/filterBy?column=${firstLastNet}&value=${value}`)
     .then((res) => res.json())
     .then((data) => {
@@ -41,8 +40,8 @@ function findNetIDFromName(value, firstLastNet, page) {
 
       if (data.length > 0) {
         document.getElementById(`add${page}Button`).disabled = false;
-        if (data.length > 3) {
-          select.size = 3; // limit size to 3 if more than 3 entries
+        if (data.length > 4) {
+          select.size = 4; // limit size to 4 if more than 4 entries
         } 
         else {
         select.size = data.length;
@@ -63,19 +62,41 @@ function findNetIDFromName(value, firstLastNet, page) {
 
 }
 
-function addSetNetID(docElementId) {
+function addSetNetID(selectElement, page) {
+    if (!selectElement.value) return;
 
-      const firstNameField = document.getElementById("firstName");
-      const lastNameField = document.getElementById("lastName");
-      const netIDField = document.getElementById("netIDInput");
+    const data = JSON.parse(selectElement.value);
+    findNetIDFromName(data.netID, "netID", page);
 
-      if (docElementId === "netIDInput" && data.length === 1) {
-        firstNameField.value = data[0].firstName;
-        lastNameField.value = data[0].lastName;
-      }
-
-  const selectedOption = document.getElementById("student-select").value;
-  input.value = selectedOption;
+    document.getElementById("firstName").value = data.firstName;
+    document.getElementById("lastName").value = data.lastName;
+    document.getElementById("netIDInput").value = data.netID;
 }
 
+function addEventListeners(page) {
+
+        document.getElementById("netIDInput").addEventListener("input", function () {
+            const netID = this.value.trim();
+            if (netID !== "") {
+                findNetIDFromName(netID, "netID", page);
+                document.getElementById("student-select").hidden = false;
+            }
+        });
+        document.getElementById("firstName").addEventListener("input", function () {
+                  const firstName = this.value.trim();
+                  if (firstName !== "") {
+                findNetIDFromName(firstName, "firstName", page);
+                document.getElementById("student-select").hidden = false;
+            }
+        });
+
+        document.getElementById("lastName").addEventListener("input", function () {
+            const lastName = this.value.trim();
+            if (lastName !== "") {
+                findNetIDFromName(lastName, "lastName", page);
+                document.getElementById("student-select").hidden = false;
+            }
+        });
+
+}
 

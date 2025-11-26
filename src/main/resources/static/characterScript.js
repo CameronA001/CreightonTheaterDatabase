@@ -131,8 +131,6 @@ function clearInput(elementId){
 }
 
 
-
-
 async function addCharacter() {
   const formData = new URLSearchParams();
   formData.append("characterName", document.getElementById("characterName").value);
@@ -156,3 +154,14 @@ async function addCharacter() {
   }
 }
 
+function searchByShowName(showName) {
+  return fetch(`/shows/getShowIDName?showName=${encodeURIComponent(showName)}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const select = document.getElementById("show-select");
+      select.innerHTML = "";
+    
+      data.forEach((character) => {
+        const option = document.createElement("option");
+        
+        option.

@@ -5,10 +5,10 @@
     <title>Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
     <script src="/characterScript.js"></script>
-    <script src = "/script.js"></script>
+    <script src="/script.js"></script>
 </head>
 
-<body class="page-background" onload="findNetIDFromName('', 'netID', 'Character');">
+<body class="page-background" onload="findNetIDFromName('', 'netID', 'Character'); addEventListeners('Character');">
 
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <button onclick="location.href='/characters/loadpage'" class="basicButton"
@@ -18,17 +18,25 @@
 
     <form id="add-character-form">
 
-        <label for="netID" class="addElementLabel">NetID:</label>
-        <input type="text" id="netIDInput" name="netID" class="formInput" required>
+        <div class="input-with-button">
+            <label for="netID" class="addElementLabel">NetID:</label>
+            <input type="text" id="netIDInput" name="netID" class="formInput" required>
+            <button type="button" class="square-button"
+                onclick="clearInput('netIDInput'); clearInput('firstName'); clearInput('lastName'); findNetIDFromName('', 'netID', 'Character');">×</button>
+        </div>
+
 
         <label for="firstName" class="addElementLabel">First Name:</label>
-        <input type = "text" id = "firstName" name = "firstName" class = "formInput"></form>
+        <input type="text" id="firstName" name="firstName" class="formInput">
 
         <label for="lastName" class="addElementLabel">Last Name:</label>
-        <input type = "text" id = "lastName" name = "lastName" class = "formInput"></form>
+        <input type="text" id="lastName" name="lastName" class="formInput">
 
-        <select size = "findNetIDFromName().value" id="student-select" onclick="addSetNetID()"></select>
-        <option value="netID"></option>
+        <div style="text-align: center;">
+            <select size="5" id="student-select" onclick="addSetNetID(this, 'Character')"></select>
+            <option value="netID"></option>
+        </div>
+
 
         <label for="characterName" class="addElementLabel">Character Name:</label>
         <input type="text" id="characterName" name="characterName" class="formInput" required>
@@ -38,43 +46,16 @@
         <input type="text" id="showName" name="showName" class="formInput" required>
         <br><br>
 
+        <div style="text-align: center;">
+            <select size="5" id="show-select"></select>
+            <option value="netID"></option>
+        </div>
 
 
-       
-        <button type="button" onclick="addCharacter()"
-                class="basicButton" id = "addCharacterButton">
+        <button type="button" onclick="addCharacter()" class="basicButton" id="addCharacterButton">
             Add Character
         </button>
 
 
     </form>
-    <script>
-        // NetID input listener (your existing code)
-document.getElementById("netIDInput").addEventListener("input", function () {
-    const netID = this.value.trim();
-    if (netID !== "") {
-        findNetIDFromName(netID, "netID", "Character");
-        document.getElementById("student-select").hidden = false;
-    }
-});
-
-// First Name input listener
-document.getElementById("firstName").addEventListener("input", function () {
-    const firstName = this.value.trim();
-    if (firstName !== "") {
-        findNetIDFromName(firstName, "firstName", "Character");
-        document.getElementById("student-select").hidden = false;
-    }
-});
-
-// Last Name input listener
-document.getElementById("lastName").addEventListener("input", function () {
-    const lastName = this.value.trim();
-    if (lastName !== "") {
-        findNetIDFromName(lastName, "lastName", "Character");
-        document.getElementById("student-select").hidden = false;
-    }
-});
-
-    </script>
 </body>
