@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/actorScript.js"> </script>
+
+</head>
+
+<body class="page-background">
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="location.href='/actors/loadpage'" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">Back to Actor List</button>
+    <h1 style="text-align: center;">EDIT STUDENT PAGE</h1>
+
+    <form id="edit-student-form">
+        <label for="netId" class="addElementLabel">NetID:</label>
+        <input type="text" id="netID" name="netID" required style="align-items:center;" th:value="${student.netID}" class="formInput">
+        <br><br>
+
+        <label for="firstName" class="addElementLabel">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required th:value="${student.firstName}" class="formInput"><br><br>
+        
+        <label for="lastName" class="addElementLabel">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required th:value="${student.lastName}" class="formInput"><br><br>
+
+        <label for="grade" class="addElementLabel">Grade:</label>
+        <input type="text" id="gradeLevel" name="gradeLevel" required th:value="${student.gradeLevel}" class="formInput"><br><br>
+
+        <label for="pronouns" class="addElementLabel">Pronouns:</label>
+        <input type="text" id="pronouns" name="pronouns" th:value="${student.pronouns}" class="formInput"><br><br>
+
+        <label for="specialNotes" class="addElementLabel">Special Notes:</label>
+        <input type="text" id="specialNotes" name="specialNotes" th:value="${student.specialNotes}" class="formInput"><br><br>
+
+        <label for="email" class="addElementLabel">Email:</label>
+        <input type="email" id="email" name="email" th:value="${student.email}" class="formInput"><br><br>
+
+        <label for="allergies" class="addElementLabel">Allergies/Sensitivities:</label>
+        <input type="text" id="allergies" name="allergies_sensitivities"th:value="${student.allergies_sensitivities}" class="formInput"><br><br>
+
+        <button type="button" onclick="editStudent('${student.netID}')" class="basicButton">Edit Student</button>
+    </form>
+    <script>
+
+    </script>
+</body>

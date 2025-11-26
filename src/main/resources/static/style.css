@@ -297,7 +297,7 @@ select option {
 	font-size: 15px;
 }
 
-#student-select {
+.table-select {
 	display: block;
 	margin: 1rem auto;
 	width: 300px;
@@ -312,8 +312,8 @@ select option {
 	cursor: pointer;
 }
 
-#student-select:hover,
-#student-select:focus {
+.table-select:hover,
+.table-select:focus {
 	border-color: #007bff;
 	outline: none;
 	background-color: #e6f0ff;

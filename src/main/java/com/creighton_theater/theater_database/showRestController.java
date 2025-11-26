@@ -1,5 +1,6 @@
 package com.creighton_theater.theater_database;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,14 @@ public class showRestController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @GetMapping("/getShowName")
-    public Map<String, Object> getShowName(@RequestParam String showName) {
-        String sql = "SELECT showID, showName FROM shows WHERE showName LIKE ?";
-        return jdbcTemplate.queryForMap(sql, showName);
+    @GetMapping("/getShowIDName")
+    public List<Map<String, Object>> getShowIDName(@RequestParam String searchBy, @RequestParam String searchValue) {
+        try {
+            String sql = "SELECT showName, yearSemester, showID FROM shows WHERE " + searchBy + " LIKE ?";
+            return jdbcTemplate.queryForList(sql, new Object[] { "%" + searchValue + "%" });
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 
 }

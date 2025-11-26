@@ -9,12 +9,12 @@
 
 </head>
 
-<body onload = " populateFilterDropdown(); loadCharacters();" class ="page-background">
+<body onload = " populateFilterDropdown(); loadCharacters(); processFilter();" class ="page-background">
 
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <h1 style="text-align: center;">CHARACTERS PAGE</h1>
     <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
-    <select id="filter-column" onchange="clearInput('filter-input'); processFilter(); updatePlaceholder();" class="filter-select"></select>
+    <select id="filter-column" onchange="clearInput('filter-input'); processFilter(); updatePlaceholder();" class="filter-select" value="netID,c"></select>
     <button onclick="location.href='/characters/addpage'" style = "float: right;" class = "basicButton">Add Character</button>
 
     <table>

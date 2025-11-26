@@ -79,4 +79,17 @@ public class PageController {
         return "actor/addActors";
     }
 
+    @GetMapping("/actors/editpage")
+    public String editActors(){
+        return "actor/editActor";
+    }
+
+    /*-----------------------------------------
+    CREW PAGES
+    -----------------------------------------*/
+    @GetMapping("/crew/loadpage")
+    public String crewPage() {
+        return "crew/crew";
+    }
+
 }

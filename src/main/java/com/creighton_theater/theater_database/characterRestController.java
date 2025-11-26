@@ -59,12 +59,13 @@ public class characterRestController {
                             FROM characters c
                             JOIN student s ON c.netID = s.netID
                             JOIN shows sh ON c.showID = sh.showID
-                            WHERE """ + page + "." + column + " LIKE ?";
+                            WHERE """ + " " + page + "." + column + "  LIKE ?";
 
             return jdbcTemplate.queryForList(sql, new Object[] { "%" + value + "%" });
+            
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return List.of();
         }
     }
 

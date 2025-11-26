@@ -2,22 +2,20 @@ function loadCharacters() {
   const urlParams = new URLSearchParams(window.location.search);
   const netID = urlParams.get("netID");
 
-    if (netID) {
-    document.getElementById("filter-column").value = "netID,characters";
+  if (netID) {
+    document.getElementById("filter-column").value = "netID,c";
     document.getElementById("filter-input").value = netID;
     processFilter();
-  }
+  } else {
+    fetch(`/characters/getAll`)
+      .then((response) => response.json())
+      .then((data) => {
+        const tableBody = document.getElementById("character-table-body");
+        tableBody.innerHTML = "";
 
-  else{
-  fetch(`/characters/getAll`)
-    .then((response) => response.json())
-    .then((data) => {
-      const tableBody = document.getElementById("character-table-body");
-      tableBody.innerHTML = "";
-
-      data.forEach((character) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>
+        data.forEach((character) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>
                             <select class="netid-select"
                             onchange="handleCharacterDropdown(this.value, '${character.characterName}')" id = "dropdown">
                                 <option value="" selected>
@@ -31,13 +29,11 @@ function loadCharacters() {
                         <td>${character.firstName} ${character.lastName}</td>
                         <td>${character.netID}</td>
                         <td>${character.showID}</td>`;
-        tableBody.appendChild(row);
-      });
-    })
-    .catch((error) => console.error("Error fetching character data:", error));
+          tableBody.appendChild(row);
+        });
+      })
+      .catch((error) => console.error("Error fetching character data:", error));
   }
-    
-
 }
 
 function handleCharacterDropdown(selectedValue, characterName) {
@@ -76,6 +72,7 @@ function processFilter() {
                             </select>
                         </td>
                         <td>${character.showName}</td>
+                        <td>${character.showSemester}</td>
                         <td>${character.firstName} ${character.lastName}</td>
                         <td>${character.netID}</td>
                         <td>${character.showID}</td>`;
@@ -86,13 +83,13 @@ function processFilter() {
 
 const FILTER_DROPDOWN_MAP = {
   character: [
-    { value: "netID,characters", label: "NetID" },
-    { value: "firstName,student", label: "First Name" },
-    { value: "lastName,student", label: "Last Name" },
-    { value: "showID,shows", label: "Show ID" },
-    { value: "characterName,characters", label: "Character Name" },
-    { value: "showName,shows", label: "Show Name" },
-    {value: "yearSemester,shows", label: "Show Semester" }
+    { value: "netID,c", label: "NetID" },
+    { value: "firstName,s", label: "First Name" },
+    { value: "lastName,s", label: "Last Name" },
+    { value: "showID,sh", label: "Show ID" },
+    { value: "characterName,c", label: "Character Name" },
+    { value: "showName,sh", label: "Show Name" },
+    { value: "yearSemester,sh", label: "Show Semester" },
   ],
 };
 
@@ -126,15 +123,17 @@ function getShowIDFromName(showName) {
     });
 }
 
-function clearInput(elementId){
-    document.getElementById(elementId).value = "";
+function clearInput(elementId) {
+  document.getElementById(elementId).value = "";
 }
 
-
 async function addCharacter() {
+  // console.log(document.getElementById("showName").value);
+  // console.log(document.getElementById("netIDInput").value);
+  // console.log(document.getElementById("characterName").value);
   const formData = new URLSearchParams();
-  formData.append("characterName", document.getElementById("characterName").value);
-  formData.append("showName", document.getElementById("showName").value);
+  formData.append("characterName",document.getElementById("characterName").value);
+  formData.append("showID", document.getElementById("showID").value);
   formData.append("netID", document.getElementById("netIDInput").value);
 
   const response = await fetch("/characters/add", {
@@ -154,14 +153,4 @@ async function addCharacter() {
   }
 }
 
-function searchByShowName(showName) {
-  return fetch(`/shows/getShowIDName?showName=${encodeURIComponent(showName)}`)
-    .then((response) => response.json())
-    .then((data) => {
-      const select = document.getElementById("show-select");
-      select.innerHTML = "";
-    
-      data.forEach((character) => {
-        const option = document.createElement("option");
-        
-        option.
+

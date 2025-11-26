@@ -16,11 +16,12 @@ function loadActors() {
         data.forEach((actor) => {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td class="sticky">
+            <td>
             <a href="/student/loadpage?netID=${actor.netID}">
             ${actor.netID}
             </a>
             </td>
+            <td class="sticky">${actor.firstName} ${actor.lastName}</td>
             <td>${actor.yearsActingExperience}</td>
             <td>${actor.skinTone}</td>
             <td>${actor.piercings}</td>
@@ -46,7 +47,6 @@ function loadActors() {
             <td>${actor.outseamToAnkle}</td>
             <td>${actor.outseamToFloor}</td>
             <td>${actor.otherNotes}</td>
-            <td>${actor.photo}</td>
             `;
 
           tableBody.appendChild(row);

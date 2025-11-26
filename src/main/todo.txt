@@ -1,10 +1,8 @@
 -fix editStudent page (netID so that it updates across all tables)
 -Fix delete student so that it fixes all foreign key references as well
 
--Something to view shows by date
 -When you search, you still need the select on netID
 
--On addCharacter page, make verify that a show exists with dropdown select thing before adding
 -Find out how to add photo file
 
 

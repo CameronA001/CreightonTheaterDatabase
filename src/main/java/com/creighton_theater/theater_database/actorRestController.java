@@ -22,7 +22,39 @@ public class actorRestController {
     @GetMapping("/getAll")
     public List<Map<String, Object>> getAllActors() {
         System.out.println("penis");
-        String sql = "SELECT * FROM actor";
+        String sql = """
+        SELECT
+        s.firstName AS firstName,
+        s.lastName AS lastName,
+        a.netID AS netID,
+        a.yearsActingExperience AS yearsActingExperience,
+        a.skinTone AS skinTone,
+        a.piercings AS piercings,
+        a.hairColor AS hairColor,
+        a.previousInjuries AS previousInjuries,
+        a.specialNotes AS specialNotes,
+        a.height AS height,
+        a.ringSize AS ringSize,
+        a.shoeSize AS shoeSize,
+        a.headCirc AS headCirc,
+        a.neckBase AS neckBase,
+        a.chest AS chest,
+        a.waist AS waist,
+        a.highHip AS highHip,
+        a.lowHip AS lowHip,
+        a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
+        a.neckToWaistFront AS neckToWaistFront,
+        a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
+        a.neckToWaistBack AS neckToWaistBack,
+        a.centerBackToWrist AS centerBackToWrist,
+        a.outsleeveToWrist AS outsleeveToWrist,
+        a.outseamBelowKnee AS outseamBelowKnee,
+        a.outseamToAnkle AS outseamToAnkle,
+        a.outseamToFloor AS outseamToFloor,
+        a.otherNotes AS otherNotes
+    FROM actor a
+    JOIN student s ON a.netID = s.netID
+    """;
         return jdbcTemplate.queryForList(sql);
     }
 
@@ -31,7 +63,7 @@ public class actorRestController {
             @RequestParam String value) {
 
         try {
-            String sql = "SELECT * FROM actor WHERE netID LIKE ?";
+            String sql = "SELECT * FROM actor JOIN student ON actor.netID = student.netID WHERE actor.netID LIKE ?";
 
             return jdbcTemplate.queryForList(sql, new Object[] { "%" + value + "%" });
         } catch (Exception e) {
