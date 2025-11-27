@@ -79,12 +79,18 @@ function addEventListeners(page) {
       findNetIDFromName(netID, "netID", page);
       document.getElementById("student-select").hidden = false;
     }
+    else{
+      findNetIDFromName('', 'netID', 'Crew');
+    }
   });
   document.getElementById("firstName").addEventListener("input", function () {
     const firstName = this.value.trim();
     if (firstName !== "") {
       findNetIDFromName(firstName, "firstName", page);
       document.getElementById("student-select").hidden = false;
+    }
+    else{
+      findNetIDFromName('', 'netID', 'Crew');
     }
   });
 
@@ -93,6 +99,9 @@ function addEventListeners(page) {
     if (lastName !== "") {
       findNetIDFromName(lastName, "lastName", page);
       document.getElementById("student-select").hidden = false;
+    }
+    else{
+      findNetIDFromName('', 'netID', 'Crew');
     }
   });
 }

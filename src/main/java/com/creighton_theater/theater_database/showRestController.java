@@ -16,6 +16,21 @@ public class showRestController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @GetMapping("/getAll")
+        public List<Map<String, Object>> getAllShows() {
+        String sql = """
+                        SELECT
+                    s.showID as showID,
+                    s.showName as showName,
+                    s.yearSemester as yearSemester,
+                    s.Director as director,
+                    s.genre as genre,
+                    s.playWright as playWright
+                FROM shows s
+                    """;
+        return jdbcTemplate.queryForList(sql);
+    }
+
     @GetMapping("/getShowIDName")
     public List<Map<String, Object>> getShowIDName(@RequestParam String searchBy, @RequestParam String searchValue) {
         try {
@@ -25,5 +40,4 @@ public class showRestController {
             return List.of();
         }
     }
-
 }

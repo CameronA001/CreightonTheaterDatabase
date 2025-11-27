@@ -277,9 +277,33 @@ input.formInput::placeholder {
 }
 
 .styled-table {
-	border-collapse: collapse;
-	min-width: 1800px;
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 100px;
+  background-color: #fff;
+  font-size: 20px;
 }
+
+.styled-table th,
+.styled-table td {
+  border: 1px solid black;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.styled-table thead tr {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.styled-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
 
 .sticky {
 	position: sticky;
@@ -351,6 +375,13 @@ select option {
 	background-color: #1d6eff;
 	color: white;
 	transform: scale(1.05);
+}
+
+
+.checkBox {
+    width: 18px;
+    height: 18px;
+    accent-color: #005ca9;     /* Modern browser color for checkmark */
 }
 
 

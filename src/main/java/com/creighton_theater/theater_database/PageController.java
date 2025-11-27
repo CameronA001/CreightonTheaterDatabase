@@ -92,4 +92,17 @@ public class PageController {
         return "crew/crew";
     }
 
+    @GetMapping("/crew/add")
+    public String addCrewPage(){
+        return"crew/addCrew";
+    }
+
+    /*-----------------------------------------
+    SHOW PAGES
+    -----------------------------------------*/
+    @GetMapping("/show/loadpage")
+    public String showPage(){
+        return "shows/shows";
+    }
+
 }

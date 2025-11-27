@@ -10,25 +10,23 @@
 <body onload="loadCrew();" class="page-background">
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <h1 style="text-align: center;">Crew Page</h1>
-    <button onclick="location.href='/crew/add'" class="basicButton" style = "float: right;">Add New Actor</button>
-    <label for ="filter-input" style="margin-right: 10px;">Filter By Net ID:</label>
+    <button onclick="location.href='/crew/add'" class="basicButton" style = "float: right;">Add New Crew</button>
+    <label for ="filter-input" style="margin-right: 10px;">Filter By NetID:</label>
     <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
 
     <div class="wide-table-container">
     <table class="styled-table" style="border-collapse:collapse">
         <thead>
             <tr>
-            <th class="sticky">CrewID</th>
-            <th>crewID</th>
-            <th>wigTrained</th>
-            <th>makeupTrained</th>
-            <th>musicReading</th>
-            <th>lighting</th>
-            <th>sound</th>
-            <th>studentNonStudent</th>
-            <th>contractOrHired</th>
-            <th>specialty</th>
-            <th>notes</th>
+            <th>NetID</th>
+            <th class = "sticky">Name</th>
+            <th>Wig Trained</th>
+            <th>Makeup Trained</th>
+            <th>Music Reading</th>
+            <th>Lighting</th>
+            <th>Sound</th>
+            <th>Specialty</th>
+            <th>Notes</th>
 
 
             </tr>

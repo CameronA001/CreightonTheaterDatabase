@@ -3,7 +3,6 @@ function loadActors() {
   const netID = urlParams.get("netID");
 
   if (netID) {
-    console.log("true");
     document.getElementById("filter-input").value = netID;
     processFilter();
   } else {

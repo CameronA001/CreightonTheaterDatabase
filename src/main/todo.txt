@@ -2,9 +2,14 @@
 -Fix delete student so that it fixes all foreign key references as well
 
 -When you search, you still need the select on netID
-
+-edit actor
+-delete actor
+-edit crew
+-delete crew
+-delete character
+-Actors and crew and character page for shows
 -Find out how to add photo file
-
+-figure out non-student for crew
 
 - dressing list for character
         -clothing, accessories, laundry instructions

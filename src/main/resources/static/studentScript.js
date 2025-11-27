@@ -96,8 +96,8 @@ function handleNetIdDropdown(selectedValue, netID) {
   if (selectedValue === "shows") {
     window.location.href = `/student/${netID}/shows`;
   }
-  if (selectedValue === "crewActor") {
-    window.location.href = `/actors/loadpage?netID=${netID}`;
+  if (selectedValue === "crew") {
+    window.location.href = `/crew/loadpage?netID=${netID}`;
   }
   if (selectedValue === "delete") {
     deleteStudent(netID);
