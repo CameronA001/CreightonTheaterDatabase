@@ -6,8 +6,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,25 +36,30 @@ public class studentRestController {
     }
 
     @PostMapping("{netID}/edit")
-    public String editStudent(String netID, String firstName, String lastName, String gradeLevel, String pronouns,
-            String specialNotes, String email, String allergies) {
-        String sql = "UPDATE student SET firstName = ?, lastName = ?, gradeLevel = ?, pronouns = ?, specialNotes = ?, email = ?, allergies_sensitivities = ? WHERE netID = ?";
-        jdbcTemplate.update(sql, firstName, lastName, gradeLevel, pronouns, specialNotes, email, allergies, netID);
-        return "OK";
-    }
+    public String editStudent(
+            @PathVariable String netID, // old netID from URL
+            @RequestParam String newNetID,
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @RequestParam String gradeLevel,
+            @RequestParam String pronouns,
+            @RequestParam String specialNotes,
+            @RequestParam String email,
+            @RequestParam String allergies) {
 
-    @PostMapping("/delete")
-    public String deleteStudent(String netID) {
-        String sql = "DELETE FROM student WHERE netID = ?";
-        jdbcTemplate.update(sql, netID);
-        return "OK";
-    }
+        String sql = """
+                UPDATE student
+                SET netID = ?, firstName = ?, lastName = ?, gradeLevel = ?, pronouns = ?,
+                    specialNotes = ?, email = ?, allergies_sensitivities = ?
+                WHERE netID = ?
+                """;
 
-    @PostMapping("/add")
-    public String addStudent(String netID, String firstName, String lastName, String gradeLevel, String pronouns,
-            String specialNotes, String email, String allergies) {
-        String sql = "INSERT INTO student (netID, firstName, lastName, gradeLevel, pronouns, specialNotes, email, allergies_sensitivities) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, netID, firstName, lastName, gradeLevel, pronouns, specialNotes, email, allergies);
+        jdbcTemplate.update(sql,
+                newNetID, firstName, lastName, gradeLevel, pronouns,
+                specialNotes, email, allergies,
+                netID // old
+        );
+
         return "OK";
     }
 
