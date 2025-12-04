@@ -1,3 +1,6 @@
+// ============================================
+// crewRestController.java
+// ============================================
 package com.creighton_theater.theater_database;
 
 import java.util.List;
@@ -22,15 +25,15 @@ public class crewRestController {
 
     @GetMapping("/getAll")
     public List<Map<String, Object>> getAllCrew() {
-        System.out.println("penis2");
+        // Changed: PostgreSQL uses CASE WHEN with TRUE/FALSE instead of 1/0
         String sql = """
                         SELECT
                     c.crewID AS crewID,
                     c.firstName AS firstName,
                     c.lastName AS lastName,
-                    CASE WHEN c.wigTrained = 1 THEN 'Yes' ELSE 'No' END AS wigTrained,
-                    CASE WHEN c.makeupTrained = 1 THEN 'Yes' ELSE 'No' END AS makeupTrained,
-                    CASE WHEN c.musicReading = 1 THEN 'Yes' ELSE 'No' END AS musicReading,
+                    CASE WHEN c.wigTrained = TRUE THEN 'Yes' ELSE 'No' END AS wigTrained,
+                    CASE WHEN c.makeupTrained = TRUE THEN 'Yes' ELSE 'No' END AS makeupTrained,
+                    CASE WHEN c.musicReading = TRUE THEN 'Yes' ELSE 'No' END AS musicReading,
                     c.lighting AS lighting,
                     c.sound AS sound,
                     c.specialty AS specialty,
@@ -41,12 +44,9 @@ public class crewRestController {
     }
 
     @GetMapping("/filterBy")
-    public List<Map<String, Object>> filterBy(
-            @RequestParam String value) {
-
+    public List<Map<String, Object>> filterBy(@RequestParam String value) {
         try {
             String sql = "SELECT * FROM crew WHERE crew.crewID LIKE ?";
-
             return jdbcTemplate.queryForList(sql, new Object[] { "%" + value + "%" });
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,13 +71,14 @@ public class crewRestController {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
+            // Convert Integer (0/1) to Boolean for PostgreSQL
             jdbcTemplate.update(sql,
                     crewID,
                     firstName,
                     lastName,
-                    wigTrained != null ? wigTrained : 0,
-                    makeupTrained != null ? makeupTrained : 0,
-                    musicReading != null ? musicReading : 0,
+                    wigTrained != null && wigTrained == 1, // Convert to boolean
+                    makeupTrained != null && makeupTrained == 1, // Convert to boolean
+                    musicReading != null && musicReading == 1, // Convert to boolean
                     lighting,
                     sound,
                     specialty,
@@ -88,5 +89,4 @@ public class crewRestController {
                     .body("Error adding crew member: " + e.getMessage());
         }
     }
-
 }

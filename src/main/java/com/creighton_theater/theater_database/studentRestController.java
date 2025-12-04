@@ -18,6 +18,8 @@ public class studentRestController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    // TODO: Add student function
+
     // retrieves all students from database
     @GetMapping("/getAll")
     public List<Map<String, Object>> getAllStudents() {

@@ -1,3 +1,7 @@
+
+// ============================================
+// showRestController.java
+// ============================================
 package com.creighton_theater.theater_database;
 
 import java.util.List;
@@ -41,19 +45,20 @@ public class showRestController {
         }
     }
 
-    // balls
     @GetMapping("/getCrew")
     public List<Map<String, Object>> getShowCrew(@RequestParam String showID) {
         try {
+            // FIXED: Removed multiple statements, removed INSERT, fixed string quotes
             String sql = """
-                    SELECT s.showName, s.yearSemester, st.firstName, st.lastName ,cs.roles, cs.crewID
+                    SELECT s.showName, s.yearSemester, st.firstName, st.lastName, cs.roles, cs.crewID
                     FROM crew_in_show cs
                     JOIN shows s ON cs.showID = s.showID
                     JOIN student st ON st.netID = cs.crewID
                     WHERE s.showID = ?
-                            """;
+                    """;
             return jdbcTemplate.queryForList(sql, showID);
         } catch (Exception e) {
+            e.printStackTrace();
             return List.of();
         }
     }

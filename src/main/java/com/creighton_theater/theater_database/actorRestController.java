@@ -1,3 +1,6 @@
+// ============================================
+// actorRestController.java
+// ============================================
 package com.creighton_theater.theater_database;
 
 import java.util.List;
@@ -21,7 +24,6 @@ public class actorRestController {
 
     @GetMapping("/getAll")
     public List<Map<String, Object>> getAllActors() {
-        System.out.println("penis");
         String sql = """
                     SELECT
                     s.firstName AS firstName,
@@ -59,12 +61,9 @@ public class actorRestController {
     }
 
     @GetMapping("/filterBy")
-    public List<Map<String, Object>> filterBy(
-            @RequestParam String value) {
-
+    public List<Map<String, Object>> filterBy(@RequestParam String value) {
         try {
             String sql = "SELECT * FROM actor JOIN student ON actor.netID = student.netID WHERE actor.netID LIKE ?";
-
             return jdbcTemplate.queryForList(sql, new Object[] { "%" + value + "%" });
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,7 +108,7 @@ public class actorRestController {
                         neckToWaistBack, centerBackToWrist, outsleeveToWrist,
                         outseamBelowKnee, outseamToAnkle, outseamToFloor,
                         otherNotes
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try {
@@ -178,5 +177,4 @@ public class actorRestController {
 
         return "OK";
     }
-
 }
