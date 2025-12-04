@@ -45,7 +45,7 @@ public class studentRestController {
             @RequestParam String pronouns,
             @RequestParam String specialNotes,
             @RequestParam String email,
-            @RequestParam String allergies) {
+            @RequestParam String allergies_sensitivities) {
 
         String sql = """
                 UPDATE student
@@ -56,7 +56,7 @@ public class studentRestController {
 
         jdbcTemplate.update(sql,
                 newNetID, firstName, lastName, gradeLevel, pronouns,
-                specialNotes, email, allergies,
+                specialNotes, email, allergies_sensitivities,
                 netID // old
         );
 

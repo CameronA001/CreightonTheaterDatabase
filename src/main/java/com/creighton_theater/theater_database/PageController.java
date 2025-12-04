@@ -22,12 +22,15 @@ public class PageController {
         return "index";
     }
 
+    @GetMapping("/help")
+    public String helpPage() {
+        return "help";
+    }
+
     @GetMapping("/student/loadpage")
     public String studentPage() {
         return "student/students";
     }
-
-    
 
     @GetMapping("/addStudent")
     public String addStudentPage() {
@@ -50,7 +53,6 @@ public class PageController {
         model.addAttribute("roles", character);
         return "characters/character";
     }
-
 
     /*-----------------------------------------
     CHARACTER PAGES
@@ -79,8 +81,44 @@ public class PageController {
         return "actor/addActors";
     }
 
-    @GetMapping("/actors/editpage")
-    public String editActors(){
+    @GetMapping("/actor/editPage")
+    public String populateEditActorPage(@RequestParam("netID") String netID, Model model) {
+        String sql = """
+                    SELECT
+                    s.firstName AS firstName,
+                    s.lastName AS lastName,
+                    a.netID AS netID,
+                    a.yearsActingExperience AS yearsActingExperience,
+                    a.skinTone AS skinTone,
+                    a.piercings AS piercings,
+                    a.hairColor AS hairColor,
+                    a.previousInjuries AS previousInjuries,
+                    a.specialNotes AS specialNotes,
+                    a.height AS height,
+                    a.ringSize AS ringSize,
+                    a.shoeSize AS shoeSize,
+                    a.headCirc AS headCirc,
+                    a.neckBase AS neckBase,
+                    a.chest AS chest,
+                    a.waist AS waist,
+                    a.highHip AS highHip,
+                    a.lowHip AS lowHip,
+                    a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
+                    a.neckToWaistFront AS neckToWaistFront,
+                    a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
+                    a.neckToWaistBack AS neckToWaistBack,
+                    a.centerBackToWrist AS centerBackToWrist,
+                    a.outsleeveToWrist AS outsleeveToWrist,
+                    a.outseamBelowKnee AS outseamBelowKnee,
+                    a.outseamToAnkle AS outseamToAnkle,
+                    a.outseamToFloor AS outseamToFloor,
+                    a.otherNotes AS otherNotes
+                FROM actor a
+                JOIN student s ON a.netID = s.netID
+                WHERE a.netID = ?
+                """;
+        Map<String, Object> actor = jdbcTemplate.queryForMap(sql, netID);
+        model.addAttribute("actor", actor);
         return "actor/editActor";
     }
 
@@ -93,15 +131,15 @@ public class PageController {
     }
 
     @GetMapping("/crew/add")
-    public String addCrewPage(){
-        return"crew/addCrew";
+    public String addCrewPage() {
+        return "crew/addCrew";
     }
 
     /*-----------------------------------------
     SHOW PAGES
     -----------------------------------------*/
     @GetMapping("/show/loadpage")
-    public String showPage(){
+    public String showPage() {
         return "shows/shows";
     }
 

@@ -16,9 +16,10 @@ function loadActors() {
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>
-            <a href="/student/loadpage?netID=${actor.netID}">
-            ${actor.netID}
-            </a>
+              <select class="netid-select"
+              onchange="handleNetIDDropdownActor(this.value, '${actor.netID}')">
+                <option value = "" selected>${actor.netID}</option>
+                <option value = "edit">Edit Actor</option>
             </td>
             <td class="sticky">${actor.firstName} ${actor.lastName}</td>
             <td>${actor.yearsActingExperience}</td>
@@ -97,7 +98,6 @@ function processFilter() {
             <td>${actor.outseamToAnkle}</td>
             <td>${actor.outseamToFloor}</td>
             <td>${actor.otherNotes}</td>
-            <td>${actor.photo}</td>
             `;
         tableBody.appendChild(row);
       });
@@ -105,55 +105,54 @@ function processFilter() {
 }
 
 function appendIfNotEmpty(formData, key, elementId) {
-    const val = document.getElementById(elementId).value;
-    if (val !== "") formData.append(key, val);
+  const val = document.getElementById(elementId).value;
+  if (val !== "") formData.append(key, val);
 }
 
 async function addActor() {
-    const formData = new URLSearchParams();
+  const formData = new URLSearchParams();
 
-    appendIfNotEmpty(formData, "netID", "netIDInput");
-    appendIfNotEmpty(formData, "skinTone", "skinTone");
-    appendIfNotEmpty(formData, "piercings", "piercings");
-    appendIfNotEmpty(formData, "hairColor", "hairColor");
-    appendIfNotEmpty(formData, "previousInjuries", "previousInjuries");
-    appendIfNotEmpty(formData, "specialNotes", "specialNotes");
-    appendIfNotEmpty(formData, "height", "height");
-    appendIfNotEmpty(formData, "ringSize", "ringSize");
-    appendIfNotEmpty(formData, "shoeSize", "shoeSize");
-    appendIfNotEmpty(formData, "headCirc", "headCirc");
-    appendIfNotEmpty(formData, "neckBase", "neckBase");
-    appendIfNotEmpty(formData, "chest", "chest");
-    appendIfNotEmpty(formData, "waist", "waist");
-    appendIfNotEmpty(formData, "highHip", "highHip");
-    appendIfNotEmpty(formData, "lowHip", "lowHip");
-    appendIfNotEmpty(formData, "armseyeToArmseyeFront", "armseyeToArmseyeFront");
-    appendIfNotEmpty(formData, "neckToWaistFront", "neckToWaistFront");
-    appendIfNotEmpty(formData, "armseyeToArmseyeBack", "armseyeToArmseyeBack");
-    appendIfNotEmpty(formData, "neckToWaistBack", "neckToWaistBack");
-    appendIfNotEmpty(formData, "centerBackToWrist", "centerBackToWrist");
-    appendIfNotEmpty(formData, "outsleeveToWrist", "outsleeveToWrist");
-    appendIfNotEmpty(formData, "outseamBelowKnee", "outseamBelowKnee");
-    appendIfNotEmpty(formData, "outseamToAnkle", "outseamToAnkle");
-    appendIfNotEmpty(formData, "outseamToFloor", "outseamToFloor");
-    appendIfNotEmpty(formData, "otherNotes", "otherNotes");
+  appendIfNotEmpty(formData, "netID", "netIDInput");
+  appendIfNotEmpty(formData, "skinTone", "skinTone");
+  appendIfNotEmpty(formData, "piercings", "piercings");
+  appendIfNotEmpty(formData, "hairColor", "hairColor");
+  appendIfNotEmpty(formData, "previousInjuries", "previousInjuries");
+  appendIfNotEmpty(formData, "specialNotes", "specialNotes");
+  appendIfNotEmpty(formData, "height", "height");
+  appendIfNotEmpty(formData, "ringSize", "ringSize");
+  appendIfNotEmpty(formData, "shoeSize", "shoeSize");
+  appendIfNotEmpty(formData, "headCirc", "headCirc");
+  appendIfNotEmpty(formData, "neckBase", "neckBase");
+  appendIfNotEmpty(formData, "chest", "chest");
+  appendIfNotEmpty(formData, "waist", "waist");
+  appendIfNotEmpty(formData, "highHip", "highHip");
+  appendIfNotEmpty(formData, "lowHip", "lowHip");
+  appendIfNotEmpty(formData, "armseyeToArmseyeFront", "armseyeToArmseyeFront");
+  appendIfNotEmpty(formData, "neckToWaistFront", "neckToWaistFront");
+  appendIfNotEmpty(formData, "armseyeToArmseyeBack", "armseyeToArmseyeBack");
+  appendIfNotEmpty(formData, "neckToWaistBack", "neckToWaistBack");
+  appendIfNotEmpty(formData, "centerBackToWrist", "centerBackToWrist");
+  appendIfNotEmpty(formData, "outsleeveToWrist", "outsleeveToWrist");
+  appendIfNotEmpty(formData, "outseamBelowKnee", "outseamBelowKnee");
+  appendIfNotEmpty(formData, "outseamToAnkle", "outseamToAnkle");
+  appendIfNotEmpty(formData, "outseamToFloor", "outseamToFloor");
+  appendIfNotEmpty(formData, "otherNotes", "otherNotes");
 
   const response = await fetch("/actors/add", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: formData.toString(),
-});
+  });
 
-const text = await response.text();
+  const text = await response.text();
 
-if (response.ok) {
+  if (response.ok) {
     alert(text); // "Actor added successfully"
     document.getElementById("add-actor-form").reset();
     window.location.href = "/actors/loadpage";
-} else {
+  } else {
     alert("Error adding actor: " + text); // now you’ll see the actual error
-}
-
+  }
 
   if (response.ok) {
     alert("Actor added successfully!");
@@ -164,4 +163,71 @@ if (response.ok) {
   }
 }
 
+async function editActor(netID) {
+  const formData = new URLSearchParams();
 
+  // Integer field
+  const years = document.getElementById("yearsActingExperience").value.trim();
+  formData.append(
+    "yearsActingExperience",
+    years === "" ? null : parseInt(years)
+  );
+
+  // String fields
+  formData.append("skinTone", document.getElementById("skinTone").value);
+  formData.append("piercings", document.getElementById("piercings").value);
+  formData.append("hairColor", document.getElementById("hairColor").value);
+  formData.append(
+    "previousInjuries",
+    document.getElementById("previousInjuries").value
+  );
+  formData.append(
+    "specialNotes",
+    document.getElementById("specialNotes").value
+  );
+  formData.append("height", document.getElementById("height").value);
+  formData.append("ringSize", document.getElementById("ringSize").value);
+  formData.append("shoeSize", document.getElementById("shoeSize").value);
+  formData.append("headCirc", headCirc);
+  console.log(typeof headCirc + "balls");
+  formData.append("neckBase", neckBase);
+  formData.append("chest", chest);
+  formData.append("waist", waist);
+  formData.append("highHip", highHip);
+  formData.append("lowHip", lowHip);
+  formData.append("armseyeToArmseyeFront", armseyeToArmseyeFront);
+  formData.append("neckToWaistFront", neckToWaistFront);
+  formData.append("armseyeToArmseyeBack", armseyeToArmseyeBack);
+  formData.append("neckToWaistBack", neckToWaistBack);
+  formData.append("centerBackToWrist", centerBackToWrist);
+  formData.append("outsleeveToWrist", outsleeveToWrist);
+  formData.append("outseamBelowKnee", outseamBelowKnee);
+  formData.append("outseamToAnkle", outseamToAnkle);
+  formData.append("outseamToFloor", outseamToFloor);
+  formData.append("otherNotes", document.getElementById("otherNotes").value);
+
+  const response = await fetch(
+    `/actors/edit?netID=${encodeURIComponent(netID)}`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (response.ok) {
+    alert("Actor edited successfully!");
+    window.location.href = "/actors/loadpage";
+  } else {
+    const text = await response.text();
+    alert("Error editing actor: " + text);
+  }
+}
+
+function handleNetIDDropdownActor(selectedValue, netID) {
+  if (!selectedValue) {
+    return;
+  }
+  if (selectedValue === "edit") {
+    window.location.href = `/actor/editPage?netID=${netID}`;
+  }
+}

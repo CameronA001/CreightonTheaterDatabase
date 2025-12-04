@@ -122,7 +122,10 @@ async function editStudent(netID) {
     document.getElementById("specialNotes").value
   );
   formData.append("email", document.getElementById("email").value);
-  formData.append("allergies", document.getElementById("allergies").value);
+  formData.append(
+    "allergies_sensitivities",
+    document.getElementById("allergies").value
+  );
 
   const response = await fetch(`/student/${netID}/edit`, {
     method: "POST",
@@ -166,7 +169,6 @@ function populateFilterDropdown() {
     select.appendChild(optionElement);
   });
 }
-
 async function addStudent() {
   const formData = new URLSearchParams();
   formData.append("netID", document.getElementById("netID").value);
@@ -174,7 +176,10 @@ async function addStudent() {
   formData.append("lastName", document.getElementById("lastName").value);
   formData.append("gradeLevel", document.getElementById("gradeLevel").value);
   formData.append("pronouns", document.getElementById("pronouns").value);
-  formData.append("specialNotes",document.getElementById("specialNotes").value);
+  formData.append(
+    "specialNotes",
+    document.getElementById("specialNotes").value
+  );
   formData.append("email", document.getElementById("email").value);
   formData.append("allergies", document.getElementById("allergies").value);
 
