@@ -1,28 +1,39 @@
+<!-- ============================================================================ -->
+<!-- addActors.html - Add new actor form -->
+<!-- ============================================================================ -->
 <!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Creighton Theater Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Actor - Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
-        <script src="/actorScript.js"></script>
-    <script src = "/script.js"></script>  
+    <script src="/common.js"></script>
+    <script src="/actorScript.js"></script>
 </head>
 
-<body class="page-background" onload="findNetIDFromName('', 'netID', 'Actor'); addEventListeners('Actor');">
-
+<body class="page-background">
+    <!-- Navigation -->
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <button onclick="location.href='/actors/loadpage'" class="basicButton"
-        style="font-size: smaller; margin-bottom: var(--space-md);">Back to Actor List</button>
+        style="font-size: smaller; margin-bottom: var(--space-md);">
+        Back to Actor List
+    </button>
 
-    <h1 style="text-align: center;">ADD ACTOR PAGE</h1>
+    <h1>ADD ACTOR PAGE</h1>
 
     <form id="add-actor-form">
+        <!-- Student Selection with Autocomplete -->
         <div class="input-with-button">
-            <label for="netID" class="addElementLabel">NetID:</label>
-            <input type="text" id="netIDInput" name="netID" class="formInput" required>
+            <label for="netIDInput" class="addElementLabel">NetID:</label>
+            <input type="text" id="netIDInput" name="netID" class="formInput" placeholder="Search for student" required>
             <button type="button" class="square-button"
-                onclick="clearInput('netIDInput'); clearInput('firstName'); clearInput('lastName'); findNetIDFromName('', 'netID', 'Character');">×</button>
+                onclick="clearInput('netIDInput'); clearInput('firstName'); clearInput('lastName'); findStudents('', 'netID', 'student-select', 'addActorButton');"
+                title="Clear search">
+                ×
+            </button>
         </div>
-
 
         <label for="firstName" class="addElementLabel">First Name:</label>
         <input type="text" id="firstName" name="firstName" class="formInput">
@@ -30,15 +41,19 @@
         <label for="lastName" class="addElementLabel">Last Name:</label>
         <input type="text" id="lastName" name="lastName" class="formInput">
 
+        <!-- Student autocomplete dropdown -->
         <div style="text-align: center;">
-            <select size="5" id="student-select" onclick="addSetNetID(this, 'Actor')"></select>
-            <option value="netID"></option>
+            <select size="5" id="student-select" onclick="selectStudent(this, 'student-select', 'addActorButton')"
+                class="table-select">
+                <option value=""></option>
+            </select>
         </div>
 
-
+        <!-- Actor-specific fields -->
         <label for="yearsActingExperience" class="addElementLabel">Years Acting Experience:</label>
-        <input type="text" id="yearsActingExperience" name="yearsActingExperience" class="formInput">
+        <input type="number" id="yearsActingExperience" name="yearsActingExperience" class="formInput">
 
+        <!-- Physical Characteristics -->
         <label for="skinTone" class="addElementLabel">Skin Tone:</label>
         <input type="text" id="skinTone" name="skinTone" class="formInput">
 
@@ -54,8 +69,9 @@
         <label for="specialNotes" class="addElementLabel">Special Notes:</label>
         <input type="text" id="specialNotes" name="specialNotes" class="formInput">
 
+        <!-- Measurements -->
         <label for="height" class="addElementLabel">Height:</label>
-        <input type="text" id="height" name="height" class="formInput">
+        <input type="text" id="height" name="height" class="formInput" placeholder="e.g., 5'8&quot;">
 
         <label for="ringSize" class="addElementLabel">Ring Size:</label>
         <input type="text" id="ringSize" name="ringSize" class="formInput">
@@ -63,60 +79,66 @@
         <label for="shoeSize" class="addElementLabel">Shoe Size:</label>
         <input type="text" id="shoeSize" name="shoeSize" class="formInput">
 
-        <label for="headCirc" class="addElementLabel">Head Circumference:</label>
+        <label for="headCirc" class="addElementLabel">Head Circumference (inches):</label>
         <input type="text" id="headCirc" name="headCirc" class="formInput">
 
-        <label for="neckBase" class="addElementLabel">Neck Base:</label>
+        <label for="neckBase" class="addElementLabel">Neck Base (inches):</label>
         <input type="text" id="neckBase" name="neckBase" class="formInput">
 
-        <label for="chest" class="addElementLabel">Chest:</label>
+        <label for="chest" class="addElementLabel">Chest (inches):</label>
         <input type="text" id="chest" name="chest" class="formInput">
 
-        <label for="waist" class="addElementLabel">Waist:</label>
+        <label for="waist" class="addElementLabel">Waist (inches):</label>
         <input type="text" id="waist" name="waist" class="formInput">
 
-        <label for="highHip" class="addElementLabel">High Hip:</label>
+        <label for="highHip" class="addElementLabel">High Hip (inches):</label>
         <input type="text" id="highHip" name="highHip" class="formInput">
 
-        <label for="lowHip" class="addElementLabel">Low Hip:</label>
+        <label for="lowHip" class="addElementLabel">Low Hip (inches):</label>
         <input type="text" id="lowHip" name="lowHip" class="formInput">
 
-        <label for="armseyeToArmseyeFront" class="addElementLabel">Armseye to Armseye (Front):</label>
+        <label for="armseyeToArmseyeFront" class="addElementLabel">Armseye to Armseye (Front, inches):</label>
         <input type="text" id="armseyeToArmseyeFront" name="armseyeToArmseyeFront" class="formInput">
 
-        <label for="neckToWaistFront" class="addElementLabel">Neck to Waist (Front):</label>
+        <label for="neckToWaistFront" class="addElementLabel">Neck to Waist (Front, inches):</label>
         <input type="text" id="neckToWaistFront" name="neckToWaistFront" class="formInput">
 
-        <label for="armseyeToArmseyeBack" class="addElementLabel">Armseye to Armseye (Back):</label>
+        <label for="armseyeToArmseyeBack" class="addElementLabel">Armseye to Armseye (Back, inches):</label>
         <input type="text" id="armseyeToArmseyeBack" name="armseyeToArmseyeBack" class="formInput">
 
-        <label for="neckToWaistBack" class="addElementLabel">Neck to Waist (Back):</label>
+        <label for="neckToWaistBack" class="addElementLabel">Neck to Waist (Back, inches):</label>
         <input type="text" id="neckToWaistBack" name="neckToWaistBack" class="formInput">
 
-        <label for="centerBackToWrist" class="addElementLabel">Center Back to Wrist:</label>
+        <label for="centerBackToWrist" class="addElementLabel">Center Back to Wrist (inches):</label>
         <input type="text" id="centerBackToWrist" name="centerBackToWrist" class="formInput">
 
-        <label for="outsleeveToWrist" class="addElementLabel">Outsleeve to Wrist:</label>
+        <label for="outsleeveToWrist" class="addElementLabel">Outsleeve to Wrist (inches):</label>
         <input type="text" id="outsleeveToWrist" name="outsleeveToWrist" class="formInput">
 
-        <label for="outseamBelowKnee" class="addElementLabel">Outseam Below Knee:</label>
+        <label for="outseamBelowKnee" class="addElementLabel">Outseam Below Knee (inches):</label>
         <input type="text" id="outseamBelowKnee" name="outseamBelowKnee" class="formInput">
 
-        <label for="outseamToAnkle" class="addElementLabel">Outseam to Ankle:</label>
+        <label for="outseamToAnkle" class="addElementLabel">Outseam to Ankle (inches):</label>
         <input type="text" id="outseamToAnkle" name="outseamToAnkle" class="formInput">
 
-        <label for="outseamToFloor" class="addElementLabel">Outseam to Floor:</label>
+        <label for="outseamToFloor" class="addElementLabel">Outseam to Floor (inches):</label>
         <input type="text" id="outseamToFloor" name="outseamToFloor" class="formInput">
 
         <label for="otherNotes" class="addElementLabel">Other Notes:</label>
         <input type="text" id="otherNotes" name="otherNotes" class="formInput">
 
-
-        <button type="button" onclick="addActor()" class="basicButton" id = "addActorButton">
+        <!-- Submit Button -->
+        <button type="button" onclick="addActor()" class="basicButton" id="addActorButton">
             Add Actor
         </button>
-
     </form>
 
-
+    <script>
+        // Initialize autocomplete when page loads
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeAddActorPage();
+        });
+    </script>
 </body>
+
+</html>

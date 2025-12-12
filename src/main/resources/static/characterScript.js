@@ -1,156 +1,202 @@
+/**
+ * characterScript.js - Character-specific functionality
+ * Handles character listing, adding, editing, and filtering
+ * Requires: common.js
+ */
+
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+
+// Filter dropdown options for character page
+// Format: "columnName,tableAlias" (c=characters, s=student, sh=shows)
+const CHARACTER_FILTER_OPTIONS = [
+  { value: "netID,c", label: "NetID" },
+  { value: "firstName,s", label: "First Name" },
+  { value: "lastName,s", label: "Last Name" },
+  { value: "showID,sh", label: "Show ID" },
+  { value: "characterName,c", label: "Character Name" },
+  { value: "showName,sh", label: "Show Name" },
+  { value: "yearSemester,sh", label: "Show Semester" },
+];
+
+// ============================================================================
+// TABLE RENDERING
+// ============================================================================
+
+/**
+ * Builds HTML for a single character table row
+ * @param {Object} character - Character data object
+ * @returns {string} HTML string for the table row
+ */
+function buildCharacterRow(character) {
+  return `
+    <td>
+      <select class="netid-select" onchange="handleCharacterDropdown(this.value, '${
+        character.characterName
+      }')">
+        <option value="" selected>${character.characterName}</option>
+        <option value="delete">Delete Character</option>
+      </select>
+    </td>
+    <td>${character.showName || ""}</td>
+    <td>${character.showSemester || ""}</td>
+    <td>${character.firstName} ${character.lastName}</td>
+    <td>${character.netID}</td>
+    <td>${character.showID}</td>
+  `;
+}
+
+// ============================================================================
+// DATA LOADING
+// ============================================================================
+
+/**
+ * Loads all characters or filters by netID from URL parameter
+ */
 function loadCharacters() {
   const urlParams = new URLSearchParams(window.location.search);
   const netID = urlParams.get("netID");
 
   if (netID) {
-    document.getElementById("filter-column").value = "netID,c";
-    document.getElementById("filter-input").value = netID;
+    // If netID parameter exists, set up filter and process
+    const filterColumn = document.getElementById("filter-column");
+    const filterInput = document.getElementById("filter-input");
+
+    if (filterColumn) filterColumn.value = "netID,c";
+    if (filterInput) filterInput.value = netID;
+
     processFilter();
   } else {
-    fetch(`/characters/getAll`)
-      .then((response) => response.json())
-      .then((data) => {
-        const tableBody = document.getElementById("character-table-body");
-        tableBody.innerHTML = "";
-
-        data.forEach((character) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `<td>
-                            <select class="netid-select"
-                            onchange="handleCharacterDropdown(this.value, '${character.characterName}')" id = "dropdown">
-                                <option value="" selected>
-                                    ${character.characterName}
-                                </option>
-                                <option value="delete">Delete Character</option>
-                            </select>
-                        </td>
-                        <td>${character.showName}</td>
-                        <td>${character.showSemester}</td>
-                        <td>${character.firstName} ${character.lastName}</td>
-                        <td>${character.netID}</td>
-                        <td>${character.showID}</td>`;
-          tableBody.appendChild(row);
-        });
-      })
-      .catch((error) => console.error("Error fetching character data:", error));
+    // Load all characters
+    loadTableData(
+      "/characters/getAll",
+      "character-table-body",
+      buildCharacterRow
+    );
   }
 }
 
-function handleCharacterDropdown(selectedValue, characterName) {
-  if (selectedValue === "") {
+// ============================================================================
+// FILTERING
+// ============================================================================
+
+/**
+ * Splits the filter column value into column name and table alias
+ * @param {string} filterValue - The filter value in format "column,table"
+ * @returns {Array} [columnName, tableAlias]
+ */
+function splitFilterValue(filterValue) {
+  return filterValue.split(",");
+}
+
+/**
+ * Processes the filter based on selected column and input value
+ */
+function processFilter() {
+  const filterColumn = document.getElementById("filter-column");
+  const filterInput = document.getElementById("filter-input");
+
+  if (!filterColumn || !filterInput) {
+    console.error("Filter elements not found");
     return;
   }
-  if (selectedValue === "delete") {
-    window.location.href = `/characters/delete?characterName=${characterName}`;
-  }
-}
 
-//this function processes the filter request and updates the table accordingly
-function processFilter() {
-  const filterBy = document.getElementById("filter-input").value;
-  const valueAndPage = splitValue(
-    document.getElementById("filter-column").value
-  );
-  const filterValue = valueAndPage[0];
-  const pageSearch = valueAndPage[1];
-  fetch(
-    `/characters/filterBy?column=${filterValue}&value=${filterBy}&page=${pageSearch}`
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      const tableBody = document.getElementById(`character-table-body`);
-      tableBody.innerHTML = "";
-      data.forEach((character) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>
-                            <select class="netid-select"
-                            onchange="handleCharacterDropdown(this.value, '${character.characterName}')" id = "dropdown">
-                                <option value="">
-                                    ${character.characterName}
-                                </option>
-                                <option value="delete">Delete Character</option>
-                            </select>
-                        </td>
-                        <td>${character.showName}</td>
-                        <td>${character.showSemester}</td>
-                        <td>${character.firstName} ${character.lastName}</td>
-                        <td>${character.netID}</td>
-                        <td>${character.showID}</td>`;
-        tableBody.appendChild(row);
-      });
-    });
-}
+  const [column, table] = splitFilterValue(filterColumn.value);
+  const value = filterInput.value;
 
-const FILTER_DROPDOWN_MAP = {
-  character: [
-    { value: "netID,c", label: "NetID" },
-    { value: "firstName,s", label: "First Name" },
-    { value: "lastName,s", label: "Last Name" },
-    { value: "showID,sh", label: "Show ID" },
-    { value: "characterName,c", label: "Character Name" },
-    { value: "showName,sh", label: "Show Name" },
-    { value: "yearSemester,sh", label: "Show Semester" },
-  ],
-};
+  // Build query with column and table parameters
+  const params = new URLSearchParams();
+  params.append("column", column);
+  params.append("value", value);
+  params.append("page", table);
 
-//splits value so that the correct table is referenced in the backend
-function splitValue(stringToSplit) {
-  const splitValues = stringToSplit.split(",");
-  return splitValues;
-}
-
-function populateFilterDropdown() {
-  const select = document.getElementById("filter-column");
-  select.innerHTML = "";
-
-  const options = FILTER_DROPDOWN_MAP["character"];
-
-  if (!options) return;
-
-  options.forEach((opt) => {
-    const optionElement = document.createElement("option");
-    optionElement.value = opt.value; // this is sent to the backend
-    optionElement.textContent = opt.label; // this is displayed to the user
-    select.appendChild(optionElement);
-  });
-}
-
-function getShowIDFromName(showName) {
-  return fetch(`/shows/getShowID?showName=${encodeURIComponent(showName)}`)
+  fetch(`/characters/filterBy?${params.toString()}`)
     .then((response) => response.json())
     .then((data) => {
-      return data.showID;
+      populateTable("character-table-body", data, buildCharacterRow);
+    })
+    .catch((error) => {
+      console.error("Error filtering characters:", error);
+      populateTable("character-table-body", [], buildCharacterRow);
     });
 }
 
-function clearInput(elementId) {
-  document.getElementById(elementId).value = "";
+/**
+ * Initializes the filter dropdown with character-specific options
+ */
+function initializeCharacterFilters() {
+  populateFilterDropdown("filter-column", CHARACTER_FILTER_OPTIONS);
+  setupFilterListener(processFilter);
+  updatePlaceholder();
 }
 
-async function addCharacter() {
-  // console.log(document.getElementById("showName").value);
-  // console.log(document.getElementById("netIDInput").value);
-  // console.log(document.getElementById("characterName").value);
-  const formData = new URLSearchParams();
-  formData.append("characterName",document.getElementById("characterName").value);
-  formData.append("showID", document.getElementById("showID").value);
-  formData.append("netID", document.getElementById("netIDInput").value);
+// ============================================================================
+// DROPDOWN ACTIONS
+// ============================================================================
 
-  const response = await fetch("/characters/add", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: formData.toString(),
-  });
+/**
+ * Handles character dropdown menu selections
+ * @param {string} selectedValue - The selected option value
+ * @param {string} characterName - The character's name
+ */
+function handleCharacterDropdown(selectedValue, characterName) {
+  if (!selectedValue) return;
 
-  if (response.ok) {
-    alert("Character added successfully!");
-    document.getElementById("add-character-form").reset();
-    window.location.href = "/characters/loadpage";
-  } else {
-    alert("Error adding character.");
+  if (selectedValue === "delete") {
+    // Navigate to delete endpoint (you may want to add a confirmation dialog)
+    window.location.href = `/characters/delete?characterName=${encodeURIComponent(
+      characterName
+    )}`;
   }
 }
 
+// ============================================================================
+// ADD CHARACTER
+// ============================================================================
 
+/**
+ * Adds a new character to the database
+ */
+async function addCharacter() {
+  const formData = new URLSearchParams();
+
+  // Get form values
+  const characterName = document.getElementById("characterName");
+  const showID = document.getElementById("showID");
+  const netIDInput = document.getElementById("netIDInput");
+
+  if (!characterName || !showID || !netIDInput) {
+    showMessage("Please fill in all required fields.", true);
+    return;
+  }
+
+  formData.append("characterName", characterName.value);
+  formData.append("showID", showID.value);
+  formData.append("netID", netIDInput.value);
+
+  await submitForm(
+    "/characters/add",
+    formData,
+    "Character added successfully!",
+    "/characters/loadpage",
+    "add-character-form"
+  );
+}
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+/**
+ * Initializes the add character page with autocomplete functionality
+ */
+function initializeAddCharacterPage() {
+  // Initialize student autocomplete
+  findStudents("", "netID", "student-select", "addCharacterButton");
+  setupStudentAutocomplete("student-select", "addCharacterButton");
+
+  // Initialize show autocomplete
+  findShows("showName", "", "show-select", "addCharacterButton");
+  setupShowAutocomplete("show-select", "addCharacterButton");
+}

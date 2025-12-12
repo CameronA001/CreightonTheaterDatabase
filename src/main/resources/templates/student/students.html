@@ -1,22 +1,33 @@
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Creighton Theater Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students - Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
-    <script src="/studentScript.js"> </script>
-    <script src = "/script.js"></script>
+    <!-- Load scripts in order: common utilities first, then page-specific -->
+    <script src="/common.js"></script>
+    <script src="/studentScript.js"></script>
 </head>
 
-<body onload = "loadStudents(), populateFilterDropdown()" class ="page-background">
-
+<body class="page-background">
+    <!-- Navigation -->
     <button onclick="location.href='/'" class="basicButton">Home</button>
-    <h1 style="text-align: center;">STUDENTS PAGE</h1>
-    <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
-    <select id="filter-column" onchange="clearInput('filter-input'); loadStudents(); updatePlaceholder();" class="filter-select"></select>
-    
-    <button onclick="location.href='/addStudent'" style = "float: right;" class = "basicButton">Add Student</button>
-    
+
+    <h1>STUDENTS PAGE</h1>
+
+    <!-- Filter/Search Controls -->
+    <div style="margin-bottom: var(--space-md);">
+        <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
+        <select id="filter-column" onchange="clearInput('filter-input'); loadStudents(); updatePlaceholder();"
+            class="filter-select"></select>
+        <button onclick="location.href='/addStudent'" style="float: right;" class="basicButton">
+            Add Student
+        </button>
+    </div>
+
+    <!-- Student Table -->
     <table>
         <thead>
             <tr>
@@ -30,13 +41,17 @@
             </tr>
         </thead>
         <tbody id="student-table-body">
+            <!-- Populated by JavaScript -->
         </tbody>
     </table>
 
     <script>
-        //dynamically updates the page as the user types into filter-input
-        const filterInput = document.getElementById("filter-input");
-        filterInput.addEventListener("input", () => {
-            processFilter("student");
-        });</script>
+        // Initialize page when DOM is loaded
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeStudentFilters();
+            loadStudents();
+        });
+    </script>
 </body>
+
+</html>

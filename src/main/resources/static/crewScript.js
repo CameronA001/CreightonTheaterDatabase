@@ -1,117 +1,141 @@
-function loadCrew(){
-    const urlParams = new URLSearchParams(window.location.search);
-    const netID = urlParams.get("netID");
+/**
+ * crewScript.js - Crew-specific functionality
+ * Handles crew listing, adding, and filtering
+ * Requires: common.js
+ */
 
-    if(netID){
-        document.getElementById("filter-input").value = netID;
-        processFilter();
-    } else{
-            fetch("/crew/getAll")
-        .then((response) => response.json())
-        .then((data) => {
-            const tableBody = document.getElementById("crew-table-body");
-            tableBody.innerHTML = "";
+// ============================================================================
+// TABLE RENDERING - CREW
+// ============================================================================
 
-            data.forEach((crew) => {
-                const row = document.createElement("tr");
+/**
+ * Builds HTML for a single crew table row
+ * @param {Object} crew - Crew data object
+ * @returns {string} HTML string for the table row
+ */
+function buildCrewRow(crew) {
+  return `
+    <td>
+      <a href="/student/loadpage?netID=${crew.crewID}">
+        ${crew.crewID}
+      </a>
+    </td>
+    <td class="sticky">${crew.firstName} ${crew.lastName}</td>
+    <td>${crew.wigTrained || "No"}</td>
+    <td>${crew.makeupTrained || "No"}</td>
+    <td>${crew.musicReading || "No"}</td>
+    <td>${crew.lighting || ""}</td>
+    <td>${crew.sound || ""}</td>
+    <td>${crew.specialty || ""}</td>
+    <td>${crew.notes || ""}</td>
+  `;
+}
 
-                row.innerHTML = `
-                    <td>
-                    <a href="/student/loadpage?netID=${crew.crewID}">
-                    ${crew.crewID}
-                    </a>
-                    </td>
-                    <td class = "sticky">${crew.firstName} ${crew.lastName}</td>
-                    <td>${crew.wigTrained}</td>
-                    <td>${crew.makeupTrained}</td>
-                    <td>${crew.musicReading}</td>
-                    <td>${crew.lighting}</td>
-                    <td>${crew.sound}</td>
-                    <td>${crew.specialty}</td>
-                    <td>${crew.notes}</td>
-                `;
+// ============================================================================
+// DATA LOADING - CREW
+// ============================================================================
 
-                tableBody.appendChild(row);
-            });
-        })
-        .catch((error) => console.error("Error fetching crew data:", error));s
+/**
+ * Loads all crew members or filters by netID from URL parameter
+ */
+function loadCrew() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const netID = urlParams.get("netID");
+
+  if (netID) {
+    // If netID parameter exists, filter immediately
+    const filterInput = document.getElementById("filter-input");
+    if (filterInput) {
+      filterInput.value = netID;
     }
+    processCrewFilter();
+  } else {
+    // Load all crew members
+    loadTableData("/crew/getAll", "crew-table-body", buildCrewRow);
+  }
+}
 
-    }
+// ============================================================================
+// FILTERING - CREW
+// ============================================================================
 
+/**
+ * Processes the filter based on crew ID input value
+ */
+function processCrewFilter() {
+  const filterInput = document.getElementById("filter-input");
+  if (!filterInput) {
+    console.error("Filter input not found");
+    return;
+  }
 
-function processFilter() {
-  const filterValue = document.getElementById("filter-input").value;
+  const filterValue = filterInput.value;
 
-  fetch(`/crew/filterBy?value=${filterValue}`)
-    .then((res) => res.json())
+  fetch(`/crew/filterBy?value=${encodeURIComponent(filterValue)}`)
+    .then((response) => response.json())
     .then((data) => {
-      const tableBody = document.getElementById(`crew-table-body`);
-      tableBody.innerHTML = "";
-
-      data.forEach((crew) => {
-        const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>
-                    <a href="/student/loadpage?netID=${crew.crewID}">
-                    ${crew.crewID}
-                    </a>
-                    </td>
-                    <td class = "sticky">${crew.firstName} ${crew.lastName}</td>
-                    <td>${crew.wigTrained}</td>
-                    <td>${crew.makeupTrained}</td>
-                    <td>${crew.musicReading}</td>
-                    <td>${crew.lighting}</td>
-                    <td>${crew.sound}</td>
-                    <td>${crew.specialty}</td>
-                    <td>${crew.notes}</td>
-                `;
-        tableBody.appendChild(row);
-      });
+      populateTable("crew-table-body", data, buildCrewRow);
+    })
+    .catch((error) => {
+      console.error("Error filtering crew:", error);
     });
 }
 
-function appendIfNotEmpty(formData, key, elementId) {
-    const val = document.getElementById(elementId).value;
-    if (val !== "") formData.append(key, val);
+/**
+ * Sets up the filter listener for crew search
+ */
+function initializeCrewFilters() {
+  setupFilterListener(processCrewFilter);
 }
 
-async function addCrew(){
-    const formData = new URLSearchParams();
-    
-    appendIfNotEmpty(formData, "crewID", "netIDInput");
-    appendIfNotEmpty(formData, "firstName", "firstName");
-    appendIfNotEmpty(formData, "lastName", "lastName");
-    appendIfNotEmpty(formData, "wigTrained", "wigTrained");
-    appendIfNotEmpty(formData, "makeupTrained", "makeupTrained");
-    appendIfNotEmpty(formData, "musicReading", "musicReading");
-    appendIfNotEmpty(formData, "lighting", "lighting");
-    appendIfNotEmpty(formData, "sound", "sound");
-    appendIfNotEmpty(formData, "specialty", "specialty");
-    appendIfNotEmpty(formData, "notes", "notes");
+// ============================================================================
+// ADD CREW
+// ============================================================================
 
-      const response = await fetch("/crew/addCrew", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: formData.toString(),
-      });
+/**
+ * Adds a new crew member to the database
+ */
+async function addCrew() {
+  const formData = new URLSearchParams();
 
-    const text = await response.text();
+  // Add all fields that have values
+  const fields = [
+    "netIDInput",
+    "firstName",
+    "lastName",
+    "wigTrained",
+    "makeupTrained",
+    "musicReading",
+    "lighting",
+    "sound",
+    "specialty",
+    "notes",
+  ];
 
-    if (response.ok) {
-    alert(text);
-    document.getElementById("add-crew-form").reset();
-    window.location.href = "/crew/loadpage";
-} else {
-    alert("Error adding crew: " + text); 
+  fields.forEach((fieldId) => {
+    // Map netIDInput to crewID for the backend
+    const key = fieldId === "netIDInput" ? "crewID" : fieldId;
+    appendIfNotEmpty(formData, key, fieldId);
+  });
+
+  await submitForm(
+    "/crew/addCrew",
+    formData,
+    "Crew member added successfully!",
+    "/crew/loadpage",
+    "add-crew-form"
+  );
 }
 
+// ============================================================================
+// INITIALIZATION - CREW
+// ============================================================================
 
-  if (response.ok) {
-    alert("Crew added successfully!");
-    document.getElementById("add-crew-form").reset();
-    window.location.href = "/crew/loadpage";
-  } else {
-    alert("Error adding crew.");
-  }
+/**
+ * Initializes the add crew page with student autocomplete
+ */
+function initializeAddCrewPage() {
+  // Initialize student autocomplete
+  findStudents("", "netID", "student-select", "addCrewButton");
+  setupStudentAutocomplete("student-select", "addCrewButton");
 }

@@ -1,22 +1,35 @@
+<!-- ============================================================================ -->
+<!-- character.html - Main character listing page -->
+<!-- ============================================================================ -->
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Creighton Theater Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Characters - Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
     <script src="/characterScript.js"></script>
-    <script src="/script.js"></script>
-
 </head>
 
-<body onload = " populateFilterDropdown(); loadCharacters(); processFilter();" class ="page-background">
-
+<body class="page-background">
+    <!-- Navigation -->
     <button onclick="location.href='/'" class="basicButton">Home</button>
-    <h1 style="text-align: center;">CHARACTERS PAGE</h1>
-    <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
-    <select id="filter-column" onchange="clearInput('filter-input'); processFilter(); updatePlaceholder();" class="filter-select" value="netID,c"></select>
-    <button onclick="location.href='/characters/addpage'" style = "float: right;" class = "basicButton">Add Character</button>
 
+    <h1>CHARACTERS PAGE</h1>
+
+    <!-- Filter/Search Controls -->
+    <div style="margin-bottom: var(--space-md);">
+        <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
+        <select id="filter-column" onchange="clearInput('filter-input'); processFilter(); updatePlaceholder();"
+            class="filter-select"></select>
+        <button onclick="location.href='/characters/addpage'" style="float: right;" class="basicButton">
+            Add Character
+        </button>
+    </div>
+
+    <!-- Character Table -->
     <table>
         <thead>
             <tr>
@@ -29,13 +42,17 @@
             </tr>
         </thead>
         <tbody id="character-table-body">
+            <!-- Populated by JavaScript -->
         </tbody>
     </table>
 
     <script>
-        //dynamically updates the page as the user types into filter-input
-        const filterInput = document.getElementById("filter-input");
-        filterInput.addEventListener("input", () => {
-            processFilter();
-        });</script>
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeCharacterFilters();
+            loadCharacters();
+        });
+    </script>
 </body>
+
+</html>

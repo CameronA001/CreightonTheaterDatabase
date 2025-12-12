@@ -1,118 +1,197 @@
+/**
+ * studentScript.js - Student-specific functionality
+ * Handles student listing, adding, editing, and filtering
+ * Requires: common.js
+ */
+
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+
+// Filter dropdown options for student page
+const STUDENT_FILTER_OPTIONS = [
+  { value: "netID", label: "NetID" },
+  { value: "firstName", label: "First Name" },
+  { value: "lastName", label: "Last Name" },
+  { value: "gradeLevel", label: "Grade Level" },
+  { value: "allergies_sensitivities", label: "Allergies/Sensitivities" },
+];
+
+// Route map for student dropdown actions
+const STUDENT_DROPDOWN_ROUTES = {
+  roles: "/characters/loadpage?netID={id}",
+  shows: "/student/{id}/shows",
+  crew: "/crew/loadpage?netID={id}",
+  actor: "/actors/loadpage?netID={id}",
+  edit: "/student/{id}/editPage",
+  delete: null, // Special handling required
+};
+
+// ============================================================================
+// TABLE RENDERING
+// ============================================================================
+
+/**
+ * Builds HTML for a single student table row
+ * @param {Object} student - Student data object
+ * @returns {string} HTML string for the table row
+ */
+function buildStudentRow(student) {
+  return `
+    <td>
+      <select class="netid-select" onchange="handleStudentDropdown(this.value, '${
+        student.netID
+      }')">
+        <option value="" selected>${student.netID}</option>
+        <option value="roles">Previous Roles</option>
+        <option value="shows">Previous Shows</option>
+        <option value="crew">Crew Page</option>
+        <option value="actor">Actor Page</option>
+        <option value="delete">Delete Student</option>
+        <option value="edit">Edit Student</option>
+      </select>
+    </td>
+    <td>${student.firstName} ${student.lastName}</td>
+    <td>${student.gradeLevel}</td>
+    <td>${student.pronouns || ""}</td>
+    <td>${student.specialNotes || ""}</td>
+    <td>${student.email || ""}</td>
+    <td>${student.allergies_sensitivities || ""}</td>
+  `;
+}
+
+// ============================================================================
+// DATA LOADING
+// ============================================================================
+
+/**
+ * Loads all students or filters by netID from URL parameter
+ */
 function loadStudents() {
   const urlParams = new URLSearchParams(window.location.search);
   const netID = urlParams.get("netID");
 
-  fetch("/student/getAll")
-    .then((response) => response.json())
-    .then((data) => {
-      const tableBody = document.getElementById("student-table-body");
-      tableBody.innerHTML = "";
+  // Load all students, then filter client-side if needed
+  loadTableData("/student/getAll", "student-table-body", (student) => {
+    // If netID parameter exists, only show matching students
+    if (netID && student.netID !== netID) {
+      return null; // Skip this student
+    }
+    return buildStudentRow(student);
+  });
 
-      // If netID exists, filter data in JS; otherwise show all
-      const filteredData = netID ? data.filter((s) => s.netID === netID) : data;
-
-      filteredData.forEach((student) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-                    <td>
-                        <select class="netid-select"
-                                onchange="handleNetIdDropdown(this.value, '${student.netID}')">
-                            <option value="" selected>${student.netID}</option>
-                            <option value="roles">Previous Roles</option>
-                            <option value="shows">Previous Shows</option>
-                            <option value="crew">CrewPage</option>
-                            <option value="actor">ActorPage</option>
-                            <option value="delete">Delete Student</option>
-                            <option value="edit">Edit Student</option>
-                        </select>
-                    </td>
-                    <td>${student.firstName} ${student.lastName}</td>
-                    <td>${student.gradeLevel}</td>
-                    <td>${student.pronouns}</td>
-                    <td>${student.specialNotes}</td>
-                    <td>${student.email}</td>
-                    <td>${student.allergies_sensitivities}</td>
-                `;
-        tableBody.appendChild(row);
-      });
-
-      // Only set filter input if netID exists
-      if (netID) {
-        document.getElementById("filter-column").value = "netID";
-        document.getElementById("filter-input").value = netID;
-      }
-    })
-    .catch((error) => console.error("Error fetching student data:", error));
+  // Set filter inputs if netID exists
+  if (netID) {
+    const filterColumn = document.getElementById("filter-column");
+    const filterInput = document.getElementById("filter-input");
+    if (filterColumn) filterColumn.value = "netID";
+    if (filterInput) filterInput.value = netID;
+  }
 }
 
-//this function processes the filter request and updates the table accordingly
-function processFilter(page) {
-  const filterBy = document.getElementById("filter-column").value;
-  const filterValue = document.getElementById("filter-input").value;
+// ============================================================================
+// FILTERING
+// ============================================================================
 
-  fetch(`/${page}/filterBy?column=${filterBy}&value=${filterValue}`)
-    .then((res) => res.json())
-    .then((data) => {
-      const tableBody = document.getElementById(`${page}-table-body`);
-      tableBody.innerHTML = "";
+/**
+ * Processes the filter based on selected column and input value
+ */
+function processFilter() {
+  const filterColumn = document.getElementById("filter-column");
+  const filterInput = document.getElementById("filter-input");
 
-      data.forEach((item) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-                    <td>
-                        <select class="netid-select" onchange="handleNetIdDropdown(this.value, '${item.netID}')">
-                            <option value="" selected>${item.netID}</option>
-                            <option value="roles">Previous Roles</option>
-                            <option value="shows">Previous Shows</option>
-                            <option value="crew">CrewPage</option>
-                            <option value="actor">ActorPage</option>
-                            <option value="delete">Delete Student</option>
-                            <option value="edit">Edit Student</option>
-                        </select>
-                    </td>
-                    <td>${item.firstName} ${item.lastName}</td>
-                    <td>${item.gradeLevel}</td>
-                    <td>${item.pronouns}</td>
-                    <td>${item.specialNotes}</td>
-                    <td>${item.email}</td>
-                    <td>${item.allergies_sensitivities}</td>
-                `;
-        tableBody.appendChild(row);
-      });
-    });
-}
-
-function clearInput(elementId) {
-  document.getElementById(elementId).value = "";
-}
-
-function handleNetIdDropdown(selectedValue, netID) {
-  if (!selectedValue) {
+  if (!filterColumn || !filterInput) {
+    console.error("Filter elements not found");
     return;
   }
-  if (selectedValue === "roles") {
-    window.location.href = `/characters/loadpage?netID=${netID}`;
-  }
-  if (selectedValue === "shows") {
-    window.location.href = `/student/${netID}/shows`;
-  }
-  if (selectedValue === "crew") {
-    window.location.href = `/crew/loadpage?netID=${netID}`;
-  }
-  if (selectedValue === "delete") {
-    deleteStudent(netID);
-  }
-  if (selectedValue === "edit") {
-    window.location.href = `/student/${netID}/editPage`;
-  }
-  if (selectedValue === "actor") {
-    window.location.href = `/actors/loadpage?netID=${netID}`;
-  }
+
+  const column = filterColumn.value;
+  const value = filterInput.value;
+
+  filterTable("student", column, value, "student-table-body", buildStudentRow);
 }
 
-async function editStudent(netID) {
+/**
+ * Initializes the filter dropdown with student-specific options
+ */
+function initializeStudentFilters() {
+  populateFilterDropdown("filter-column", STUDENT_FILTER_OPTIONS);
+  setupFilterListener(processFilter);
+  updatePlaceholder();
+}
+
+// ============================================================================
+// DROPDOWN ACTIONS
+// ============================================================================
+
+/**
+ * Handles student dropdown menu selections
+ * @param {string} selectedValue - The selected option value
+ * @param {string} netID - The student's netID
+ */
+function handleStudentDropdown(selectedValue, netID) {
+  if (!selectedValue) return;
+
+  // Special handling for delete action
+  if (selectedValue === "delete") {
+    deleteStudent(netID);
+    return;
+  }
+
+  // Handle navigation to other pages
+  handleDropdownNavigation(selectedValue, STUDENT_DROPDOWN_ROUTES, netID);
+}
+
+// ============================================================================
+// ADD STUDENT
+// ============================================================================
+
+/**
+ * Adds a new student to the database
+ */
+async function addStudent() {
   const formData = new URLSearchParams();
+
+  // Required fields
   formData.append("netID", document.getElementById("netID").value);
+  formData.append("firstName", document.getElementById("firstName").value);
+  formData.append("lastName", document.getElementById("lastName").value);
+  formData.append("gradeLevel", document.getElementById("gradeLevel").value);
+
+  // Optional fields
+  formData.append("pronouns", document.getElementById("pronouns").value);
+  formData.append(
+    "specialNotes",
+    document.getElementById("specialNotes").value
+  );
+  formData.append("email", document.getElementById("email").value);
+  formData.append("allergies", document.getElementById("allergies").value);
+
+  await submitForm(
+    "/student/add",
+    formData,
+    "Student added successfully!",
+    "/student/loadpage",
+    "add-student-form"
+  );
+}
+
+// ============================================================================
+// EDIT STUDENT
+// ============================================================================
+
+/**
+ * Edits an existing student's information
+ * @param {string} oldNetID - The student's current netID (from the URL path)
+ */
+async function editStudent(oldNetID) {
+  const formData = new URLSearchParams();
+
+  // New netID (might be same as old)
+  const newNetID = document.getElementById("netID").value;
+  formData.append("newNetID", newNetID);
+
+  // All other fields
   formData.append("firstName", document.getElementById("firstName").value);
   formData.append("lastName", document.getElementById("lastName").value);
   formData.append("gradeLevel", document.getElementById("gradeLevel").value);
@@ -127,85 +206,30 @@ async function editStudent(netID) {
     document.getElementById("allergies").value
   );
 
-  const response = await fetch(`/student/${netID}/edit`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: formData.toString(),
-  });
-
-  if (response.ok) {
-    alert("Student edited successfully!");
-    document.getElementById("edit-student-form").reset();
-    window.location.href = "/student/loadpage";
-  } else {
-    alert("Error editing student.");
-  }
-}
-
-const FILTER_DROPDOWN_MAP = {
-  student: [
-    { value: "netID", label: "NetID" },
-    { value: "firstName", label: "First Name" },
-    { value: "lastName", label: "Last Name" },
-    { value: "gradeLevel", label: "Grade Level" },
-    { value: "allergies_sensitivities", label: "Allergies/Sensitivities" },
-  ],
-};
-
-function populateFilterDropdown() {
-  const select = document.getElementById("filter-column");
-  select.innerHTML = "";
-
-  const options = FILTER_DROPDOWN_MAP["student"];
-
-  if (!options) return;
-
-  options.forEach((opt) => {
-    const optionElement = document.createElement("option");
-    optionElement.value = opt.value; // this is sent to the backend
-    optionElement.textContent = opt.label; // this is displayed to the user
-    select.appendChild(optionElement);
-  });
-}
-async function addStudent() {
-  const formData = new URLSearchParams();
-  formData.append("netID", document.getElementById("netID").value);
-  formData.append("firstName", document.getElementById("firstName").value);
-  formData.append("lastName", document.getElementById("lastName").value);
-  formData.append("gradeLevel", document.getElementById("gradeLevel").value);
-  formData.append("pronouns", document.getElementById("pronouns").value);
-  formData.append(
-    "specialNotes",
-    document.getElementById("specialNotes").value
+  await submitForm(
+    `/student/${encodeURIComponent(oldNetID)}/edit`,
+    formData,
+    "Student edited successfully!",
+    "/student/loadpage",
+    "edit-student-form"
   );
-  formData.append("email", document.getElementById("email").value);
-  formData.append("allergies", document.getElementById("allergies").value);
-
-  const response = await fetch("/student/add", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: formData.toString(),
-  });
-
-  if (response.ok) {
-    alert("Student added successfully!");
-    document.getElementById("add-student-form").reset();
-    window.location.href = "/student/loadpage";
-  } else {
-    alert("Error adding student.");
-  }
 }
 
+// ============================================================================
+// DELETE STUDENT
+// ============================================================================
+
+/**
+ * Deletes a student from the database
+ * @param {string} netID - The student's netID to delete
+ */
 function deleteStudent(netID) {
   if (
     !confirm(`Are you sure you want to delete student with NetID: ${netID}?`)
   ) {
     return;
   }
+
   const formData = new URLSearchParams();
   formData.append("netID", netID);
 
@@ -218,30 +242,44 @@ function deleteStudent(netID) {
   })
     .then((response) => {
       if (response.ok) {
-        alert("Student deleted successfully!");
-        loadStudents();
+        showMessage("Student deleted successfully!");
+        loadStudents(); // Reload the table
       } else {
-        alert("Error deleting student.");
+        showMessage("Error deleting student.", true);
       }
     })
-    .catch((error) => console.error("Error deleting student:", error));
+    .catch((error) => {
+      console.error("Error deleting student:", error);
+      showMessage("Error deleting student.", true);
+    });
 }
 
+// ============================================================================
+// FORM VALIDATION
+// ============================================================================
+
+/**
+ * Validates and formats the netID input field
+ * NetID format: 3 letters followed by up to 5 digits (e.g., ABC12345)
+ */
 function validateNetID() {
-  document.getElementById("netID").addEventListener("input", function (e) {
+  const netIDInput = document.getElementById("netID");
+  if (!netIDInput) return;
+
+  netIDInput.addEventListener("input", function (e) {
     let value = e.target.value;
 
-    // Only allow letters for first 3 chars
+    // Only allow letters for first 3 characters
     if (value.length <= 3) {
-      value = value.replace(/[^A-Za-z]/g, "");
+      value = value.replace(/[^A-Za-z]/g, "").toUpperCase();
+    } else {
+      // After 3 chars, only allow digits
+      value =
+        value.substring(0, 3).toUpperCase() +
+        value.substring(3).replace(/[^0-9]/g, "");
     }
 
-    // After 3 chars, allow only digits
-    if (value.length > 3) {
-      value = value.substring(0, 3) + value.substring(3).replace(/[^0-9]/g, "");
-    }
-
-    // Enforce max length 8
+    // Enforce max length of 8
     value = value.substring(0, 8);
 
     e.target.value = value;

@@ -1,45 +1,84 @@
+<!-- ============================================================================ -->
+<!-- addStudents.html - Refactored -->
+<!-- ============================================================================ -->
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Creighton Theater Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student - Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
-    <script src="/studentScript.js"> </script>
+    <script src="/common.js"></script>
+    <script src="/studentScript.js"></script>
 </head>
 
-<body class="page-background" onload = "validateNetID()" >
-
+<body class="page-background">
+    <!-- Navigation -->
     <button onclick="location.href='/'" class="basicButton">Home</button>
-    <button onclick="location.href='/student/loadpage'" class="basicButton" style = "font-size: smaller; margin-bottom: var(--space-md);">Back to Student List</button>
-    <h1 style="text-align: center;">ADD STUDENT PAGE</h1>
-    
+    <button onclick="location.href='/student/loadpage'" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">
+        Back to Student List
+    </button>
+
+    <h1>ADD STUDENT PAGE</h1>
+
     <form id="add-student-form">
-        <label for="netId" class="addElementLabel">NetID:</label>
-        <input type="text" id="netID" name="netID"required>
+        <!-- NetID (Required, validated format: ABC12345) -->
+        <label for="netID" class="addElementLabel">NetID:</label>
+        <input type="text" id="netID" name="netID" class="formInput" placeholder="e.g., ABC12345" required
+            maxlength="8">
         <br><br>
 
+        <!-- First Name (Required) -->
         <label for="firstName" class="addElementLabel">First Name:</label>
-        <input type="text" id="firstName" name="firstName" required><br><br>
+        <input type="text" id="firstName" name="firstName" class="formInput" required>
+        <br><br>
 
+        <!-- Last Name (Required) -->
         <label for="lastName" class="addElementLabel">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" required><br><br>
+        <input type="text" id="lastName" name="lastName" class="formInput" required>
+        <br><br>
 
-        <label for="grade" class="addElementLabel">Grade:</label>
-        <input type="text" id="gradeLevel" name="gradeLevel" required><br><br>
+        <!-- Grade Level (Required) -->
+        <label for="gradeLevel" class="addElementLabel">Grade:</label>
+        <input type="text" id="gradeLevel" name="gradeLevel" class="formInput"
+            placeholder="e.g., Freshman, Sophomore, etc." required>
+        <br><br>
 
+        <!-- Pronouns (Optional) -->
         <label for="pronouns" class="addElementLabel">Pronouns:</label>
-        <input type="text" id="pronouns" name="pronouns"><br><br>
+        <input type="text" id="pronouns" name="pronouns" class="formInput"
+            placeholder="e.g., he/him, she/her, they/them">
+        <br><br>
 
+        <!-- Special Notes (Optional) -->
         <label for="specialNotes" class="addElementLabel">Special Notes:</label>
-        <input type="text" id="specialNotes" name="specialNotes"><br><br>
+        <input type="text" id="specialNotes" name="specialNotes" class="formInput">
+        <br><br>
 
+        <!-- Email (Optional) -->
         <label for="email" class="addElementLabel">Email:</label>
-        <input type="email" id="email" name="email"><br><br>
+        <input type="email" id="email" name="email" class="formInput" placeholder="student@example.edu">
+        <br><br>
 
+        <!-- Allergies/Sensitivities (Optional) -->
         <label for="allergies" class="addElementLabel">Allergies/Sensitivities:</label>
-        <input type="text" id="allergies" name="allergies_sensitivities"><br><br>
+        <input type="text" id="allergies" name="allergies_sensitivities" class="formInput">
+        <br><br>
 
-        <button type="button" onclick = "addStudent()" class = "basicButton">Add Student</button>
+        <!-- Submit Button -->
+        <button type="button" onclick="addStudent()" class="basicButton">
+            Add Student
+        </button>
     </form>
 
-    
+    <script>
+        // Initialize NetID validation when page loads
+        window.addEventListener('DOMContentLoaded', function () {
+            validateNetID();
+        });
+    </script>
+</body>
+
+</html>
