@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Students - Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
-    <!-- Load scripts in order: common utilities first, then page-specific -->
     <script src="/common.js"></script>
     <script src="/studentScript.js"></script>
 </head>
@@ -18,14 +17,15 @@
     <h1>STUDENTS PAGE</h1>
 
     <!-- Filter/Search Controls -->
-    <div style="margin-bottom: var(--space-md);">
-        <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
-        <select id="filter-column" onchange="clearInput('filter-input'); loadStudents(); updatePlaceholder();"
-            class="filter-select"></select>
-        <button onclick="location.href='/addStudent'" style="float: right;" class="basicButton">
-            Add Student
-        </button>
-    </div>
+
+    <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
+    <select id="filter-column" onchange="clearInput('filter-input'); loadStudents(); updatePlaceholder();"
+        class="filter-select"></select>
+    <button onclick="location.href='/addStudent'" style="float: right;" class="basicButton">
+        Add Student
+    </button>
+
+
 
     <!-- Student Table -->
     <table>
@@ -41,12 +41,10 @@
             </tr>
         </thead>
         <tbody id="student-table-body">
-            <!-- Populated by JavaScript -->
         </tbody>
     </table>
 
     <script>
-        // Initialize page when DOM is loaded
         window.addEventListener('DOMContentLoaded', function () {
             initializeStudentFilters();
             loadStudents();

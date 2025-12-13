@@ -52,11 +52,12 @@ function buildCharacterRow(character) {
 // ============================================================================
 
 /**
- * Loads all characters or filters by netID from URL parameter
+ * Loads all characters or filters by netID or showID from URL parameter
  */
 function loadCharacters() {
   const urlParams = new URLSearchParams(window.location.search);
   const netID = urlParams.get("netID");
+  const showID = urlParams.get("showID");
 
   if (netID) {
     // If netID parameter exists, set up filter and process
@@ -65,6 +66,15 @@ function loadCharacters() {
 
     if (filterColumn) filterColumn.value = "netID,c";
     if (filterInput) filterInput.value = netID;
+
+    processFilter();
+  } else if (showID) {
+    // If showID parameter exists, filter by show
+    const filterColumn = document.getElementById("filter-column");
+    const filterInput = document.getElementById("filter-input");
+
+    if (filterColumn) filterColumn.value = "showID,sh";
+    if (filterInput) filterInput.value = showID;
 
     processFilter();
   } else {
@@ -144,11 +154,14 @@ function handleCharacterDropdown(selectedValue, characterName) {
   if (!selectedValue) return;
 
   if (selectedValue === "delete") {
-    // Navigate to delete endpoint (you may want to add a confirmation dialog)
+    // Navigate to delete endpoint
     window.location.href = `/characters/delete?characterName=${encodeURIComponent(
       characterName
     )}`;
   }
+
+  // Reset dropdown to selected state after navigation decision
+  event.target.value = "";
 }
 
 // ============================================================================

@@ -20,6 +20,7 @@
     <h1>ACTOR PAGE</h1>
 
     <!-- Action Buttons -->
+
     <button onclick="location.href='/actor/add'" class="basicButton" style="float: right;">
         Add New Actor
     </button>
@@ -27,7 +28,8 @@
     <!-- Filter Controls -->
     <label for="filter-input" style="margin-right: 10px;">Filter By Net ID:</label>
     <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
-
+    <select id="filter-column" onchange="clearInput('filter-input'); loadActors(); updatePlaceholder();"
+        class="filter-select"></select>
     <!-- Wide Table Container for horizontal scrolling -->
     <div class="wide-table-container">
         <table class="styled-table" style="border-collapse:collapse">

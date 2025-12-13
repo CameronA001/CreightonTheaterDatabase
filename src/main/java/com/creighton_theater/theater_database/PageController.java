@@ -54,6 +54,11 @@ public class PageController {
         return "characters/character";
     }
 
+    @GetMapping("/student/{netID}/shows")
+    public String studentShowsPage() {
+        return "student/studentShows";
+    }
+
     /*-----------------------------------------
     CHARACTER PAGES
     -----------------------------------------*/
@@ -141,6 +146,11 @@ public class PageController {
     @GetMapping("/show/loadpage")
     public String showPage() {
         return "shows/shows";
+    }
+
+    @GetMapping("/show/crewInShow")
+    public String crewInShowPage() {
+        return "/shows/crewInShow";
     }
 
 }

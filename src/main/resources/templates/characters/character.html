@@ -14,20 +14,23 @@
 </head>
 
 <body class="page-background">
-    <!-- Navigation -->
     <button onclick="location.href='/'" class="basicButton">Home</button>
 
     <h1>CHARACTERS PAGE</h1>
 
     <!-- Filter/Search Controls -->
-    <div style="margin-bottom: var(--space-md);">
-        <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
-        <select id="filter-column" onchange="clearInput('filter-input'); processFilter(); updatePlaceholder();"
-            class="filter-select"></select>
-        <button onclick="location.href='/characters/addpage'" style="float: right;" class="basicButton">
-            Add Character
-        </button>
-    </div>
+
+    <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
+
+    <select id="filter-column" onchange="clearInput('filter-input'); processFilter(); updatePlaceholder();"
+        class="filter-select">
+    </select>
+
+    <button onclick="location.href='/characters/addpage'" style="float: right;" class="basicButton">
+        Add Character
+    </button>
+
+
 
     <!-- Character Table -->
     <table>
@@ -42,12 +45,10 @@
             </tr>
         </thead>
         <tbody id="character-table-body">
-            <!-- Populated by JavaScript -->
         </tbody>
     </table>
 
     <script>
-        // Initialize page
         window.addEventListener('DOMContentLoaded', function () {
             initializeCharacterFilters();
             loadCharacters();

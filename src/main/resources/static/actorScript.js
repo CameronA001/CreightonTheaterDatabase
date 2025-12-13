@@ -37,6 +37,13 @@ const ACTOR_FIELDS = [
   "otherNotes",
 ];
 
+const ACTOR_FILTER_OPTIONS = [
+  { value: "netID", label: "NetID" },
+  { value: "firstName", label: "First Name" },
+  { value: "lastName", label: "Last Name" },
+  { value: "shows", label: "Previous Shows" },
+];
+
 // ============================================================================
 // TABLE RENDERING
 // ============================================================================
@@ -57,6 +64,7 @@ function buildActorRow(actor) {
       }')">
         <option value="" selected>${actor.netID}</option>
         <option value="edit">Edit Actor</option>
+        <option value="viewShows">View Previous Shows</option>
       </select>
     </td>
     <td class="sticky">${actor.firstName} ${actor.lastName}</td>
@@ -97,11 +105,16 @@ function buildFilteredActorRow(actor) {
   const display = (value) => value || "";
 
   return `
-    <td class="sticky">
-      <a href="/student/loadpage?netID=${actor.netID}">
-        ${actor.netID}
-      </a>
+    <td>
+      <select class="netid-select" onchange="handleActorDropdown(this.value, '${
+        actor.netID
+      }')">
+        <option value="" selected>${actor.netID}</option>
+        <option value="edit">Edit Actor</option>
+        <option value="viewShows">View Previous Shows</option>
+      </select>
     </td>
+    <td class="sticky">${actor.firstName} ${actor.lastName}</td>
     <td>${display(actor.yearsActingExperience)}</td>
     <td>${display(actor.skinTone)}</td>
     <td>${display(actor.piercings)}</td>
@@ -135,17 +148,27 @@ function buildFilteredActorRow(actor) {
 // ============================================================================
 
 /**
- * Loads all actors or filters by netID from URL parameter
+ * Loads all actors or filters by netID or showID from URL parameter
  */
 function loadActors() {
   const urlParams = new URLSearchParams(window.location.search);
   const netID = urlParams.get("netID");
+  const showID = urlParams.get("showID");
+  const filterInput = document.getElementById("filter-input");
+  const filterBy = document.getElementById("filter-column");
 
   if (netID) {
     // If netID parameter exists, filter immediately
-    const filterInput = document.getElementById("filter-input");
-    if (filterInput) {
+    if (filterInput && filterBy) {
+      filterBy.value = "netID";
       filterInput.value = netID;
+    }
+    processFilter();
+  } else if (showID) {
+    // If showID parameter exists, filter by show
+    if (filterInput && filterBy) {
+      filterBy.value = "shows";
+      filterInput.value = showID;
     }
     processFilter();
   } else {
@@ -159,18 +182,25 @@ function loadActors() {
 // ============================================================================
 
 /**
- * Processes the filter based on netID input value
+ * Processes the filter based on column and input value
  */
 function processFilter() {
   const filterInput = document.getElementById("filter-input");
-  if (!filterInput) {
-    console.error("Filter input not found");
+  const filterColumn = document.getElementById("filter-column");
+
+  if (!filterInput || !filterColumn) {
+    console.error("Filter input or column not found");
     return;
   }
 
   const filterValue = filterInput.value;
+  const column = filterColumn.value;
 
-  fetch(`/actors/filterBy?value=${encodeURIComponent(filterValue)}`)
+  fetch(
+    `/actors/filterBy?column=${encodeURIComponent(
+      column
+    )}&value=${encodeURIComponent(filterValue)}`
+  )
     .then((response) => response.json())
     .then((data) => {
       populateTable("actor-table-body", data, buildFilteredActorRow);
@@ -185,6 +215,8 @@ function processFilter() {
  */
 function initializeActorFilters() {
   setupFilterListener(processFilter);
+  populateFilterDropdown("filter-column", ACTOR_FILTER_OPTIONS);
+  updatePlaceholder();
 }
 
 // ============================================================================
@@ -201,7 +233,14 @@ function handleActorDropdown(selectedValue, netID) {
 
   if (selectedValue === "edit") {
     window.location.href = `/actor/editPage?netID=${encodeURIComponent(netID)}`;
+  } else if (selectedValue === "viewShows") {
+    window.location.href = `/characters/loadpage?netID=${encodeURIComponent(
+      netID
+    )}`;
   }
+
+  // Reset dropdown to selected state after navigation decision
+  event.target.value = "";
 }
 
 // ============================================================================

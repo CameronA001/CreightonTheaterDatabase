@@ -32,6 +32,7 @@ function buildShowRow(show) {
       }')">
         <option value="" selected>${show.showID}</option>
         <option value="viewCrew">View Crew</option>
+        <option value="viewCharacters">View Characters</option>
       </select>
     </td>
     <td>${show.showName || ""}</td>
@@ -39,6 +40,20 @@ function buildShowRow(show) {
     <td>${show.director || ""}</td>
     <td>${show.genre || ""}</td>
     <td>${show.playWright || ""}</td>
+  `;
+}
+
+/**
+ * Builds HTML for a single show crew table row
+ * @param {Object} showCrew - Show crew data object
+ * @returns {string} HTML string for the table row
+ */
+function buildShowCrewRow(showCrew) {
+  return `
+    <td>${showCrew.firstName}</td>
+    <td>${showCrew.lastName}</td>
+    <td>${showCrew.roles}</td>
+    <td>${showCrew.crewID}</td> 
   `;
 }
 
@@ -51,6 +66,33 @@ function buildShowRow(show) {
  */
 function loadShows() {
   loadTableData("/shows/getAll", "show-table-body", buildShowRow);
+}
+
+/**
+ * Loads crew members for a specific show
+ * @param {string} showID - The show's ID
+ */
+function loadCrewShow(showID) {
+  fetch(`/shows/getCrew?showID=${encodeURIComponent(showID)}`)
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to load crew");
+      return response.json();
+    })
+    .then((data) => {
+      if (data.length > 0) {
+        const showName = data[0].showName;
+        const yearSemester = data[0].yearSemester;
+
+        document.getElementById(
+          "show-title"
+        ).textContent = `${showName} (${yearSemester}) Crew`;
+      }
+
+      populateTable("showCrew-table-body", data, buildShowCrewRow);
+    })
+    .catch((error) => {
+      console.error("Error loading crew:", error);
+    });
 }
 
 // ============================================================================
@@ -117,6 +159,15 @@ function handleShowDropdown(selectedValue, showID) {
   if (!selectedValue) return;
 
   if (selectedValue === "viewCrew") {
-    window.location.href = `/shows/${encodeURIComponent(showID)}/crew`;
+    window.location.href = `/show/crewInShow?showID=${encodeURIComponent(
+      showID
+    )}`;
+  } else if (selectedValue === "viewCharacters") {
+    window.location.href = `/characters/loadpage?showID=${encodeURIComponent(
+      showID
+    )}`;
   }
+
+  // Reset dropdown to selected state after navigation decision
+  event.target.value = "";
 }
