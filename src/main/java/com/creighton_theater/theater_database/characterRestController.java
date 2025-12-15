@@ -1,4 +1,3 @@
-
 package com.creighton_theater.theater_database;
 
 import java.util.HashMap;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * REST Controller for Character entity operations
  * Handles CRUD operations for characters (roles played by actors in shows)
  * 
- * @author Theater Database Team
+ * @author Cameron Abanes
  * @version 2.0
  */
 @RestController

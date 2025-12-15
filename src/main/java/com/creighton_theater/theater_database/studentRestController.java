@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * REST Controller for Student entity operations
  * Handles CRUD operations for students in the theater database
  * 
- * @author Theater Database Team
+ * @author Cameron Abanes
  * @version 2.0
  */
 @RestController
@@ -74,6 +74,41 @@ public class studentRestController {
             return ResponseEntity.ok(students);
         } catch (DataAccessException e) {
             System.err.println("Error filtering students: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    /**
+     * Retrieves all shows that a student has been in (as an actor)
+     * API endpoint for fetching show data as JSON
+     * 
+     * @param netID The student's netID
+     * @return List of shows with character information
+     */
+    @GetMapping("/getShows")
+    public ResponseEntity<List<Map<String, Object>>> getStudentShows(@RequestParam String netID) {
+        try {
+            String sql = """
+                    SELECT DISTINCT
+                        s.showID,
+                        s.showName,
+                        s.yearSemester,
+                        s.director,
+                        s.genre,
+                        s.playWright,
+                        GROUP_CONCAT(c.characterName SEPARATOR ', ') AS characters
+                    FROM shows s
+                    JOIN characters c ON s.showID = c.showID
+                    WHERE c.netID = ?
+                    GROUP BY s.showID, s.showName, s.yearSemester, s.director, s.genre, s.playWright
+                    ORDER BY s.yearSemester DESC, s.showName
+                    """;
+
+            List<Map<String, Object>> shows = jdbcTemplate.queryForList(sql, netID);
+            return ResponseEntity.ok(shows);
+
+        } catch (DataAccessException e) {
+            System.err.println("Error fetching student shows: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }

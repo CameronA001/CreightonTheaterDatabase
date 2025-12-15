@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Shows - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/studentScript.js"></script>
+</head>
+
+<body class="page-background">
+    <!-- Navigation -->
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="location.href='/student/loadpage'" class="basicButton">Back to Students</button>
+
+    <h1 id="student-title">Student's Previous Shows</h1>
+
+    <!-- Shows Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Show ID</th>
+                <th>Show Name</th>
+                <th>Year/Semester</th>
+                <th>Character(s) Played</th>
+                <th>Director</th>
+                <th>Genre</th>
+                <th>Playwright</th>
+            </tr>
+        </thead>
+        <tbody id="student-shows-table-body">
+            <!-- Populated by JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const pathParts = window.location.pathname.split('/');
+            const netID = pathParts[2]; // Extract netID from URL path
+            loadStudentShows(netID);
+        });
+    </script>
+</body>
+
+</html>

@@ -60,6 +60,23 @@ function buildStudentRow(student) {
   `;
 }
 
+/**
+ * Builds HTML for a single student show table row
+ * @param {Object} show - Show data object
+ * @returns {string} HTML string for the table row
+ */
+function buildStudentShowRow(show) {
+  return `
+    <td>${show.showID || ""}</td>
+    <td>${show.showName || ""}</td>
+    <td>${show.yearSemester || ""}</td>
+    <td>${show.characters || ""}</td>
+    <td>${show.director || ""}</td>
+    <td>${show.genre || ""}</td>
+    <td>${show.playWright || ""}</td>
+  `;
+}
+
 // ============================================================================
 // DATA LOADING
 // ============================================================================
@@ -87,6 +104,32 @@ function loadStudents() {
     if (filterColumn) filterColumn.value = "netID";
     if (filterInput) filterInput.value = netID;
   }
+}
+
+/**
+ * Loads all shows that a student has been in
+ * @param {string} netID - The student's netID
+ */
+function loadStudentShows(netID) {
+  fetch(`/student/getShows?netID=${encodeURIComponent(netID)}`)
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to load student shows");
+      return response.json();
+    })
+    .then((data) => {
+      // Update the title with student info if available
+      const titleElement = document.getElementById("student-title");
+      if (titleElement && data.length > 0) {
+        titleElement.textContent = `Previous Shows for ${netID}`;
+      } else if (titleElement) {
+        titleElement.textContent = `No Previous Shows Found for ${netID}`;
+      }
+
+      populateTable("student-shows-table-body", data, buildStudentShowRow);
+    })
+    .catch((error) => {
+      console.error("Error loading student shows:", error);
+    });
 }
 
 // ============================================================================
@@ -140,6 +183,9 @@ function handleStudentDropdown(selectedValue, netID) {
 
   // Handle navigation to other pages
   handleDropdownNavigation(selectedValue, STUDENT_DROPDOWN_ROUTES, netID);
+
+  // Reset dropdown to selected state after navigation decision
+  event.target.value = "";
 }
 
 // ============================================================================

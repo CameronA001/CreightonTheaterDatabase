@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Handles CRUD operations for crew members
  * Note: Crew table references student table - crew members must be students
  * 
- * @author Theater Database Team
+ * @author Cameron Abanes
  * @version 2.0
  */
 @RestController

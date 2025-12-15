@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * REST Controller for Show entity operations
  * Handles operations related to theater shows/productions
  * 
- * @author Theater Database Team
+ * @author Cameron Abanes
  * @version 2.0
  */
 @RestController
@@ -77,7 +77,7 @@ public class showRestController {
 
             // Build SQL with validated column name
             String sql = String.format(
-                    "SELECT showName, yearSemester, showID FROM shows WHERE %s LIKE ? ORDER BY yearSemester DESC",
+                    "SELECT showName, yearSemester, showID, director, genre, playWright  FROM shows WHERE %s LIKE ? ORDER BY yearSemester DESC",
                     searchBy);
 
             List<Map<String, Object>> shows = jdbcTemplate.queryForList(sql, "%" + searchValue + "%");

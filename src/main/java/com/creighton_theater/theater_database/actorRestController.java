@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * Handles CRUD operations for actors (students with additional acting-related
  * information)
  * 
- * @author Theater Database Team
+ * @author Cameron Abanes
  * @version 2.0
  */
 @RestController
@@ -80,21 +80,141 @@ public class actorRestController {
     }
 
     /**
-     * Filters actors by netID (partial match)
+     * Filters actors by column and value (supports netID, firstName, lastName,
+     * shows)
      * Uses parameterized query to prevent SQL injection
      * 
-     * @param value The netID value to search for
+     * @param column The column to filter by (netID, firstName, lastName, shows)
+     * @param value  The value to search for
      * @return List of actors matching the search criteria
      */
     @GetMapping("/filterBy")
-    public ResponseEntity<List<Map<String, Object>>> filterBy(@RequestParam String value) {
+    public ResponseEntity<List<Map<String, Object>>> filterBy(
+            @RequestParam String column,
+            @RequestParam String value) {
         try {
-            String sql = """
-                    SELECT * FROM actor
-                    JOIN student ON actor.netID = student.netID
-                    WHERE actor.netID LIKE ?
-                    ORDER BY student.lastName, student.firstName
-                    """;
+            // Whitelist valid columns
+            List<String> validColumns = List.of("netID", "firstName", "lastName", "shows");
+
+            if (!validColumns.contains(column)) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            String sql;
+
+            if ("shows".equals(column)) {
+                // Filter by show ID - get actors who played characters in this show
+                sql = """
+                        SELECT DISTINCT
+                            s.firstName AS firstName,
+                            s.lastName AS lastName,
+                            a.netID AS netID,
+                            a.yearsActingExperience AS yearsActingExperience,
+                            a.skinTone AS skinTone,
+                            a.piercings AS piercings,
+                            a.hairColor AS hairColor,
+                            a.previousInjuries AS previousInjuries,
+                            a.specialNotes AS specialNotes,
+                            a.height AS height,
+                            a.ringSize AS ringSize,
+                            a.shoeSize AS shoeSize,
+                            a.headCirc AS headCirc,
+                            a.neckBase AS neckBase,
+                            a.chest AS chest,
+                            a.waist AS waist,
+                            a.highHip AS highHip,
+                            a.lowHip AS lowHip,
+                            a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
+                            a.neckToWaistFront AS neckToWaistFront,
+                            a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
+                            a.neckToWaistBack AS neckToWaistBack,
+                            a.centerBackToWrist AS centerBackToWrist,
+                            a.outsleeveToWrist AS outsleeveToWrist,
+                            a.outseamBelowKnee AS outseamBelowKnee,
+                            a.outseamToAnkle AS outseamToAnkle,
+                            a.outseamToFloor AS outseamToFloor,
+                            a.otherNotes AS otherNotes
+                        FROM actor a
+                        JOIN student s ON a.netID = s.netID
+                        JOIN characters c ON a.netID = c.netID
+                        WHERE c.showID LIKE ?
+                        ORDER BY s.lastName, s.firstName
+                        """;
+            } else if ("firstName".equals(column) || "lastName".equals(column)) {
+                // Filter by student name fields
+                sql = String.format("""
+                        SELECT
+                            s.firstName AS firstName,
+                            s.lastName AS lastName,
+                            a.netID AS netID,
+                            a.yearsActingExperience AS yearsActingExperience,
+                            a.skinTone AS skinTone,
+                            a.piercings AS piercings,
+                            a.hairColor AS hairColor,
+                            a.previousInjuries AS previousInjuries,
+                            a.specialNotes AS specialNotes,
+                            a.height AS height,
+                            a.ringSize AS ringSize,
+                            a.shoeSize AS shoeSize,
+                            a.headCirc AS headCirc,
+                            a.neckBase AS neckBase,
+                            a.chest AS chest,
+                            a.waist AS waist,
+                            a.highHip AS highHip,
+                            a.lowHip AS lowHip,
+                            a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
+                            a.neckToWaistFront AS neckToWaistFront,
+                            a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
+                            a.neckToWaistBack AS neckToWaistBack,
+                            a.centerBackToWrist AS centerBackToWrist,
+                            a.outsleeveToWrist AS outsleeveToWrist,
+                            a.outseamBelowKnee AS outseamBelowKnee,
+                            a.outseamToAnkle AS outseamToAnkle,
+                            a.outseamToFloor AS outseamToFloor,
+                            a.otherNotes AS otherNotes
+                        FROM actor a
+                        JOIN student s ON a.netID = s.netID
+                        WHERE s.%s LIKE ?
+                        ORDER BY s.lastName, s.firstName
+                        """, column);
+            } else {
+                // Filter by netID
+                sql = """
+                        SELECT
+                            s.firstName AS firstName,
+                            s.lastName AS lastName,
+                            a.netID AS netID,
+                            a.yearsActingExperience AS yearsActingExperience,
+                            a.skinTone AS skinTone,
+                            a.piercings AS piercings,
+                            a.hairColor AS hairColor,
+                            a.previousInjuries AS previousInjuries,
+                            a.specialNotes AS specialNotes,
+                            a.height AS height,
+                            a.ringSize AS ringSize,
+                            a.shoeSize AS shoeSize,
+                            a.headCirc AS headCirc,
+                            a.neckBase AS neckBase,
+                            a.chest AS chest,
+                            a.waist AS waist,
+                            a.highHip AS highHip,
+                            a.lowHip AS lowHip,
+                            a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
+                            a.neckToWaistFront AS neckToWaistFront,
+                            a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
+                            a.neckToWaistBack AS neckToWaistBack,
+                            a.centerBackToWrist AS centerBackToWrist,
+                            a.outsleeveToWrist AS outsleeveToWrist,
+                            a.outseamBelowKnee AS outseamBelowKnee,
+                            a.outseamToAnkle AS outseamToAnkle,
+                            a.outseamToFloor AS outseamToFloor,
+                            a.otherNotes AS otherNotes
+                        FROM actor a
+                        JOIN student s ON a.netID = s.netID
+                        WHERE a.netID LIKE ?
+                        ORDER BY s.lastName, s.firstName
+                        """;
+            }
 
             List<Map<String, Object>> actors = jdbcTemplate.queryForList(sql, "%" + value + "%");
             return ResponseEntity.ok(actors);
