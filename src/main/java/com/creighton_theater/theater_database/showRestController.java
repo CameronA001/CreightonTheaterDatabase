@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
+//TODO: when viewing actors/crew for a show, don't make it like (showing 11, 21, 31 etc for just "1")
 /**
  * REST Controller for Show entity operations
  * Handles operations related to theater shows/productions
