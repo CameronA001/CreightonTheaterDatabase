@@ -197,17 +197,6 @@ Open your browser and navigate to:
 http://localhost:8080
 ```
 
-Example pages (direct links after starting the app):
-
-- Home: `/` → `http://localhost:8080/`
-- Actors: `/actors/loadpage` → `http://localhost:8080/actors/loadpage`
-- Characters: `/characters/loadpage`
-- Crew: `/crew/loadpage`
-- Shows: `/show/loadpage`
-- Students list: `/student/loadpage`
-
----
-
 ## ⚙️ Troubleshooting 🛠️
 
 Common problems and how to fix them.
