@@ -22,7 +22,7 @@ This README explains how to set up the project on a Windows machine with a local
 Follow the steps below if you haven't installed Java or MySQL yet.
 
 Windows - Java (Adoptium or installer):
-1. Visit https://adoptium.net/ and download the Windows installer for the Temurin (Eclipse) JDK that matches Java 25.
+1. Visit https://www.oracle.com/java/technologies/downloads/ and download the windows x64 installer. 
 2. Run the installer and follow prompts.
 3. Set `JAVA_HOME` in System Properties → Environment Variables to the JDK installation folder, and add `%JAVA_HOME%\bin` to `PATH` if the installer did not do so.
 
