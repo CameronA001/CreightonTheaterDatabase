@@ -38,9 +38,9 @@ const ACTOR_FIELDS = [
 ];
 
 const ACTOR_FILTER_OPTIONS = [
-  { value: "netID", label: "NetID" },
-  { value: "firstName", label: "First Name" },
-  { value: "lastName", label: "Last Name" },
+  { value: "netid", label: "NetID" },
+  { value: "firstname", label: "First Name" },
+  { value: "lastname", label: "Last Name" },
   { value: "shows", label: "Previous Shows" },
 ];
 
@@ -60,39 +60,39 @@ function buildActorRow(actor) {
   return `
     <td>
       <select class="netid-select" onchange="handleActorDropdown(this.value, '${
-        actor.netID
+        actor.netid
       }')">
-        <option value="" selected>${actor.netID}</option>
+        <option value="" selected>${actor.netid}</option>
         <option value="edit">Edit Actor</option>
         <option value="viewShows">View Previous Shows</option>
       </select>
     </td>
-    <td class="sticky">${actor.firstName} ${actor.lastName}</td>
-    <td>${display(actor.yearsActingExperience)}</td>
-    <td>${display(actor.skinTone)}</td>
+    <td class="sticky">${actor.firstname} ${actor.lastname}</td>
+    <td>${display(actor.yearsactingexperience)}</td>
+    <td>${display(actor.skintone)}</td>
     <td>${display(actor.piercings)}</td>
-    <td>${display(actor.hairColor)}</td>
-    <td>${display(actor.previousInjuries)}</td>
-    <td>${display(actor.specialNotes)}</td>
+    <td>${display(actor.haircolor)}</td>
+    <td>${display(actor.previousinjuries)}</td>
+    <td>${display(actor.specialnotes)}</td>
     <td>${display(actor.height)}</td>
-    <td>${display(actor.ringSize)}</td>
-    <td>${display(actor.shoeSize)}</td>
-    <td>${display(actor.headCirc)}</td>
-    <td>${display(actor.neckBase)}</td>
+    <td>${display(actor.ringsize)}</td>
+    <td>${display(actor.shoesize)}</td>
+    <td>${display(actor.headcirc)}</td>
+    <td>${display(actor.neckbase)}</td>
     <td>${display(actor.chest)}</td>
     <td>${display(actor.waist)}</td>
-    <td>${display(actor.highHip)}</td>
-    <td>${display(actor.lowHip)}</td>
-    <td>${display(actor.armseyeToArmseyeFront)}</td>
-    <td>${display(actor.neckToWaistFront)}</td>
-    <td>${display(actor.armseyeToArmseyeBack)}</td>
-    <td>${display(actor.neckToWaistBack)}</td>
-    <td>${display(actor.centerBackToWrist)}</td>
-    <td>${display(actor.outsleeveToWrist)}</td>
-    <td>${display(actor.outseamBelowKnee)}</td>
-    <td>${display(actor.outseamToAnkle)}</td>
-    <td>${display(actor.outseamToFloor)}</td>
-    <td>${display(actor.otherNotes)}</td>
+    <td>${display(actor.highhip)}</td>
+    <td>${display(actor.lowhip)}</td>
+    <td>${display(actor.armseyetoarmseyefront)}</td>
+    <td>${display(actor.necktowaistfront)}</td>
+    <td>${display(actor.armseyetoarmseyeback)}</td>
+    <td>${display(actor.necktowaistback)}</td>
+    <td>${display(actor.centerbacktowrist)}</td>
+    <td>${display(actor.outsleevetowrist)}</td>
+    <td>${display(actor.outseambelowknee)}</td>
+    <td>${display(actor.outseamtoankle)}</td>
+    <td>${display(actor.outseamtofloor)}</td>
+    <td>${display(actor.othernotes)}</td>
   `;
 }
 
@@ -107,39 +107,39 @@ function buildFilteredActorRow(actor) {
   return `
     <td>
       <select class="netid-select" onchange="handleActorDropdown(this.value, '${
-        actor.netID
+        actor.netid
       }')">
-        <option value="" selected>${actor.netID}</option>
+        <option value="" selected>${actor.netid}</option>
         <option value="edit">Edit Actor</option>
         <option value="viewShows">View Previous Shows</option>
       </select>
     </td>
-    <td class="sticky">${actor.firstName} ${actor.lastName}</td>
-    <td>${display(actor.yearsActingExperience)}</td>
-    <td>${display(actor.skinTone)}</td>
+    <td class="sticky">${actor.firstname} ${actor.lastname}</td>
+    <td>${display(actor.yearsactingexperience)}</td>
+    <td>${display(actor.skintone)}</td>
     <td>${display(actor.piercings)}</td>
-    <td>${display(actor.hairColor)}</td>
-    <td>${display(actor.previousInjuries)}</td>
-    <td>${display(actor.specialNotes)}</td>
+    <td>${display(actor.haircolor)}</td>
+    <td>${display(actor.previousinjuries)}</td>
+    <td>${display(actor.specialnotes)}</td>
     <td>${display(actor.height)}</td>
-    <td>${display(actor.ringSize)}</td>
-    <td>${display(actor.shoeSize)}</td>
-    <td>${display(actor.headCirc)}</td>
-    <td>${display(actor.neckBase)}</td>
+    <td>${display(actor.ringsize)}</td>
+    <td>${display(actor.shoesize)}</td>
+    <td>${display(actor.headcirc)}</td>
+    <td>${display(actor.neckbase)}</td>
     <td>${display(actor.chest)}</td>
     <td>${display(actor.waist)}</td>
-    <td>${display(actor.highHip)}</td>
-    <td>${display(actor.lowHip)}</td>
-    <td>${display(actor.armseyeToArmseyeFront)}</td>
-    <td>${display(actor.neckToWaistFront)}</td>
-    <td>${display(actor.armseyeToArmseyeBack)}</td>
-    <td>${display(actor.neckToWaistBack)}</td>
-    <td>${display(actor.centerBackToWrist)}</td>
-    <td>${display(actor.outsleeveToWrist)}</td>
-    <td>${display(actor.outseamBelowKnee)}</td>
-    <td>${display(actor.outseamToAnkle)}</td>
-    <td>${display(actor.outseamToFloor)}</td>
-    <td>${display(actor.otherNotes)}</td>
+    <td>${display(actor.highhip)}</td>
+    <td>${display(actor.lowhip)}</td>
+    <td>${display(actor.armseyetoarmseyefront)}</td>
+    <td>${display(actor.necktowaistfront)}</td>
+    <td>${display(actor.armseyetoarmseyeback)}</td>
+    <td>${display(actor.necktowaistback)}</td>
+    <td>${display(actor.centerbacktowrist)}</td>
+    <td>${display(actor.outsleevetowrist)}</td>
+    <td>${display(actor.outseambelowknee)}</td>
+    <td>${display(actor.outseamtoankle)}</td>
+    <td>${display(actor.outseamtofloor)}</td>
+    <td>${display(actor.othernotes)}</td>
   `;
 }
 
@@ -160,7 +160,7 @@ function loadActors() {
   if (netID) {
     // If netID parameter exists, filter immediately
     if (filterInput && filterBy) {
-      filterBy.value = "netID";
+      filterBy.value = "netid";
       filterInput.value = netID;
     }
     processFilter();
@@ -198,8 +198,8 @@ function processFilter() {
 
   fetch(
     `/actors/filterBy?column=${encodeURIComponent(
-      column
-    )}&value=${encodeURIComponent(filterValue)}`
+      column,
+    )}&value=${encodeURIComponent(filterValue)}`,
   )
     .then((response) => response.json())
     .then((data) => {
@@ -235,7 +235,7 @@ function handleActorDropdown(selectedValue, netID) {
     window.location.href = `/actor/editPage?netID=${encodeURIComponent(netID)}`;
   } else if (selectedValue === "viewShows") {
     window.location.href = `/characters/loadpage?netID=${encodeURIComponent(
-      netID
+      netID,
     )}`;
   }
 
@@ -258,7 +258,7 @@ async function addActor() {
     appendIfNotEmpty(
       formData,
       fieldId === "netIDInput" ? "netID" : fieldId,
-      fieldId
+      fieldId,
     );
   });
 
@@ -273,7 +273,7 @@ async function addActor() {
     formData,
     "Actor added successfully!",
     "/actors/loadpage",
-    "add-actor-form"
+    "add-actor-form",
   );
 }
 
@@ -333,7 +333,7 @@ async function editActor(netID) {
     formData,
     "Actor edited successfully!",
     "/actors/loadpage",
-    "edit-actor-form"
+    "edit-actor-form",
   );
 }
 
@@ -346,6 +346,6 @@ async function editActor(netID) {
  */
 function initializeAddActorPage() {
   // Initialize student autocomplete
-  findStudents("", "netID", "student-select", "addActorButton");
+  findStudents("", "netid", "student-select", "addActorButton");
   setupStudentAutocomplete("student-select", "addActorButton");
 }

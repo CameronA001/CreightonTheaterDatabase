@@ -10,9 +10,9 @@
 
 // Filter dropdown options for show page
 const SHOW_FILTER_OPTIONS = [
-  { value: "showID", label: "Show ID" },
-  { value: "showName", label: "Show Name" },
-  { value: "yearSemester", label: "Year/Semester" },
+  { value: "showid", label: "Show ID" },
+  { value: "showname", label: "Show Name" },
+  { value: "yearsemester", label: "Year/Semester" },
 ];
 
 // ============================================================================
@@ -26,20 +26,18 @@ const SHOW_FILTER_OPTIONS = [
  */
 function buildShowRow(show) {
   return `
-    <td>
-      <select class="netid-select" onchange="handleShowDropdown(this.value, '${
-        show.showID
-      }')">
-        <option value="" selected>${show.showID}</option>
-        <option value="viewCrew">View Crew</option>
-        <option value="viewCharacters">View Characters</option>
-      </select>
-    </td>
-    <td>${show.showName || ""}</td>
-    <td>${show.yearSemester || ""}</td>
+  <td>
+    <select class="netid-select" onchange="handleShowDropdown(event, this.value, '${show.showid}')">
+      <option value="">${show.showid}</option>
+      <option value="viewCharacters">View Characters</option>
+      <option value="delete">Delete Show</option>
+    </select>
+  </td>
+    <td>${show.showname || ""}</td>
+    <td>${show.yearsemester || ""}</td>
     <td>${show.director || ""}</td>
     <td>${show.genre || ""}</td>
-    <td>${show.playWright || ""}</td>
+    <td>${show.playwright || ""}</td>
   `;
 }
 
@@ -50,10 +48,10 @@ function buildShowRow(show) {
  */
 function buildShowCrewRow(showCrew) {
   return `
-    <td>${showCrew.firstName}</td>
-    <td>${showCrew.lastName}</td>
+    <td>${showCrew.firstname}</td>
+    <td>${showCrew.lastname}</td>
     <td>${showCrew.roles}</td>
-    <td>${showCrew.crewID}</td> 
+    <td>${showCrew.crewid}</td> 
   `;
 }
 
@@ -80,12 +78,11 @@ function loadCrewShow(showID) {
     })
     .then((data) => {
       if (data.length > 0) {
-        const showName = data[0].showName;
-        const yearSemester = data[0].yearSemester;
+        const showName = data[0].showname;
+        const yearSemester = data[0].yearsemester;
 
-        document.getElementById(
-          "show-title"
-        ).textContent = `${showName} (${yearSemester}) Crew`;
+        document.getElementById("show-title").textContent =
+          `${showName} (${yearSemester}) Crew`;
       }
 
       populateTable("showCrew-table-body", data, buildShowCrewRow);
@@ -124,8 +121,8 @@ function processShowFilter() {
   // Otherwise, filter shows
   fetch(
     `/shows/getShowIDName?searchBy=${searchBy}&searchValue=${encodeURIComponent(
-      searchValue
-    )}`
+      searchValue,
+    )}`,
   )
     .then((response) => response.json())
     .then((data) => {
@@ -149,25 +146,30 @@ function initializeShowFilters() {
 // ============================================================================
 // DROPDOWN ACTIONS - SHOWS
 // ============================================================================
-
-/**
- * Handles show dropdown menu selections
- * @param {string} selectedValue - The selected option value
- * @param {string} showID - The show's ID
- */
-function handleShowDropdown(selectedValue, showID) {
+function handleShowDropdown(event, selectedValue, showID) {
   if (!selectedValue) return;
 
-  if (selectedValue === "viewCrew") {
-    window.location.href = `/show/crewInShow?showID=${encodeURIComponent(
-      showID
-    )}`;
-  } else if (selectedValue === "viewCharacters") {
-    window.location.href = `/characters/loadpage?showID=${encodeURIComponent(
-      showID
-    )}`;
+  if (selectedValue === "viewCharacters") {
+    window.location.href = `/characters/loadpage?showID=${encodeURIComponent(showID)}`;
+  } else if (selectedValue === "delete") {
+    if (confirm("Are you sure you want to delete this show?")) {
+      // Call the delete endpoint via fetch instead of redirect
+      fetch(`/shows/delete?showID=${encodeURIComponent(showID)}`, {
+        method: "DELETE",
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert("Show deleted successfully.");
+            window.location.reload(); // refresh the page
+          } else {
+            return response.text().then((text) => {
+              throw new Error(text);
+            });
+          }
+        })
+        .catch((error) => {
+          alert("Error deleting show: " + error.message);
+        });
+    }
   }
-
-  // Reset dropdown to selected state after navigation decision
-  event.target.value = "";
 }

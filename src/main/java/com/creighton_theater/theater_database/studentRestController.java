@@ -33,11 +33,10 @@ public class studentRestController {
     @GetMapping("/getAll")
     public ResponseEntity<List<Map<String, Object>>> getAllStudents() {
         try {
-            String sql = "SELECT * FROM student ORDER BY lastName, firstName";
+            String sql = "SELECT * FROM student ORDER BY lastname, firstname";
             List<Map<String, Object>> students = jdbcTemplate.queryForList(sql);
             return ResponseEntity.ok(students);
         } catch (DataAccessException e) {
-            // Log the error (in production, use proper logging framework)
             System.err.println("Error fetching all students: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
@@ -47,8 +46,7 @@ public class studentRestController {
      * Filters students by a specific column and value
      * Uses parameterized queries to prevent SQL injection
      * 
-     * @param column The column name to filter by (netID, firstName, lastName,
-     *               gradeLevel, allergies_sensitivities)
+     * @param column The column name to filter by
      * @param value  The value to search for (supports partial matches with LIKE)
      * @return List of students matching the filter criteria
      */
@@ -60,20 +58,54 @@ public class studentRestController {
         try {
             // Whitelist allowed columns to prevent SQL injection
             List<String> allowedColumns = List.of(
-                    "netID", "firstName", "lastName", "gradeLevel",
-                    "pronouns", "specialNotes", "email", "allergies_sensitivities");
+                    "netid", "firstname", "lastname", "gradelevel",
+                    "pronouns", "specialnotes", "email", "allergies_sensitivities");
 
             if (!allowedColumns.contains(column)) {
                 return ResponseEntity.badRequest().body(null);
             }
 
             // Use parameterized query - column name is validated above
-            String sql = String.format("SELECT * FROM student WHERE %s LIKE ? ORDER BY lastName, firstName", column);
+            String sql = String.format("SELECT * FROM student WHERE %s LIKE ? ORDER BY lastname, firstname", column);
             List<Map<String, Object>> students = jdbcTemplate.queryForList(sql, "%" + value + "%");
 
             return ResponseEntity.ok(students);
         } catch (DataAccessException e) {
             System.err.println("Error filtering students: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    /**
+     * Searches for students by a specific field
+     * Used for autocomplete functionality
+     * 
+     * @param value    The search value
+     * @param searchBy The field to search by (netid, firstname, lastname)
+     * @return List of students matching the search
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<Map<String, Object>>> searchStudents(
+            @RequestParam String value,
+            @RequestParam String searchBy) {
+
+        try {
+            // Whitelist allowed columns
+            List<String> allowedColumns = List.of("netid", "firstname", "lastname");
+
+            if (!allowedColumns.contains(searchBy)) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            String sql = String.format(
+                    "SELECT netid, firstname, lastname FROM student WHERE %s LIKE ? ORDER BY lastname, firstname LIMIT 10",
+                    searchBy);
+
+            List<Map<String, Object>> students = jdbcTemplate.queryForList(sql, "%" + value + "%");
+            return ResponseEntity.ok(students);
+
+        } catch (DataAccessException e) {
+            System.err.println("Error searching students: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
@@ -88,20 +120,20 @@ public class studentRestController {
     @GetMapping("/getShows")
     public ResponseEntity<List<Map<String, Object>>> getStudentShows(@RequestParam String netID) {
         try {
+            // PostgreSQL uses string_agg instead of GROUP_CONCAT
             String sql = """
                     SELECT DISTINCT
-                        s.showID,
-                        s.showName,
-                        s.yearSemester,
-                        s.director,
+                        s.showid,
+                        s.showname,
+                        s.yearsemester,
                         s.genre,
-                        s.playWright,
-                        GROUP_CONCAT(c.characterName SEPARATOR ', ') AS characters
+                        s.playwright,
+                        string_agg(c.charactername, ', ') AS characters
                     FROM shows s
-                    JOIN characters c ON s.showID = c.showID
-                    WHERE c.netID = ?
-                    GROUP BY s.showID, s.showName, s.yearSemester, s.director, s.genre, s.playWright
-                    ORDER BY s.yearSemester DESC, s.showName
+                    JOIN characters c ON s.showid = c.showid
+                    WHERE c.netid = ?
+                    GROUP BY s.showid, s.showname, s.yearsemester, s.genre, s.playwright
+                    ORDER BY s.yearsemester DESC, s.showname
                     """;
 
             List<Map<String, Object>> shows = jdbcTemplate.queryForList(sql, netID);
@@ -141,8 +173,8 @@ public class studentRestController {
 
         try {
             String sql = """
-                    INSERT INTO student (netID, firstName, lastName, gradeLevel, pronouns,
-                                       specialNotes, email, allergies_sensitivities)
+                    INSERT INTO student (netid, firstname, lastname, gradelevel, pronouns,
+                                       specialnotes, email, allergies_sensitivities)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     """;
 
@@ -163,12 +195,10 @@ public class studentRestController {
 
     /**
      * Edits an existing student's information
-     * Allows changing the netID (primary key) by using the path variable as the old
-     * netID
+     * Allows changing the netID (primary key)
      * 
      * @param netID                   The current/old netID from the URL path
-     * @param newNetID                The new netID (can be same as old if not
-     *                                changing)
+     * @param newNetID                The new netID
      * @param firstName               Updated first name
      * @param lastName                Updated last name
      * @param gradeLevel              Updated grade level
@@ -195,15 +225,15 @@ public class studentRestController {
         try {
             String sql = """
                     UPDATE student
-                    SET netID = ?, firstName = ?, lastName = ?, gradeLevel = ?, pronouns = ?,
-                        specialNotes = ?, email = ?, allergies_sensitivities = ?
-                    WHERE netID = ?
+                    SET netid = ?, firstname = ?, lastname = ?, gradelevel = ?, pronouns = ?,
+                        specialnotes = ?, email = ?, allergies_sensitivities = ?
+                    WHERE netid = ?
                     """;
 
             int rowsAffected = jdbcTemplate.update(sql,
                     newNetID, firstName, lastName, gradeLevel, pronouns,
                     specialNotes, email, allergies_sensitivities,
-                    netID); // This is the old netID from the path
+                    netID);
 
             if (rowsAffected > 0) {
                 response.put("status", "success");
@@ -225,9 +255,6 @@ public class studentRestController {
 
     /**
      * Deletes a student from the database
-     * Note: This will fail if the student has related records (actors, crew,
-     * characters)
-     * due to foreign key constraints
      * 
      * @param netID The netID of the student to delete
      * @return ResponseEntity with success or error message
@@ -237,7 +264,7 @@ public class studentRestController {
         Map<String, String> response = new HashMap<>();
 
         try {
-            String sql = "DELETE FROM student WHERE netID = ?";
+            String sql = "DELETE FROM student WHERE netid = ?";
             int rowsAffected = jdbcTemplate.update(sql, netID);
 
             if (rowsAffected > 0) {

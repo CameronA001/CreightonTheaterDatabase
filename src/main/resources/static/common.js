@@ -91,7 +91,7 @@ function loadTableData(
   endpoint,
   tableBodyId,
   rowBuilder,
-  errorCallback = null
+  errorCallback = null,
 ) {
   fetch(endpoint)
     .then((response) => {
@@ -128,7 +128,7 @@ function filterTable(
   filterColumn,
   filterValue,
   tableBodyId,
-  rowBuilder
+  rowBuilder,
 ) {
   // Build query parameters
   const params = new URLSearchParams();
@@ -200,7 +200,7 @@ async function submitForm(
   formData,
   successMessage,
   redirectUrl,
-  formId = null
+  formId = null,
 ) {
   try {
     const response = await fetch(endpoint, {
@@ -243,23 +243,23 @@ async function submitForm(
 }
 
 // ============================================================================
-// AUTOCOMPLETE FUNCTIONALITY
+// AUTOCOMPLETE - STUDENTS
 // ============================================================================
 
 /**
  * Searches for students by a specific field and populates a select dropdown
  * @param {string} searchValue - The value to search for
- * @param {string} searchColumn - The column to search in (netID, firstName, lastName)
+ * @param {string} searchBy - The field to search by (netID, firstName, lastName)
  * @param {string} selectId - The ID of the select element to populate
  * @param {string} buttonId - The ID of the submit button to enable/disable
  * @returns {Promise<number>} - Number of results found
  */
-async function findStudents(searchValue, searchColumn, selectId, buttonId) {
+async function findStudents(searchValue, searchBy, selectId, buttonId) {
   try {
     const response = await fetch(
-      `/student/filterBy?column=${searchColumn}&value=${encodeURIComponent(
-        searchValue
-      )}`
+      `/student/search?value=${encodeURIComponent(
+        searchValue,
+      )}&searchBy=${searchBy}`,
     );
     const data = await response.json();
 
@@ -283,11 +283,11 @@ async function findStudents(searchValue, searchColumn, selectId, buttonId) {
     data.forEach((student) => {
       const option = document.createElement("option");
       option.value = JSON.stringify({
-        netID: student.netID,
-        firstName: student.firstName,
-        lastName: student.lastName,
+        netID: student.netid,
+        firstName: student.firstname,
+        lastName: student.lastname,
       });
-      option.textContent = `${student.firstName} ${student.lastName} (${student.netID})`;
+      option.textContent = `${student.firstname} ${student.lastname} (${student.netid})`;
       select.appendChild(option);
     });
 
@@ -389,8 +389,8 @@ async function findShows(searchBy, searchValue, selectId, buttonId) {
   try {
     const response = await fetch(
       `/shows/getShowIDName?searchBy=${searchBy}&searchValue=${encodeURIComponent(
-        searchValue
-      )}`
+        searchValue,
+      )}`,
     );
     const data = await response.json();
 
@@ -415,17 +415,17 @@ async function findShows(searchBy, searchValue, selectId, buttonId) {
     data.forEach((show) => {
       const option = document.createElement("option");
       option.value = JSON.stringify({
-        showID: show.showID,
-        showName: show.showName,
-        yearSemester: show.yearSemester,
+        showID: show.showid,
+        showName: show.showname,
+        yearSemester: show.yearsemester,
       });
-      option.textContent = `${show.showName} (${show.yearSemester})`;
+      option.textContent = `${show.showname} (${show.yearsemester})`;
       select.appendChild(option);
     });
 
     // Set the first show's ID if there's only one result
     if (data.length === 1 && showIDField) {
-      showIDField.value = data[0].showID;
+      showIDField.value = data[0].showid;
     }
 
     // Set dropdown size (max 4 visible items)
@@ -477,7 +477,7 @@ function setupShowAutocomplete(selectId, buttonId) {
     showNameInput.addEventListener("input", function () {
       const value = this.value.trim();
       if (value !== "") {
-        findShows("showName", value, selectId, buttonId);
+        findShows("showname", value, selectId, buttonId);
         const select = document.getElementById(selectId);
         if (select) select.hidden = false;
       }
@@ -488,7 +488,7 @@ function setupShowAutocomplete(selectId, buttonId) {
     yearSemesterInput.addEventListener("input", function () {
       const value = this.value.trim();
       if (value !== "") {
-        findShows("yearSemester", value, selectId, buttonId);
+        findShows("yearsemester", value, selectId, buttonId);
         const select = document.getElementById(selectId);
         if (select) select.hidden = false;
       }

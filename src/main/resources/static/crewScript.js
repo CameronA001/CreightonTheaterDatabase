@@ -16,14 +16,14 @@
 function buildCrewRow(crew) {
   return `
     <td>
-      <a href="/student/loadpage?netID=${crew.crewID}">
-        ${crew.crewID}
+      <a href="/student/loadpage?netID=${crew.crewid}">
+        ${crew.crewid}
       </a>
     </td>
-    <td class="sticky">${crew.firstName} ${crew.lastName}</td>
-    <td>${crew.wigTrained || "No"}</td>
-    <td>${crew.makeupTrained || "No"}</td>
-    <td>${crew.musicReading || "No"}</td>
+    <td class="sticky">${crew.firstname} ${crew.lastname}</td>
+    <td>${crew.wigtrained || "No"}</td>
+    <td>${crew.makeuptrained || "No"}</td>
+    <td>${crew.musicreading || "No"}</td>
     <td>${crew.lighting || ""}</td>
     <td>${crew.sound || ""}</td>
     <td>${crew.specialty || ""}</td>
@@ -123,7 +123,7 @@ async function addCrew() {
     formData,
     "Crew member added successfully!",
     "/crew/loadpage",
-    "add-crew-form"
+    "add-crew-form",
   );
 }
 
@@ -136,6 +136,11 @@ async function addCrew() {
  */
 function initializeAddCrewPage() {
   // Initialize student autocomplete
-  findStudents("", "netID", "student-select", "addCrewButton");
+  findStudents("", "netid", "student-select", "addCrewButton");
   setupStudentAutocomplete("student-select", "addCrewButton");
+
+  const netInput = document.getElementById("netIDInput");
+  netInput.addEventListener("input", function () {
+    findStudents(this.value, "netid", "student-select", "addCrewButton");
+  });
 }

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <head>
     <meta charset="UTF-8">
     <title>Creighton Theater Database</title>
     <link rel="stylesheet" href="/style.css">
-        <script src="/crewScript.js"></script>
-    <script src = "/script.js"></script>  
+    <script src="/crewScript.js"></script>
+    <script src="/common.js"></script>
 </head>
 
 <body class="page-background" onload="findNetIDFromName('', 'netID', 'Crew'); addEventListeners('Crew');">
@@ -20,7 +21,7 @@
             <label for="netID" class="addElementLabel">NetID:</label>
             <input type="text" id="netIDInput" name="netID" class="formInput" required>
             <button type="button" class="square-button"
-                onclick="clearInput('netIDInput'); clearInput('firstName'); clearInput('lastName'); findNetIDFromName('', 'netID', 'Crew');">×</button>
+                onclick="clearInput('netIDInput'); clearInput('firstName'); clearInput('lastName'); findNetIDFromName('', 'netid', 'Crew');">×</button>
         </div>
 
 
@@ -31,7 +32,8 @@
         <input type="text" id="lastName" name="lastName" class="formInput">
 
         <div style="text-align: center;">
-            <select size="5" id="student-select" onclick="addSetNetID(this, 'Crew')"></select>
+            <select size="5" id="student-select"
+                onclick="selectStudent(this, 'student-select', 'addCrewButton')"></select>
             <option value="netID"></option>
         </div>
 
@@ -40,11 +42,11 @@
         <br><br>
 
         <label for="makeupTrained" class="addElementLabel">Makeup Trained(Check if yes):</label>
-        <input type="checkbox" id="makeupTrained" name="makeupTrained" value = "1" class="checkBox">
+        <input type="checkbox" id="makeupTrained" name="makeupTrained" value="1" class="checkBox">
         <br><br>
 
         <label for="musicReading" class="addElementLabel">Music Reading(Check if yes):</label>
-        <input type="checkbox" id="musicReading" name="musicReading" value = "1"class="checkBox">
+        <input type="checkbox" id="musicReading" name="musicReading" value="1" class="checkBox">
         <br><br>
 
         <label for="lighting" class="addElementLabel">Lighting Training(Describe):</label>
@@ -60,11 +62,18 @@
         <input type="text" id="notes" name="notes" class="formInput">
 
 
-        <button type="button" onclick="addCrew()" class="basicButton" id = "addCrewButton">
+        <button type="button" onclick="addCrew()" class="basicButton" id="addCrewButton">
             Add Crew
         </button>
 
     </form>
 
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeAddCrewPage();
+        });
+    </script>
 
 </body>
+
+</html>

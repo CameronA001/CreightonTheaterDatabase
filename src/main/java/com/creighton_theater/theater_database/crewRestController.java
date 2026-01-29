@@ -32,7 +32,7 @@ public class crewRestController {
 
     /**
      * Retrieves all crew members with formatted boolean fields
-     * Converts binary fields to Yes/No for display
+     * Joins with student table to get names
      * 
      * @return List of all crew members
      */
@@ -41,18 +41,19 @@ public class crewRestController {
         try {
             String sql = """
                     SELECT
-                        c.crewID AS crewID,
-                        c.firstName AS firstName,
-                        c.lastName AS lastName,
-                        CASE WHEN c.wigTrained = 1 THEN 'Yes' ELSE 'No' END AS wigTrained,
-                        CASE WHEN c.makeupTrained = 1 THEN 'Yes' ELSE 'No' END AS makeupTrained,
-                        CASE WHEN c.musicReading = 1 THEN 'Yes' ELSE 'No' END AS musicReading,
+                        c.crewid AS crewid,
+                        s.firstname AS firstname,
+                        s.lastname AS lastname,
+                        CASE WHEN c.wigtrained = true THEN 'Yes' ELSE 'No' END AS wigtrained,
+                        CASE WHEN c.makeuptrained = true THEN 'Yes' ELSE 'No' END AS makeuptrained,
+                        CASE WHEN c.musicreading = true THEN 'Yes' ELSE 'No' END AS musicreading,
                         c.lighting AS lighting,
                         c.sound AS sound,
                         c.specialty AS specialty,
                         c.notes AS notes
                     FROM crew c
-                    ORDER BY c.lastName, c.firstName
+                    JOIN student s ON c.crewid = s.netid
+                    ORDER BY s.lastname, s.firstname
                     """;
 
             List<Map<String, Object>> crew = jdbcTemplate.queryForList(sql);
@@ -73,7 +74,24 @@ public class crewRestController {
     @GetMapping("/filterBy")
     public ResponseEntity<List<Map<String, Object>>> filterBy(@RequestParam String value) {
         try {
-            String sql = "SELECT * FROM crew WHERE crew.crewID LIKE ? ORDER BY lastName, firstName";
+            String sql = """
+                    SELECT
+                        c.crewid AS crewid,
+                        s.firstname AS firstname,
+                        s.lastname AS lastname,
+                        CASE WHEN c.wigtrained = true THEN 'Yes' ELSE 'No' END AS wigtrained,
+                        CASE WHEN c.makeuptrained = true THEN 'Yes' ELSE 'No' END AS makeuptrained,
+                        CASE WHEN c.musicreading = true THEN 'Yes' ELSE 'No' END AS musicreading,
+                        c.lighting AS lighting,
+                        c.sound AS sound,
+                        c.specialty AS specialty,
+                        c.notes AS notes
+                    FROM crew c
+                    JOIN student s ON c.crewid = s.netid
+                    WHERE c.crewid LIKE ?
+                    ORDER BY s.lastname, s.firstname
+                    """;
+
             List<Map<String, Object>> crew = jdbcTemplate.queryForList(sql, "%" + value + "%");
             return ResponseEntity.ok(crew);
 
@@ -88,11 +106,9 @@ public class crewRestController {
      * The crewID must correspond to an existing student's netID
      * 
      * @param crewID        The crew member's ID (must be an existing student netID)
-     * @param firstName     First name
-     * @param lastName      Last name
-     * @param wigTrained    Whether trained in wig work (1=yes, 0=no)
-     * @param makeupTrained Whether trained in makeup (1=yes, 0=no)
-     * @param musicReading  Whether can read music (1=yes, 0=no)
+     * @param wigTrained    Whether trained in wig work (true/false)
+     * @param makeupTrained Whether trained in makeup (true/false)
+     * @param musicReading  Whether can read music (true/false)
      * @param lighting      Lighting experience/notes
      * @param sound         Sound experience/notes
      * @param specialty     Special skills or focus area
@@ -102,11 +118,9 @@ public class crewRestController {
     @PostMapping("/addCrew")
     public ResponseEntity<Map<String, String>> addCrew(
             @RequestParam String crewID,
-            @RequestParam String firstName,
-            @RequestParam String lastName,
-            @RequestParam(required = false) Integer wigTrained,
-            @RequestParam(required = false) Integer makeupTrained,
-            @RequestParam(required = false) Integer musicReading,
+            @RequestParam(required = false) Boolean wigTrained,
+            @RequestParam(required = false) Boolean makeupTrained,
+            @RequestParam(required = false) Boolean musicReading,
             @RequestParam(required = false) String lighting,
             @RequestParam(required = false) String sound,
             @RequestParam(required = false) String specialty,
@@ -116,18 +130,16 @@ public class crewRestController {
 
         try {
             String sql = """
-                    INSERT INTO crew (crewID, firstName, lastName, wigTrained, makeupTrained,
-                                     musicReading, lighting, sound, specialty, notes)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO crew (crewid, wigtrained, makeuptrained,
+                                     musicreading, lighting, sound, specialty, notes)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     """;
 
             jdbcTemplate.update(sql,
                     crewID,
-                    firstName,
-                    lastName,
-                    wigTrained != null ? wigTrained : 0,
-                    makeupTrained != null ? makeupTrained : 0,
-                    musicReading != null ? musicReading : 0,
+                    wigTrained != null ? wigTrained : false,
+                    makeupTrained != null ? makeupTrained : false,
+                    musicReading != null ? musicReading : false,
                     lighting,
                     sound,
                     specialty,
@@ -144,7 +156,7 @@ public class crewRestController {
             // Check for foreign key constraint
             if (e.getMessage().contains("foreign key")) {
                 response.put("message", "Cannot add crew member: Student with netID '" + crewID + "' does not exist");
-            } else if (e.getMessage().contains("Duplicate entry")) {
+            } else if (e.getMessage().contains("Duplicate entry") || e.getMessage().contains("duplicate key")) {
                 response.put("message", "Crew profile already exists for this student");
             } else {
                 response.put("message", "Error adding crew member: " + e.getMessage());
