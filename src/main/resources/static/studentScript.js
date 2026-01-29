@@ -10,10 +10,10 @@
 
 // Filter dropdown options for student page
 const STUDENT_FILTER_OPTIONS = [
-  { value: "netID", label: "NetID" },
-  { value: "firstName", label: "First Name" },
-  { value: "lastName", label: "Last Name" },
-  { value: "gradeLevel", label: "Grade Level" },
+  { value: "netid", label: "NetID" },
+  { value: "firstname", label: "First Name" },
+  { value: "lastname", label: "Last Name" },
+  { value: "gradelevel", label: "Grade Level" },
   { value: "allergies_sensitivities", label: "Allergies/Sensitivities" },
 ];
 
@@ -40,9 +40,9 @@ function buildStudentRow(student) {
   return `
     <td>
       <select class="netid-select" onchange="handleStudentDropdown(this.value, '${
-        student.netID
+        student.netid
       }')">
-        <option value="" selected>${student.netID}</option>
+        <option value="" selected>${student.netid}</option>
         <option value="roles">Previous Roles</option>
         <option value="shows">Previous Shows</option>
         <option value="crew">Crew Page</option>
@@ -51,10 +51,10 @@ function buildStudentRow(student) {
         <option value="edit">Edit Student</option>
       </select>
     </td>
-    <td>${student.firstName} ${student.lastName}</td>
-    <td>${student.gradeLevel}</td>
+    <td>${student.firstname} ${student.lastname}</td>
+    <td>${student.gradelevel}</td>
     <td>${student.pronouns || ""}</td>
-    <td>${student.specialNotes || ""}</td>
+    <td>${student.specialnotes || ""}</td>
     <td>${student.email || ""}</td>
     <td>${student.allergies_sensitivities || ""}</td>
   `;
@@ -67,13 +67,13 @@ function buildStudentRow(student) {
  */
 function buildStudentShowRow(show) {
   return `
-    <td>${show.showID || ""}</td>
-    <td>${show.showName || ""}</td>
-    <td>${show.yearSemester || ""}</td>
+    <td>${show.showid || ""}</td>
+    <td>${show.showname || ""}</td>
+    <td>${show.yearsemester || ""}</td>
     <td>${show.characters || ""}</td>
     <td>${show.director || ""}</td>
     <td>${show.genre || ""}</td>
-    <td>${show.playWright || ""}</td>
+    <td>${show.playwright || ""}</td>
   `;
 }
 
@@ -91,7 +91,7 @@ function loadStudents() {
   // Load all students, then filter client-side if needed
   loadTableData("/student/getAll", "student-table-body", (student) => {
     // If netID parameter exists, only show matching students
-    if (netID && student.netID !== netID) {
+    if (netID && student.netid !== netID) {
       return null; // Skip this student
     }
     return buildStudentRow(student);
@@ -101,7 +101,7 @@ function loadStudents() {
   if (netID) {
     const filterColumn = document.getElementById("filter-column");
     const filterInput = document.getElementById("filter-input");
-    if (filterColumn) filterColumn.value = "netID";
+    if (filterColumn) filterColumn.value = "netid";
     if (filterInput) filterInput.value = netID;
   }
 }
@@ -208,7 +208,7 @@ async function addStudent() {
   formData.append("pronouns", document.getElementById("pronouns").value);
   formData.append(
     "specialNotes",
-    document.getElementById("specialNotes").value
+    document.getElementById("specialNotes").value,
   );
   formData.append("email", document.getElementById("email").value);
   formData.append("allergies", document.getElementById("allergies").value);
@@ -218,7 +218,7 @@ async function addStudent() {
     formData,
     "Student added successfully!",
     "/student/loadpage",
-    "add-student-form"
+    "add-student-form",
   );
 }
 
@@ -244,12 +244,12 @@ async function editStudent(oldNetID) {
   formData.append("pronouns", document.getElementById("pronouns").value);
   formData.append(
     "specialNotes",
-    document.getElementById("specialNotes").value
+    document.getElementById("specialNotes").value,
   );
   formData.append("email", document.getElementById("email").value);
   formData.append(
     "allergies_sensitivities",
-    document.getElementById("allergies").value
+    document.getElementById("allergies").value,
   );
 
   await submitForm(
@@ -257,7 +257,7 @@ async function editStudent(oldNetID) {
     formData,
     "Student edited successfully!",
     "/student/loadpage",
-    "edit-student-form"
+    "edit-student-form",
   );
 }
 

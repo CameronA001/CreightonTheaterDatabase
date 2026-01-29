@@ -1,5 +1,6 @@
 package com.creighton_theater.theater_database;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,17 +37,17 @@ public class characterRestController {
         try {
             String sql = """
                     SELECT
-                        s.firstName AS firstName,
-                        s.lastName AS lastName,
-                        c.characterName AS characterName,
-                        c.netID AS netID,
-                        c.showID AS showID,
-                        sh.showName AS showName,
-                        sh.yearSemester AS showSemester
+                        s.firstname AS firstname,
+                        s.lastname AS lastname,
+                        c.charactername AS charactername,
+                        c.netid AS netid,
+                        c.showid AS showid,
+                        sh.showname AS showname,
+                        sh.yearsemester AS showsemester
                     FROM characters c
-                    JOIN student s ON c.netID = s.netID
-                    JOIN shows sh ON c.showID = sh.showID
-                    ORDER BY sh.yearSemester DESC, sh.showName, c.characterName
+                    JOIN student s ON c.netid = s.netid
+                    JOIN shows sh ON c.showid = sh.showid
+                    ORDER BY sh.yearsemester DESC, sh.showname, c.charactername
                     """;
 
             List<Map<String, Object>> characters = jdbcTemplate.queryForList(sql);
@@ -74,41 +75,65 @@ public class characterRestController {
             @RequestParam String page) {
 
         try {
-            // Whitelist valid column and table combinations
+            // Whitelist valid columns for each table alias
             Map<String, List<String>> validCombinations = Map.of(
-                    "c", List.of("netID", "characterName", "showID"),
-                    "s", List.of("firstName", "lastName"),
-                    "sh", List.of("showID", "showName", "yearSemester"));
+                    "c", List.of("netid", "charactername"),
+                    "s", List.of("firstname", "lastname"),
+                    "sh", List.of("showid", "showname", "yearsemester"));
 
             // Validate the table alias and column
             if (!validCombinations.containsKey(page) ||
                     !validCombinations.get(page).contains(column)) {
-                return ResponseEntity.badRequest().body(null);
+                return ResponseEntity.badRequest().body(Collections.emptyList());
             }
 
-            // Build SQL with validated parameters
-            String sql = String.format("""
-                    SELECT
-                        s.firstName AS firstName,
-                        s.lastName AS lastName,
-                        c.characterName AS characterName,
-                        c.netID AS netID,
-                        c.showID AS showID,
-                        sh.showName AS showName,
-                        sh.yearSemester AS showSemester
-                    FROM characters c
-                    JOIN student s ON c.netID = s.netID
-                    JOIN shows sh ON c.showID = sh.showID
-                    WHERE %s.%s LIKE ?
-                    ORDER BY sh.yearSemester DESC, sh.showName
-                    """, page, column);
+            // Determine if the column is numeric
+            boolean isNumeric = page.equals("sh") && column.equals("showid");
 
-            List<Map<String, Object>> characters = jdbcTemplate.queryForList(sql, "%" + value + "%");
+            // Build SQL with proper operator
+            String operator = isNumeric ? "=" : "LIKE";
+
+            String sql = String.format("""
+                    SELECT s.firstname AS firstname,
+                           s.lastname AS lastname,
+                           c.charactername AS charactername,
+                           c.netid AS netid,
+                           c.showid AS showid,
+                           sh.showname AS showname,
+                           sh.yearsemester AS showsemester
+                    FROM characters c
+                    JOIN student s ON c.netid = s.netid
+                    JOIN shows sh ON c.showid = sh.showid
+                    WHERE %s.%s %s ?
+                    ORDER BY sh.yearsemester DESC, sh.showname
+                    """, page, column, operator);
+
+            // Use integer value for numeric, string with % for LIKE
+            Object param = isNumeric ? Integer.parseInt(value) : "%" + value + "%";
+
+            List<Map<String, Object>> characters = jdbcTemplate.queryForList(sql, param);
             return ResponseEntity.ok(characters);
 
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid numeric value: " + value);
+            return ResponseEntity.badRequest().body(Collections.emptyList());
         } catch (DataAccessException e) {
-            System.err.println("Error filtering characters: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.emptyList());
+        }
+    }
+
+    @GetMapping("/db/ping")
+    public ResponseEntity<String> pingDatabase() {
+        try {
+            Integer result = jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+            return ResponseEntity.ok("DB connected, result = " + result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getClass().getName() + ": " + e.getMessage());
         }
     }
 
@@ -130,8 +155,9 @@ public class characterRestController {
         Map<String, String> response = new HashMap<>();
 
         try {
-            String sql = "INSERT INTO characters (characterName, netID, showID) VALUES (?, ?, ?)";
-            jdbcTemplate.update(sql, characterName, netID, showID);
+            String sql = "INSERT INTO characters (charactername, netid, showid) VALUES (?, ?, ?)";
+            int showIdInt = Integer.parseInt(showID);
+            jdbcTemplate.update(sql, characterName, netID, showIdInt);
 
             response.put("status", "success");
             response.put("message", "Character added successfully!");
@@ -164,8 +190,6 @@ public class characterRestController {
 
     /**
      * Edits a character's information
-     * Note: This implementation is simplified - consider whether character name
-     * should be editable
      * 
      * @param newCharacterName The new character name
      * @param netID            The netID of the actor
@@ -181,7 +205,7 @@ public class characterRestController {
         Map<String, String> response = new HashMap<>();
 
         try {
-            String sql = "UPDATE characters SET characterName = ?, netID = ? WHERE characterName = ?";
+            String sql = "UPDATE characters SET charactername = ?, netid = ? WHERE charactername = ?";
             int rowsAffected = jdbcTemplate.update(sql, newCharacterName, netID, oldCharacterName);
 
             if (rowsAffected > 0) {

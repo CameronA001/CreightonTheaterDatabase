@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
-//TODO: when viewing actors/crew for a show, don't make it like (showing 11, 21, 31 etc for just "1")
 /**
  * REST Controller for Show entity operations
  * Handles operations related to theater shows/productions
@@ -35,14 +34,13 @@ public class showRestController {
         try {
             String sql = """
                     SELECT
-                        s.showID as showID,
-                        s.showName as showName,
-                        s.yearSemester as yearSemester,
-                        s.Director as director,
+                        s.showid as showid,
+                        s.showname as showname,
+                        s.yearsemester as yearsemester,
                         s.genre as genre,
-                        s.playWright as playWright
+                        s.playwright as playwright
                     FROM shows s
-                    ORDER BY s.yearSemester DESC, s.showName
+                    ORDER BY s.yearsemester DESC, s.showname
                     """;
 
             List<Map<String, Object>> shows = jdbcTemplate.queryForList(sql);
@@ -58,10 +56,9 @@ public class showRestController {
      * Searches for shows by a specific field
      * Used for autocomplete functionality in forms
      * 
-     * @param searchBy    The field to search by (showName, yearSemester, showID)
+     * @param searchBy    The field to search by (showname, yearsemester, showid)
      * @param searchValue The value to search for (supports partial matches)
-     * @return List of shows matching the search criteria (showName, yearSemester,
-     *         showID only)
+     * @return List of shows matching the search criteria
      */
     @GetMapping("/getShowIDName")
     public ResponseEntity<List<Map<String, Object>>> getShowIDName(
@@ -70,7 +67,7 @@ public class showRestController {
 
         try {
             // Whitelist allowed search columns
-            List<String> allowedColumns = List.of("showName", "yearSemester", "showID");
+            List<String> allowedColumns = List.of("showname", "yearsemester", "showid");
 
             if (!allowedColumns.contains(searchBy)) {
                 return ResponseEntity.badRequest().body(null);
@@ -78,7 +75,7 @@ public class showRestController {
 
             // Build SQL with validated column name
             String sql = String.format(
-                    "SELECT showName, yearSemester, showID, director, genre, playWright  FROM shows WHERE %s LIKE ? ORDER BY yearSemester DESC",
+                    "SELECT showname, yearsemester, showid, genre, playwright FROM shows WHERE %s LIKE ? ORDER BY yearsemester DESC",
                     searchBy);
 
             List<Map<String, Object>> shows = jdbcTemplate.queryForList(sql, "%" + searchValue + "%");
@@ -101,17 +98,17 @@ public class showRestController {
         try {
             String sql = """
                     SELECT
-                        s.showName,
-                        s.yearSemester,
-                        st.firstName,
-                        st.lastName,
+                        s.showname,
+                        s.yearsemester,
+                        st.firstname,
+                        st.lastname,
                         cs.roles,
-                        cs.crewID
+                        cs.crewid
                     FROM crew_in_show cs
-                    JOIN shows s ON cs.showID = s.showID
-                    JOIN student st ON st.netID = cs.crewID
-                    WHERE s.showID = ?
-                    ORDER BY st.lastName, st.firstName
+                    JOIN shows s ON cs.showid = s.showid
+                    JOIN student st ON st.netid = cs.crewid
+                    WHERE s.showid = ?
+                    ORDER BY st.lastname, st.firstname
                     """;
 
             List<Map<String, Object>> crewMembers = jdbcTemplate.queryForList(sql, showID);
@@ -122,4 +119,27 @@ public class showRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteShow(@RequestParam String showID) {
+        try {
+            int showIdInt = Integer.parseInt(showID);
+            String sql = "DELETE FROM shows WHERE showid = ?";
+            System.out.println("Attempting to delete showID = " + showID);
+
+            int rowsAffected = jdbcTemplate.update(sql, showIdInt);
+
+            if (rowsAffected > 0) {
+                return ResponseEntity.ok("Show deleted successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Show not found.");
+            }
+
+        } catch (DataAccessException e) {
+            System.err.println("Error deleting show: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting show.");
+        }
+    }
+
 }

@@ -39,7 +39,7 @@ public class PageController {
 
     @GetMapping("/student/{netID}/editPage")
     public String populateEditStudentPage(@PathVariable("netID") String netID, Model model) {
-        String sql = "SELECT * FROM student WHERE netID = ?";
+        String sql = "SELECT * FROM student WHERE netid = ?";
         Map<String, Object> student = jdbcTemplate.queryForMap(sql, netID);
         model.addAttribute("student", student);
         return "student/editStudents";
@@ -47,8 +47,7 @@ public class PageController {
 
     @GetMapping("/student/{netID}/characters")
     public String showPage(@PathVariable("netID") String netID, Model model) {
-
-        String sql = "SELECT * FROM characters WHERE netID = ?";
+        String sql = "SELECT * FROM characters WHERE netid = ?";
         List<Map<String, Object>> character = jdbcTemplate.queryForList(sql, netID);
         model.addAttribute("roles", character);
         return "characters/character";
@@ -90,37 +89,37 @@ public class PageController {
     public String populateEditActorPage(@RequestParam("netID") String netID, Model model) {
         String sql = """
                     SELECT
-                    s.firstName AS firstName,
-                    s.lastName AS lastName,
-                    a.netID AS netID,
-                    a.yearsActingExperience AS yearsActingExperience,
-                    a.skinTone AS skinTone,
+                    s.firstname AS firstname,
+                    s.lastname AS lastname,
+                    a.netid AS netid,
+                    a.yearsactingexperience AS yearsactingexperience,
+                    a.skintone AS skintone,
                     a.piercings AS piercings,
-                    a.hairColor AS hairColor,
-                    a.previousInjuries AS previousInjuries,
-                    a.specialNotes AS specialNotes,
+                    a.haircolor AS haircolor,
+                    a.previousinjuries AS previousinjuries,
+                    a.specialnotes AS specialnotes,
                     a.height AS height,
-                    a.ringSize AS ringSize,
-                    a.shoeSize AS shoeSize,
-                    a.headCirc AS headCirc,
-                    a.neckBase AS neckBase,
+                    a.ringsize AS ringsize,
+                    a.shoesize AS shoesize,
+                    a.headcirc AS headcirc,
+                    a.neckbase AS neckbase,
                     a.chest AS chest,
                     a.waist AS waist,
-                    a.highHip AS highHip,
-                    a.lowHip AS lowHip,
-                    a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
-                    a.neckToWaistFront AS neckToWaistFront,
-                    a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
-                    a.neckToWaistBack AS neckToWaistBack,
-                    a.centerBackToWrist AS centerBackToWrist,
-                    a.outsleeveToWrist AS outsleeveToWrist,
-                    a.outseamBelowKnee AS outseamBelowKnee,
-                    a.outseamToAnkle AS outseamToAnkle,
-                    a.outseamToFloor AS outseamToFloor,
-                    a.otherNotes AS otherNotes
+                    a.highhip AS highhip,
+                    a.lowhip AS lowhip,
+                    a.armseyetoarmseyefront AS armseyetoarmseyefront,
+                    a.necktowaistfront AS necktowaistfront,
+                    a.armseyetoarmseyeback AS armseyetoarmseyeback,
+                    a.necktowaistback AS necktowaistback,
+                    a.centerbacktowrist AS centerbacktowrist,
+                    a.outsleevetowrist AS outsleevetowrist,
+                    a.outseambelowknee AS outseambelowknee,
+                    a.outseamtoankle AS outseamtoankle,
+                    a.outseamtofloor AS outseamtofloor,
+                    a.othernotes AS othernotes
                 FROM actor a
-                JOIN student s ON a.netID = s.netID
-                WHERE a.netID = ?
+                JOIN student s ON a.netid = s.netid
+                WHERE a.netid = ?
                 """;
         Map<String, Object> actor = jdbcTemplate.queryForMap(sql, netID);
         model.addAttribute("actor", actor);

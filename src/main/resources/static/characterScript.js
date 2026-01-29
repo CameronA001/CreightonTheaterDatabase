@@ -11,13 +11,13 @@
 // Filter dropdown options for character page
 // Format: "columnName,tableAlias" (c=characters, s=student, sh=shows)
 const CHARACTER_FILTER_OPTIONS = [
-  { value: "netID,c", label: "NetID" },
-  { value: "firstName,s", label: "First Name" },
-  { value: "lastName,s", label: "Last Name" },
-  { value: "showID,sh", label: "Show ID" },
-  { value: "characterName,c", label: "Character Name" },
-  { value: "showName,sh", label: "Show Name" },
-  { value: "yearSemester,sh", label: "Show Semester" },
+  { value: "netid,c", label: "NetID" },
+  { value: "firstname,s", label: "First Name" },
+  { value: "lastname,s", label: "Last Name" },
+  { value: "showid,sh", label: "Show ID" },
+  { value: "charactername,c", label: "Character Name" },
+  { value: "showname,sh", label: "Show Name" },
+  { value: "yearsemester,sh", label: "Show Semester" },
 ];
 
 // ============================================================================
@@ -33,17 +33,17 @@ function buildCharacterRow(character) {
   return `
     <td>
       <select class="netid-select" onchange="handleCharacterDropdown(this.value, '${
-        character.characterName
+        character.charactername
       }')">
-        <option value="" selected>${character.characterName}</option>
+        <option value="" selected>${character.charactername}</option>
         <option value="delete">Delete Character</option>
       </select>
     </td>
-    <td>${character.showName || ""}</td>
-    <td>${character.showSemester || ""}</td>
-    <td>${character.firstName} ${character.lastName}</td>
-    <td>${character.netID}</td>
-    <td>${character.showID}</td>
+    <td>${character.showname || ""}</td>
+    <td>${character.showsemester || ""}</td>
+    <td>${character.firstname} ${character.lastname}</td>
+    <td>${character.netid}</td>
+    <td>${character.showid}</td>
   `;
 }
 
@@ -64,7 +64,7 @@ function loadCharacters() {
     const filterColumn = document.getElementById("filter-column");
     const filterInput = document.getElementById("filter-input");
 
-    if (filterColumn) filterColumn.value = "netID,c";
+    if (filterColumn) filterColumn.value = "netid,c";
     if (filterInput) filterInput.value = netID;
 
     processFilter();
@@ -73,7 +73,7 @@ function loadCharacters() {
     const filterColumn = document.getElementById("filter-column");
     const filterInput = document.getElementById("filter-input");
 
-    if (filterColumn) filterColumn.value = "showID,sh";
+    if (filterColumn) filterColumn.value = "showid,sh";
     if (filterInput) filterInput.value = showID;
 
     processFilter();
@@ -82,7 +82,7 @@ function loadCharacters() {
     loadTableData(
       "/characters/getAll",
       "character-table-body",
-      buildCharacterRow
+      buildCharacterRow,
     );
   }
 }
@@ -156,7 +156,7 @@ function handleCharacterDropdown(selectedValue, characterName) {
   if (selectedValue === "delete") {
     // Navigate to delete endpoint
     window.location.href = `/characters/delete?characterName=${encodeURIComponent(
-      characterName
+      characterName,
     )}`;
   }
 
@@ -185,15 +185,15 @@ async function addCharacter() {
   }
 
   formData.append("characterName", characterName.value);
-  formData.append("showID", showID.value);
   formData.append("netID", netIDInput.value);
+  formData.append("showID", showID.value);
 
   await submitForm(
     "/characters/add",
     formData,
     "Character added successfully!",
     "/characters/loadpage",
-    "add-character-form"
+    "add-character-form",
   );
 }
 
@@ -206,10 +206,22 @@ async function addCharacter() {
  */
 function initializeAddCharacterPage() {
   // Initialize student autocomplete
-  findStudents("", "netID", "student-select", "addCharacterButton");
+  findStudents("", "netid", "student-select", "addCharacterButton");
   setupStudentAutocomplete("student-select", "addCharacterButton");
 
   // Initialize show autocomplete
-  findShows("showName", "", "show-select", "addCharacterButton");
+  findShows("showname", "", "show-select", "addCharacterButton");
   setupShowAutocomplete("show-select", "addCharacterButton");
+
+  const netInput = document.getElementById("netIDInput");
+
+  netInput.addEventListener("input", function () {
+    findStudents(this.value, "netid", "student-select", "addCharacterButton");
+  });
+
+  const showInput = document.getElementById("showID");
+
+  showInput.addEventListener("input", function () {
+    findShows(this.value, "showname", "show-select", "addCharacterButton");
+  });
 }

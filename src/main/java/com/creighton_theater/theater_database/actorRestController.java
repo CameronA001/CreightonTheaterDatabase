@@ -37,37 +37,37 @@ public class actorRestController {
         try {
             String sql = """
                     SELECT
-                        s.firstName AS firstName,
-                        s.lastName AS lastName,
-                        a.netID AS netID,
-                        a.yearsActingExperience AS yearsActingExperience,
-                        a.skinTone AS skinTone,
+                        s.firstname AS firstname,
+                        s.lastname AS lastname,
+                        a.netid AS netid,
+                        a.yearsactingexperience AS yearsactingexperience,
+                        a.skintone AS skintone,
                         a.piercings AS piercings,
-                        a.hairColor AS hairColor,
-                        a.previousInjuries AS previousInjuries,
-                        a.specialNotes AS specialNotes,
+                        a.haircolor AS haircolor,
+                        a.previousinjuries AS previousinjuries,
+                        a.specialnotes AS specialnotes,
                         a.height AS height,
-                        a.ringSize AS ringSize,
-                        a.shoeSize AS shoeSize,
-                        a.headCirc AS headCirc,
-                        a.neckBase AS neckBase,
+                        a.ringsize AS ringsize,
+                        a.shoesize AS shoesize,
+                        a.headcirc AS headcirc,
+                        a.neckbase AS neckbase,
                         a.chest AS chest,
                         a.waist AS waist,
-                        a.highHip AS highHip,
-                        a.lowHip AS lowHip,
-                        a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
-                        a.neckToWaistFront AS neckToWaistFront,
-                        a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
-                        a.neckToWaistBack AS neckToWaistBack,
-                        a.centerBackToWrist AS centerBackToWrist,
-                        a.outsleeveToWrist AS outsleeveToWrist,
-                        a.outseamBelowKnee AS outseamBelowKnee,
-                        a.outseamToAnkle AS outseamToAnkle,
-                        a.outseamToFloor AS outseamToFloor,
-                        a.otherNotes AS otherNotes
+                        a.highhip AS highhip,
+                        a.lowhip AS lowhip,
+                        a.armseyetoarmseyefront AS armseyetoarmseyefront,
+                        a.necktowaistfront AS necktowaistfront,
+                        a.armseyetoarmseyeback AS armseyetoarmseyeback,
+                        a.necktowaistback AS necktowaistback,
+                        a.centerbacktowrist AS centerbacktowrist,
+                        a.outsleevetowrist AS outsleevetowrist,
+                        a.outseambelowknee AS outseambelowknee,
+                        a.outseamtoankle AS outseamtoankle,
+                        a.outseamtofloor AS outseamtofloor,
+                        a.othernotes AS othernotes
                     FROM actor a
-                    JOIN student s ON a.netID = s.netID
-                    ORDER BY s.lastName, s.firstName
+                    JOIN student s ON a.netid = s.netid
+                    ORDER BY s.lastname, s.firstname
                     """;
 
             List<Map<String, Object>> actors = jdbcTemplate.queryForList(sql);
@@ -80,11 +80,11 @@ public class actorRestController {
     }
 
     /**
-     * Filters actors by column and value (supports netID, firstName, lastName,
+     * Filters actors by column and value (supports netid, firstname, lastname,
      * shows)
      * Uses parameterized query to prevent SQL injection
      * 
-     * @param column The column to filter by (netID, firstName, lastName, shows)
+     * @param column The column to filter by (netid, firstname, lastname, shows)
      * @param value  The value to search for
      * @return List of actors matching the search criteria
      */
@@ -94,7 +94,7 @@ public class actorRestController {
             @RequestParam String value) {
         try {
             // Whitelist valid columns
-            List<String> validColumns = List.of("netID", "firstName", "lastName", "shows");
+            List<String> validColumns = List.of("netid", "firstname", "lastname", "shows");
 
             if (!validColumns.contains(column)) {
                 return ResponseEntity.badRequest().body(null);
@@ -106,113 +106,113 @@ public class actorRestController {
                 // Filter by show ID - get actors who played characters in this show
                 sql = """
                         SELECT DISTINCT
-                            s.firstName AS firstName,
-                            s.lastName AS lastName,
-                            a.netID AS netID,
-                            a.yearsActingExperience AS yearsActingExperience,
-                            a.skinTone AS skinTone,
+                            s.firstname AS firstname,
+                            s.lastname AS lastname,
+                            a.netid AS netid,
+                            a.yearsactingexperience AS yearsactingexperience,
+                            a.skintone AS skintone,
                             a.piercings AS piercings,
-                            a.hairColor AS hairColor,
-                            a.previousInjuries AS previousInjuries,
-                            a.specialNotes AS specialNotes,
+                            a.haircolor AS haircolor,
+                            a.previousinjuries AS previousinjuries,
+                            a.specialnotes AS specialnotes,
                             a.height AS height,
-                            a.ringSize AS ringSize,
-                            a.shoeSize AS shoeSize,
-                            a.headCirc AS headCirc,
-                            a.neckBase AS neckBase,
+                            a.ringsize AS ringsize,
+                            a.shoesize AS shoesize,
+                            a.headcirc AS headcirc,
+                            a.neckbase AS neckbase,
                             a.chest AS chest,
                             a.waist AS waist,
-                            a.highHip AS highHip,
-                            a.lowHip AS lowHip,
-                            a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
-                            a.neckToWaistFront AS neckToWaistFront,
-                            a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
-                            a.neckToWaistBack AS neckToWaistBack,
-                            a.centerBackToWrist AS centerBackToWrist,
-                            a.outsleeveToWrist AS outsleeveToWrist,
-                            a.outseamBelowKnee AS outseamBelowKnee,
-                            a.outseamToAnkle AS outseamToAnkle,
-                            a.outseamToFloor AS outseamToFloor,
-                            a.otherNotes AS otherNotes
+                            a.highhip AS highhip,
+                            a.lowhip AS lowhip,
+                            a.armseyetoarmseyefront AS armseyetoarmseyefront,
+                            a.necktowaistfront AS necktowaistfront,
+                            a.armseyetoarmseyeback AS armseyetoarmseyeback,
+                            a.necktowaistback AS necktowaistback,
+                            a.centerbacktowrist AS centerbacktowrist,
+                            a.outsleevetowrist AS outsleevetowrist,
+                            a.outseambelowknee AS outseambelowknee,
+                            a.outseamtoankle AS outseamtoankle,
+                            a.outseamtofloor AS outseamtofloor,
+                            a.othernotes AS othernotes
                         FROM actor a
-                        JOIN student s ON a.netID = s.netID
-                        JOIN characters c ON a.netID = c.netID
-                        WHERE c.showID LIKE ?
-                        ORDER BY s.lastName, s.firstName
+                        JOIN student s ON a.netid = s.netid
+                        JOIN characters c ON a.netid = c.netid
+                        WHERE c.showid LIKE ?
+                        ORDER BY s.lastname, s.firstname
                         """;
-            } else if ("firstName".equals(column) || "lastName".equals(column)) {
+            } else if ("firstname".equals(column) || "lastname".equals(column)) {
                 // Filter by student name fields
                 sql = String.format("""
                         SELECT
-                            s.firstName AS firstName,
-                            s.lastName AS lastName,
-                            a.netID AS netID,
-                            a.yearsActingExperience AS yearsActingExperience,
-                            a.skinTone AS skinTone,
+                            s.firstname AS firstname,
+                            s.lastname AS lastname,
+                            a.netid AS netid,
+                            a.yearsactingexperience AS yearsactingexperience,
+                            a.skintone AS skintone,
                             a.piercings AS piercings,
-                            a.hairColor AS hairColor,
-                            a.previousInjuries AS previousInjuries,
-                            a.specialNotes AS specialNotes,
+                            a.haircolor AS haircolor,
+                            a.previousinjuries AS previousinjuries,
+                            a.specialnotes AS specialnotes,
                             a.height AS height,
-                            a.ringSize AS ringSize,
-                            a.shoeSize AS shoeSize,
-                            a.headCirc AS headCirc,
-                            a.neckBase AS neckBase,
+                            a.ringsize AS ringsize,
+                            a.shoesize AS shoesize,
+                            a.headcirc AS headcirc,
+                            a.neckbase AS neckbase,
                             a.chest AS chest,
                             a.waist AS waist,
-                            a.highHip AS highHip,
-                            a.lowHip AS lowHip,
-                            a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
-                            a.neckToWaistFront AS neckToWaistFront,
-                            a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
-                            a.neckToWaistBack AS neckToWaistBack,
-                            a.centerBackToWrist AS centerBackToWrist,
-                            a.outsleeveToWrist AS outsleeveToWrist,
-                            a.outseamBelowKnee AS outseamBelowKnee,
-                            a.outseamToAnkle AS outseamToAnkle,
-                            a.outseamToFloor AS outseamToFloor,
-                            a.otherNotes AS otherNotes
+                            a.highhip AS highhip,
+                            a.lowhip AS lowhip,
+                            a.armseyetoarmseyefront AS armseyetoarmseyefront,
+                            a.necktowaistfront AS necktowaistfront,
+                            a.armseyetoarmseyeback AS armseyetoarmseyeback,
+                            a.necktowaistback AS necktowaistback,
+                            a.centerbacktowrist AS centerbacktowrist,
+                            a.outsleevetowrist AS outsleevetowrist,
+                            a.outseambelowknee AS outseambelowknee,
+                            a.outseamtoankle AS outseamtoankle,
+                            a.outseamtofloor AS outseamtofloor,
+                            a.othernotes AS othernotes
                         FROM actor a
-                        JOIN student s ON a.netID = s.netID
+                        JOIN student s ON a.netid = s.netid
                         WHERE s.%s LIKE ?
-                        ORDER BY s.lastName, s.firstName
+                        ORDER BY s.lastname, s.firstname
                         """, column);
             } else {
-                // Filter by netID
+                // Filter by netid
                 sql = """
                         SELECT
-                            s.firstName AS firstName,
-                            s.lastName AS lastName,
-                            a.netID AS netID,
-                            a.yearsActingExperience AS yearsActingExperience,
-                            a.skinTone AS skinTone,
+                            s.firstname AS firstname,
+                            s.lastname AS lastname,
+                            a.netid AS netid,
+                            a.yearsactingexperience AS yearsactingexperience,
+                            a.skintone AS skintone,
                             a.piercings AS piercings,
-                            a.hairColor AS hairColor,
-                            a.previousInjuries AS previousInjuries,
-                            a.specialNotes AS specialNotes,
+                            a.haircolor AS haircolor,
+                            a.previousinjuries AS previousinjuries,
+                            a.specialnotes AS specialnotes,
                             a.height AS height,
-                            a.ringSize AS ringSize,
-                            a.shoeSize AS shoeSize,
-                            a.headCirc AS headCirc,
-                            a.neckBase AS neckBase,
+                            a.ringsize AS ringsize,
+                            a.shoesize AS shoesize,
+                            a.headcirc AS headcirc,
+                            a.neckbase AS neckbase,
                             a.chest AS chest,
                             a.waist AS waist,
-                            a.highHip AS highHip,
-                            a.lowHip AS lowHip,
-                            a.armseyeToArmseyeFront AS armseyeToArmseyeFront,
-                            a.neckToWaistFront AS neckToWaistFront,
-                            a.armseyeToArmseyeBack AS armseyeToArmseyeBack,
-                            a.neckToWaistBack AS neckToWaistBack,
-                            a.centerBackToWrist AS centerBackToWrist,
-                            a.outsleeveToWrist AS outsleeveToWrist,
-                            a.outseamBelowKnee AS outseamBelowKnee,
-                            a.outseamToAnkle AS outseamToAnkle,
-                            a.outseamToFloor AS outseamToFloor,
-                            a.otherNotes AS otherNotes
+                            a.highhip AS highhip,
+                            a.lowhip AS lowhip,
+                            a.armseyetoarmseyefront AS armseyetoarmseyefront,
+                            a.necktowaistfront AS necktowaistfront,
+                            a.armseyetoarmseyeback AS armseyetoarmseyeback,
+                            a.necktowaistback AS necktowaistback,
+                            a.centerbacktowrist AS centerbacktowrist,
+                            a.outsleevetowrist AS outsleevetowrist,
+                            a.outseambelowknee AS outseambelowknee,
+                            a.outseamtoankle AS outseamtoankle,
+                            a.outseamtofloor AS outseamtofloor,
+                            a.othernotes AS othernotes
                         FROM actor a
-                        JOIN student s ON a.netID = s.netID
-                        WHERE a.netID LIKE ?
-                        ORDER BY s.lastName, s.firstName
+                        JOIN student s ON a.netid = s.netid
+                        WHERE a.netid LIKE ?
+                        ORDER BY s.lastname, s.firstname
                         """;
             }
 
@@ -228,34 +228,6 @@ public class actorRestController {
     /**
      * Adds a new actor profile for an existing student
      * All measurement fields are optional except netID
-     * 
-     * @param netID                 Student's netID (must exist in student table)
-     * @param yearsActingExperience Number of years of acting experience
-     * @param skinTone              Description of skin tone
-     * @param piercings             Description of piercings
-     * @param hairColor             Hair color
-     * @param previousInjuries      Any previous injuries to note
-     * @param specialNotes          Special notes for this actor
-     * @param height                Height (string format, e.g., "5'8\"")
-     * @param ringSize              Ring size
-     * @param shoeSize              Shoe size
-     * @param headCirc              Head circumference measurement
-     * @param neckBase              Neck base measurement
-     * @param chest                 Chest measurement
-     * @param waist                 Waist measurement
-     * @param highHip               High hip measurement
-     * @param lowHip                Low hip measurement
-     * @param armseyeToArmseyeFront Front armseye measurement
-     * @param neckToWaistFront      Front neck to waist measurement
-     * @param armseyeToArmseyeBack  Back armseye measurement
-     * @param neckToWaistBack       Back neck to waist measurement
-     * @param centerBackToWrist     Center back to wrist measurement
-     * @param outsleeveToWrist      Outsleeve to wrist measurement
-     * @param outseamBelowKnee      Outseam below knee measurement
-     * @param outseamToAnkle        Outseam to ankle measurement
-     * @param outseamToFloor        Outseam to floor measurement
-     * @param otherNotes            Other notes
-     * @return ResponseEntity with success or error message
      */
     @PostMapping("/add")
     public ResponseEntity<Map<String, String>> addActor(
@@ -291,13 +263,13 @@ public class actorRestController {
         try {
             String sql = """
                     INSERT INTO actor (
-                        netID, yearsActingExperience, skinTone, piercings, hairColor, previousInjuries,
-                        specialNotes, height, ringSize, shoeSize, headCirc,
-                        neckBase, chest, waist, highHip, lowHip,
-                        armseyeToArmseyeFront, neckToWaistFront, armseyeToArmseyeBack,
-                        neckToWaistBack, centerBackToWrist, outsleeveToWrist,
-                        outseamBelowKnee, outseamToAnkle, outseamToFloor,
-                        otherNotes
+                        netid, yearsactingexperience, skintone, piercings, haircolor, previousinjuries,
+                        specialnotes, height, ringsize, shoesize, headcirc,
+                        neckbase, chest, waist, highhip, lowhip,
+                        armseyetoarmseyefront, necktowaistfront, armseyetoarmseyeback,
+                        necktowaistback, centerbacktowrist, outsleevetowrist,
+                        outseambelowknee, outseamtoankle, outseamtofloor,
+                        othernotes
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """;
 
@@ -321,7 +293,7 @@ public class actorRestController {
             // Check for foreign key constraint (student doesn't exist)
             if (e.getMessage().contains("foreign key")) {
                 response.put("message", "Cannot add actor: Student with netID '" + netID + "' does not exist");
-            } else if (e.getMessage().contains("Duplicate entry")) {
+            } else if (e.getMessage().contains("Duplicate entry") || e.getMessage().contains("duplicate key")) {
                 response.put("message", "Actor profile already exists for this student");
             } else {
                 response.put("message", "Error adding actor: " + e.getMessage());
@@ -334,34 +306,6 @@ public class actorRestController {
     /**
      * Edits an existing actor's information
      * netID cannot be changed (it's the primary key and foreign key to student)
-     * 
-     * @param netID                 The actor's netID (from query parameter)
-     * @param yearsActingExperience Updated years of experience
-     * @param skinTone              Updated skin tone
-     * @param piercings             Updated piercings description
-     * @param hairColor             Updated hair color
-     * @param previousInjuries      Updated previous injuries
-     * @param specialNotes          Updated special notes
-     * @param height                Updated height
-     * @param ringSize              Updated ring size
-     * @param shoeSize              Updated shoe size
-     * @param headCirc              Updated head circumference
-     * @param neckBase              Updated neck base
-     * @param chest                 Updated chest measurement
-     * @param waist                 Updated waist measurement
-     * @param highHip               Updated high hip measurement
-     * @param lowHip                Updated low hip measurement
-     * @param armseyeToArmseyeFront Updated front armseye measurement
-     * @param neckToWaistFront      Updated front neck to waist measurement
-     * @param armseyeToArmseyeBack  Updated back armseye measurement
-     * @param neckToWaistBack       Updated back neck to waist measurement
-     * @param centerBackToWrist     Updated center back to wrist measurement
-     * @param outsleeveToWrist      Updated outsleeve to wrist measurement
-     * @param outseamBelowKnee      Updated outseam below knee measurement
-     * @param outseamToAnkle        Updated outseam to ankle measurement
-     * @param outseamToFloor        Updated outseam to floor measurement
-     * @param otherNotes            Updated other notes
-     * @return ResponseEntity with success or error message
      */
     @PostMapping("/edit")
     public ResponseEntity<Map<String, String>> editActor(
@@ -397,13 +341,13 @@ public class actorRestController {
         try {
             String sql = """
                     UPDATE actor
-                    SET yearsActingExperience = ?, skinTone = ?, piercings = ?, hairColor = ?,
-                        previousInjuries = ?, specialNotes = ?, height = ?, ringSize = ?, shoeSize = ?,
-                        headCirc = ?, neckBase = ?, chest = ?, waist = ?, highHip = ?, lowHip = ?,
-                        armseyeToArmseyeFront = ?, neckToWaistFront = ?, armseyeToArmseyeBack = ?,
-                        neckToWaistBack = ?, centerBackToWrist = ?, outsleeveToWrist = ?,
-                        outseamBelowKnee = ?, outseamToAnkle = ?, outseamToFloor = ?, otherNotes = ?
-                    WHERE netID = ?
+                    SET yearsactingexperience = ?, skintone = ?, piercings = ?, haircolor = ?,
+                        previousinjuries = ?, specialnotes = ?, height = ?, ringsize = ?, shoesize = ?,
+                        headcirc = ?, neckbase = ?, chest = ?, waist = ?, highhip = ?, lowhip = ?,
+                        armseyetoarmseyefront = ?, necktowaistfront = ?, armseyetoarmseyeback = ?,
+                        necktowaistback = ?, centerbacktowrist = ?, outsleevetowrist = ?,
+                        outseambelowknee = ?, outseamtoankle = ?, outseamtofloor = ?, othernotes = ?
+                    WHERE netid = ?
                     """;
 
             int rowsAffected = jdbcTemplate.update(sql,
