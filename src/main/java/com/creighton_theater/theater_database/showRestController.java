@@ -38,6 +38,7 @@ public class showRestController {
                         s.showname as showname,
                         s.yearsemester as yearsemester,
                         s.genre as genre,
+                        s.director as director,
                         s.playwright as playwright
                     FROM shows s
                     ORDER BY s.yearsemester DESC, s.showname
@@ -120,6 +121,77 @@ public class showRestController {
         }
     }
 
+    /**
+     * Loads scenes for a specific show
+     * 
+     * @param showID
+     * @return
+     */
+    @GetMapping("/getScenesInShow")
+    public ResponseEntity<List<Map<String, Object>>> getScenesInShow(@RequestParam String showID) {
+        try {
+            String sql = """
+                    SELECT
+                        s.showname,
+                        s.yearsemester,
+                        sc.scenename,
+                        sc.act,
+                        sc.locationset,
+                        sc.song,
+                        sc.bookscriptpages,
+                        sc.crewinshow
+                    FROM scene sc
+                    JOIN shows s ON sc.showid = s.showid
+                    WHERE s.showid = ?
+                    ORDER BY sc.act, sc.scenename
+                    """;
+
+            int showIdInt = Integer.parseInt(showID);
+            List<Map<String, Object>> scenes = jdbcTemplate.queryForList(sql, new Object[] { showIdInt });
+
+            return ResponseEntity.ok(scenes);
+
+        } catch (DataAccessException e) {
+            System.err.println("Error fetching scenes for show: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<String> addShow(
+            @RequestParam String showname,
+            @RequestParam String yearsemester,
+            @RequestParam String director,
+            @RequestParam String genre,
+            @RequestParam String playwright) {
+        try {
+            String sql = """
+                    INSERT INTO shows (showname, yearsemester, director, genre, playwright)
+                    VALUES (?, ?, ?, ?, ?)
+                    """;
+
+            int rowsAffected = jdbcTemplate.update(sql, showname, yearsemester, director, genre, playwright);
+
+            if (rowsAffected > 0) {
+                return ResponseEntity.ok("Show added successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add show.");
+            }
+
+        } catch (DataAccessException e) {
+            System.err.println("Error adding show: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error adding show.");
+        }
+    }
+
+    /**
+     * Deletes a show from the database
+     * 
+     * @param showID The ID of the show to delete
+     * @return Response indicating success or failure of deletion
+     */
+
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteShow(@RequestParam String showID) {
         try {
@@ -142,4 +214,34 @@ public class showRestController {
         }
     }
 
+    @GetMapping("/getSceneDetails")
+    public ResponseEntity<List<Map<String, Object>>> getCharactersInScene(@RequestParam String sceneName) {
+        try {
+            String sql = """
+                    SELECT
+                        cs.charactername,
+                        st.firstname || ' ' || st.lastname AS actorName,
+                        cs.costumechange,
+                        cs.costumeworn,
+                        cs.characterlocation,
+                        cs.changelocation,
+                        cs.changelengthoftime,
+                        cs.additionalnotes,
+                        cs.scenename
+                    FROM character_in_scene cs
+                    JOIN shows s on cs.showid = s.showid
+                    JOIN student st ON cs.netid = st.netid
+                    WHERE cs.scenename LIKE CONCAT('%', ?, '%')
+                    ORDER BY cs.charactername
+                                        """;
+
+            List<Map<String, Object>> characters = jdbcTemplate.queryForList(sql, new Object[] { sceneName });
+            return ResponseEntity.ok(characters);
+
+        } catch (DataAccessException e) {
+            System.err.println("Error fetching characters for scene: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+    // TODO: add scene function
 }

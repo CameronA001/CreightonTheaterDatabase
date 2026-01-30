@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/showScript.js"></script>
+    <script src="/common.js"></script>
+</head>
+
+<body class="page-background" onload="findNetIDFromName('', 'netID', 'Crew'); addEventListeners('Crew');">
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="location.href='/show/loadpage'" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">Back to Show List</button>
+
+    <h1 style="text-align: center;">ADD SHOW PAGE</h1>
+
+    <form id="add-show-form">
+        <label for="showname" class="addElementLabel">Show Name:</label>
+        <input type="text" id="showname" name="showname" class="formInput">
+
+        <label for="yearsemester" class="addElementLabel">Year and Semester (Write as Season Year):</label>
+        <input type="text" id="yearsemester" name="yearsemester" class="formInput">
+
+        <label for="director" class="addElementLabel">Director:</label>
+        <input type="text" id="director" name="director" class="formInput">
+
+        <label for="genre" class="addElementLabel">Genre:</label>
+        <input type="text" id="genre" name="genre" class="formInput">
+
+        <label for="playwright" class="addElementLabel">Playwright:</label>
+        <input type="text" id="playwright" name="playwright" class="formInput">
+
+        <button type="button" onclick="addShow()" class="basicButton" id="addCrewButton">
+            Add Show
+        </button>
+
+    </form>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeAddSHowPage();
+        });
+    </script>
+
+</body>
+
+</html>

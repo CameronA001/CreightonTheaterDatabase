@@ -152,4 +152,18 @@ public class PageController {
         return "/shows/crewInShow";
     }
 
+    @GetMapping("/show/scenesInShow")
+    public String scenesInShowPage() {
+        return "/shows/scenesInShow";
+    }
+
+    @GetMapping("/show/sceneDetails")
+    public String sceneDetailsPage() {
+        return "/shows/sceneDetails";
+    }
+
+    @GetMapping("/show/add")
+    public String addShowPage() {
+        return "shows/addShow";
+    }
 }

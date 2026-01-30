@@ -11,23 +11,25 @@
     <script src="/showScript.js"></script>
 </head>
 
-<body class="page-background">
+<body>
     <!-- Navigation -->
     <button onclick="location.href='/'" class="basicButton">Home</button>
     <button onclick="location.href='/show/loadpage'" class="basicButton">Back to Shows</button>
 
-    <h1 id="show-title"></h1>
+    <h1 id="scene-title"></h1>
 
     <!-- Scenes Table -->
     <table>
         <thead>
             <tr>
-                <th>Scene Name</th>
-                <th>Act</th>
-                <th>Location</th>
-                <th>Song</th>
-                <th>Book Page</th>
-                <th>Crew on scene</th>
+                <th>Character Name</th>
+                <th>Actor Name</th>
+                <th>Costume Change</th>
+                <th>Costume Worn</th>
+                <th>Character Location</th>
+                <th>Change Location</th>
+                <th>Change Time</th>
+                <th>Notes</th>
             </tr>
         </thead>
         <tbody id="scenes-table-body">
@@ -39,8 +41,9 @@
         // Initialize page
         window.addEventListener('DOMContentLoaded', function () {
             const params = new URLSearchParams(window.location.search);
-            const showID = params.get("showID");
-            loadScenesInShow(showID);
+            const sceneName = params.get("sceneName");
+            console.log(sceneName);
+            loadSceneDetails(sceneName);
         });
     </script>
 </body>

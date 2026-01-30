@@ -10,7 +10,6 @@
 
 // Filter dropdown options for show page
 const SHOW_FILTER_OPTIONS = [
-  { value: "showid", label: "Show ID" },
   { value: "showname", label: "Show Name" },
   { value: "yearsemester", label: "Year/Semester" },
 ];
@@ -30,6 +29,7 @@ function buildShowRow(show) {
     <select class="netid-select" onchange="handleShowDropdown(event, this.value, '${show.showid}')">
       <option value="">${show.showid}</option>
       <option value="viewCharacters">View Characters</option>
+      <option value="viewScenes">View Scenes</option>
       <option value="delete">Delete Show</option>
     </select>
   </td>
@@ -53,6 +53,35 @@ function buildShowCrewRow(showCrew) {
     <td>${showCrew.roles}</td>
     <td>${showCrew.crewid}</td> 
   `;
+}
+
+function buildSceneRow(scene) {
+  return `
+    <td><select class="netid-select" onchange="handleSceneDropdown(event, this.value, '${scene.scenename}')">
+        <option value="">${scene.scenename}</option>
+        <option value="viewCharacters">View Characters</option>
+        <option value="delete">Delete Scene</option>
+      </select>
+    </td>
+    <td>${scene.act}</td>
+    <td>${scene.locationset}</td>
+    <td>${scene.song}</td>
+    <td>${scene.bookscriptpages}</td>  
+    <td>${scene.crewinshow}</td>
+      `;
+}
+
+function buildSceneDetailsRow(sceneDetail) {
+  return `
+    <td>${sceneDetail.charactername}</td>
+    <td>${sceneDetail.actorname}</td>
+    <td>${sceneDetail.costumechange}</td>
+    <td>${sceneDetail.costumeworn}</td>
+    <td>${sceneDetail.characterlocation}</td>
+    <td>${sceneDetail.changelocation}</td>
+    <td>${sceneDetail.changetime}</td>
+    <td>${sceneDetail.notes}</td>
+      `;
 }
 
 // ============================================================================
@@ -89,6 +118,48 @@ function loadCrewShow(showID) {
     })
     .catch((error) => {
       console.error("Error loading crew:", error);
+    });
+}
+
+function loadScenesInShow(showID) {
+  fetch(`/shows/getScenesInShow?showID=${encodeURIComponent(showID)}`)
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to load scenes");
+      return response.json();
+    })
+    .then((data) => {
+      if (data.length > 0) {
+        const showName = data[0].showname;
+        const yearSemester = data[0].yearsemester;
+
+        document.getElementById("show-title").textContent =
+          `${showName} (${yearSemester}) Scenes`;
+      }
+
+      populateTable("scenes-table-body", data, buildSceneRow);
+    })
+    .catch((error) => {
+      console.error("Error loading scenes:", error);
+    });
+}
+
+function loadSceneDetails(sceneName) {
+  fetch(`/shows/getSceneDetails?sceneName=${encodeURIComponent(sceneName)}`)
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to load scene details");
+      return response.json();
+    })
+    .then((data) => {
+      if (data.length > 0) {
+        const scene = data[0];
+        document.getElementById("scene-title").textContent =
+          `Scene: ${scene.scenename}`;
+      }
+
+      populateTable("scenes-table-body", data, buildSceneDetailsRow);
+    })
+    .catch((error) => {
+      console.error("Error loading scene details:", error);
     });
 }
 
@@ -151,6 +222,8 @@ function handleShowDropdown(event, selectedValue, showID) {
 
   if (selectedValue === "viewCharacters") {
     window.location.href = `/characters/loadpage?showID=${encodeURIComponent(showID)}`;
+  } else if (selectedValue === "viewScenes") {
+    window.location.href = `/show/scenesInShow?showID=${encodeURIComponent(showID)}`;
   } else if (selectedValue === "delete") {
     if (confirm("Are you sure you want to delete this show?")) {
       // Call the delete endpoint via fetch instead of redirect
@@ -172,4 +245,56 @@ function handleShowDropdown(event, selectedValue, showID) {
         });
     }
   }
+}
+
+function handleSceneDropdown(event, selectedValue, sceneName) {
+  if (!selectedValue) return;
+
+  if (selectedValue === "viewCharacters") {
+    window.location.href = `/show/sceneDetails?sceneName=${encodeURIComponent(sceneName)}`;
+  } else if (selectedValue === "delete") {
+    if (confirm("Are you sure you want to delete this scene?")) {
+      // Call the delete endpoint via fetch instead of redirect
+      fetch(`/scenes/delete?sceneName=${encodeURIComponent(sceneName)}`, {
+        method: "DELETE",
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert("Scene deleted successfully.");
+            window.location.reload(); // refresh the page
+          } else {
+            return response.text().then((text) => {
+              throw new Error(text);
+            });
+          }
+        })
+        .catch((error) => {
+          alert("Error deleting scene: " + error.message);
+        });
+    }
+  }
+}
+
+// ============================================================================
+// ADDING
+// ============================================================================
+async function addShow() {
+  const formData = new URLSearchParams();
+
+  formData.append("showname", document.getElementById("showname").value);
+  formData.append(
+    "yearsemester",
+    document.getElementById("yearsemester").value,
+  );
+  formData.append("director", document.getElementById("director").value);
+  formData.append("genre", document.getElementById("genre").value);
+  formData.append("playwright", document.getElementById("playwright").value);
+
+  await submitForm(
+    "/shows/add",
+    formData,
+    "Show added successfully!",
+    "/show/loadpage",
+    "add-show-form",
+  );
 }

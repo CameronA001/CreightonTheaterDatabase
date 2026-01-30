@@ -20,12 +20,12 @@
     <h1>SHOW PAGE</h1>
 
     <!-- Filter/Search Controls -->
-    <div style="margin-bottom: var(--space-md);">
-        <label for="filter-input" style="margin-right: 10px;">Filter By:</label>
-        <input type="text" placeholder="Search by Show Name" id="filter-input" class="search-bar">
-        <select id="filter-column" onchange="clearInput('filter-input'); loadShows(); updatePlaceholder();"
-            class="filter-select"></select>
-    </div>
+
+
+    <input type="text" placeholder="Search by Show Name" id="filter-input" class="search-bar">
+    <select id="filter-column" onchange="clearInput('filter-input'); loadShows(); updatePlaceholder();"
+        class="filter-select"></select>
+    <button onclick="location.href='/show/add'" class="basicButton" style=" float: right;">Add New Show</button>
 
     <!-- Show Table -->
     <table>
