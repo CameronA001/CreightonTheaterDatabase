@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Character - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/characterScript.js"></script>
+</head>
+
+<body class="page-background">
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="location.href='/characters/loadpage'" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">Back to Characters</button>
+
+    <h1 style="text-align: center;">EDIT CHARACTER</h1>
+
+    <form id="edit-character-form">
+        <label for="characterName" class="addElementLabel">Character Name:</label>
+        <input type="text" id="characterName" name="characterName" class="formInput" required>
+
+        <label for="showID" class="addElementLabel">Show ID:</label>
+        <input type="text" id="showID" name="showID" class="formInput" required>
+
+        <!-- TODO: Fix show selection -->
+        <label class="addElementLabel">Show Selection:</label>
+        <select id="show-select" onchange="selectShow(this, 'show-select', 'editCharacterButton')" class="formInput"
+            size="0">
+        </select>
+
+        <!-- TODO: Add clear button and make it so that selectStudent works-->
+        <label for="netIDInput" class="addElementLabel">Actor NetID:</label>
+        <input type="text" id="netIDInput" name="netIDInput" class="formInput" required>
+
+        <label for="firstName" class="addElementLabel">First Name (for search):</label>
+        <input type="text" id="firstName" name="firstName" class="formInput">
+
+        <label for="lastName" class="addElementLabel">Last Name (for search):</label>
+        <input type="text" id="lastName" name="lastName" class="formInput">
+
+        <label class="addElementLabel">Student Selection:</label>
+        <select id="student-select" onchange="selectStudent(this, 'student-select', 'editCharacterButton')"
+            class="formInput" size="0">
+        </select>
+
+        <button type="button" onclick="editCharacter()" class="basicButton" id="editCharacterButton">
+            Update Character
+        </button>
+
+    </form>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeEditCharacterPage();
+        });
+    </script>
+
+</body>
+
+</html>

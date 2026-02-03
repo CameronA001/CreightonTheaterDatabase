@@ -71,6 +71,11 @@ public class PageController {
         return "characters/addCharacters";
     }
 
+    @GetMapping("/characters/editPage")
+    public String editCharacterPage() {
+        return "characters/editCharacter";
+    }
+
     /*----------------
     ACTOR PAGES
     ----------------*/
@@ -165,5 +170,25 @@ public class PageController {
     @GetMapping("/show/add")
     public String addShowPage() {
         return "shows/addShow";
+    }
+
+    @GetMapping("/show/addScene")
+    public String addScenePage() {
+        return "shows/addScene";
+    }
+
+    @GetMapping("/show/editScene")
+    public String editScenePage() {
+        return "shows/editScene";
+    }
+
+    @GetMapping("/show/addSceneDetails")
+    public String addSceneDetailsPage() {
+        return "shows/addSceneDetails";
+    }
+
+    @GetMapping("/show/editSceneDetails")
+    public String editSceneDetailsPage() {
+        return "shows/editSceneDetails";
     }
 }

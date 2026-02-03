@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Scene - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/showScript.js"></script>
+    <script src="/common.js"></script>
+</head>
+
+<body class="page-background">
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeAddScenePage();
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const showID = urlParams.get('showID');
+        document.getElementById('showID').value = showID;
+    </script>
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="history.back()" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">Back</button>
+
+    <h1 style="text-align: center;">ADD SCENE</h1>
+
+    <form id="add-scene-form">
+        <label for="scenename" class="addElementLabel">Scene Name:</label>
+        <input type="text" id="scenename" name="scenename" class="formInput" required>
+
+        <label for="act" class="addElementLabel">Act:</label>
+        <input type="text" id="act" name="act" class="formInput" required>
+
+        <label for="locationset" class="addElementLabel">Location/Set:</label>
+        <input type="text" id="locationset" name="locationset" class="formInput" required>
+
+        <label for="song" class="addElementLabel">Song (optional):</label>
+        <input type="text" id="song" name="song" class="formInput">
+
+        <label for="bookscriptpages" class="addElementLabel">Book/Script Pages (optional):</label>
+        <input type="text" id="bookscriptpages" name="bookscriptpages" class="formInput">
+
+        <label for="crewinshow" class="addElementLabel">Crew in Scene (optional):</label>
+        <input type="text" id="crewinshow" name="crewinshow" class="formInput">
+
+        <input type="hidden" id="showID" name="showID">
+
+        <button type="button" onclick="addScene()" class="basicButton" id="addSceneButton">
+            Add Scene
+        </button>
+
+    </form>
+
+
+
+</body>
+
+</html>

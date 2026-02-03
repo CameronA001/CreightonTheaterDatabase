@@ -124,6 +124,46 @@ public class characterRestController {
         }
     }
 
+    /**
+     * Gets a specific character by character name, show ID, and netID
+     * Used for edit page population
+     * 
+     * @param characterName The character name
+     * @param showID        The show ID
+     * @param netID         The actor's netID
+     * @return Character information
+     */
+    @GetMapping("/getCharacter")
+    public ResponseEntity<Map<String, Object>> getCharacter(
+            @RequestParam String characterName,
+            @RequestParam String showID,
+            @RequestParam String netID) {
+        try {
+            String sql = """
+                    SELECT
+                        s.firstname AS firstname,
+                        s.lastname AS lastname,
+                        c.charactername AS charactername,
+                        c.netid AS netid,
+                        c.showid AS showid,
+                        sh.showname AS showname,
+                        sh.yearsemester AS showsemester
+                    FROM characters c
+                    JOIN student s ON c.netid = s.netid
+                    JOIN shows sh ON c.showid = sh.showid
+                    WHERE c.charactername = ? AND c.showid = ? AND c.netid = ?
+                    """;
+
+            int showIdInt = Integer.parseInt(showID);
+            Map<String, Object> character = jdbcTemplate.queryForMap(sql, characterName, showIdInt, netID);
+            return ResponseEntity.ok(character);
+
+        } catch (DataAccessException e) {
+            System.err.println("Error fetching character: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @GetMapping("/db/ping")
     public ResponseEntity<String> pingDatabase() {
         try {
@@ -191,22 +231,38 @@ public class characterRestController {
     /**
      * Edits a character's information
      * 
-     * @param newCharacterName The new character name
-     * @param netID            The netID of the actor
      * @param oldCharacterName The old character name (for lookup)
+     * @param oldNetID         The old netID (for lookup)
+     * @param oldShowID        The old show ID (for lookup)
+     * @param newCharacterName The new character name
+     * @param newNetID         The new netID
+     * @param newShowID        The new show ID
      * @return Success message
      */
     @PostMapping("/edit")
     public ResponseEntity<Map<String, String>> editCharacter(
-            @RequestParam("NewCharacterName") String newCharacterName,
-            @RequestParam("netID") String netID,
-            @RequestParam("OldcharacterName") String oldCharacterName) {
+            @RequestParam("oldCharacterName") String oldCharacterName,
+            @RequestParam("oldNetID") String oldNetID,
+            @RequestParam("oldShowID") String oldShowID,
+            @RequestParam("newCharacterName") String newCharacterName,
+            @RequestParam("newNetID") String newNetID,
+            @RequestParam("newShowID") String newShowID) {
 
         Map<String, String> response = new HashMap<>();
 
         try {
-            String sql = "UPDATE characters SET charactername = ?, netid = ? WHERE charactername = ?";
-            int rowsAffected = jdbcTemplate.update(sql, newCharacterName, netID, oldCharacterName);
+            String sql = """
+                    UPDATE characters
+                    SET charactername = ?, netid = ?, showid = ?
+                    WHERE charactername = ? AND netid = ? AND showid = ?
+                    """;
+
+            int oldShowIdInt = Integer.parseInt(oldShowID);
+            int newShowIdInt = Integer.parseInt(newShowID);
+
+            int rowsAffected = jdbcTemplate.update(sql,
+                    newCharacterName, newNetID, newShowIdInt,
+                    oldCharacterName, oldNetID, oldShowIdInt);
 
             if (rowsAffected > 0) {
                 response.put("status", "success");
@@ -218,6 +274,22 @@ public class characterRestController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
+        } catch (DataIntegrityViolationException e) {
+            String message = e.getRootCause() != null ? e.getRootCause().getMessage() : e.getMessage();
+
+            response.put("status", "error");
+
+            if (message != null && message.toLowerCase().contains("foreign key")) {
+                response.put("message",
+                        "Cannot update character: referenced netID or showID does not exist.");
+            } else if (message != null && message.toLowerCase().contains("duplicate")) {
+                response.put("message", "This character already exists for this show");
+            } else {
+                response.put("message", message);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
         } catch (DataAccessException e) {
             System.err.println("Error editing character: " + e.getMessage());
             response.put("status", "error");
@@ -226,4 +298,35 @@ public class characterRestController {
         }
     }
 
+    /**
+     * Deletes a character from the database
+     * 
+     * @param characterName The character name
+     * @param showID        The show ID
+     * @param netID         The actor's netID
+     * @return Response indicating success or failure
+     */
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteCharacter(
+            @RequestParam String characterName,
+            @RequestParam String showID,
+            @RequestParam String netID) {
+        try {
+            int showIdInt = Integer.parseInt(showID);
+            String sql = "DELETE FROM characters WHERE charactername = ? AND showid = ? AND netid = ?";
+
+            int rowsAffected = jdbcTemplate.update(sql, characterName, showIdInt, netID);
+
+            if (rowsAffected > 0) {
+                return ResponseEntity.ok("Character deleted successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Character not found.");
+            }
+
+        } catch (DataAccessException e) {
+            System.err.println("Error deleting character: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting character.");
+        }
+    }
 }

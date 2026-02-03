@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Scene Details - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/showScript.js"></script>
+    <script src="/common.js"></script>
+</head>
+
+<body class="page-background">
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="history.back()" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">Back</button>
+
+
+    <!-- TODO: Add character lookup function -->
+    <h1 style="text-align: center;">ADD CHARACTER TO SCENE</h1>
+
+    <form id="add-scene-details-form">
+        <input type="hidden" id="scenename" name="scenename">
+        <input type="hidden" id="showID" name="showID">
+
+        <div class="input-with-button">
+            <label for="netIDInput" class="addElementLabel">NetID:</label>
+            <input type="text" id="netIDInput" name="netID" class="formInput" placeholder="Search for student" required>
+            <button type="button" class="square-button"
+                onclick="clearInput('netIDInput'); clearInput('firstName'); clearInput('lastName'); findStudents('', 'netid', 'student-select', 'addSceneDetailsButton');"
+                title="Clear search">
+                X</button>
+        </div>
+
+        <label for="firstName" class="addElementLabel">First Name:</label>
+        <input type="text" id="firstName" name="firstName" class="formInput">
+
+        <label for="lastName" class="addElementLabel">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" class="formInput">
+
+        <div style="text-align: center;">
+            <select size="5" id="student-select"
+                onclick="selectStudent(this, 'student-select', 'addSceneDetailsButton')" class="table-select">
+                <option value=""></option>
+            </select>
+        </div>
+
+        <label for="costumechange" class="addElementLabel">Costume Change:</label>
+        <input type="text" id="costumechange" name="costumechange" class="formInput">
+
+        <label for="costumeworn" class="addElementLabel">Costume Worn:</label>
+        <input type="text" id="costumeworn" name="costumeworn" class="formInput">
+
+        <label for="characterlocation" class="addElementLabel">Character Location:</label>
+        <input type="text" id="characterlocation" name="characterlocation" class="formInput">
+
+        <label for="changelocation" class="addElementLabel">Change Location:</label>
+        <input type="text" id="changelocation" name="changelocation" class="formInput">
+
+        <label for="changetime" class="addElementLabel">Change Time:</label>
+        <input type="text" id="changetime" name="changetime" class="formInput">
+
+        <label for="notes" class="addElementLabel">Additional Notes:</label>
+        <textarea id="notes" name="notes" class="formInput" rows="4"></textarea>
+
+        <button type="button" onclick="addSceneDetails()" class="basicButton" id="addSceneDetailsButton">
+            Add to Scene
+        </button>
+
+    </form>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeAddSceneDetailsPage();
+        });
+    </script>
+
+</body>
+
+</html>

@@ -11,12 +11,15 @@
     <script src="/showScript.js"></script>
 </head>
 
-<body>
+<body class="page-background">
     <!-- Navigation -->
     <button onclick="location.href='/'" class="basicButton">Home</button>
-    <button onclick="location.href='/show/loadpage'" class="basicButton">Back to Shows</button>
+    <button onclick="history.back()" class="basicButton">Back</button>
 
     <h1 id="scene-title"></h1>
+
+    <button onclick="addCharacterToSceneRedirect()" class="basicButton" style="float: right;">Add Character to
+        Scene</button>
 
     <!-- Scenes Table -->
     <table>
@@ -39,12 +42,21 @@
 
     <script>
         // Initialize page
+        let currentSceneName = "";
+        let currentShowID = "";
+
         window.addEventListener('DOMContentLoaded', function () {
             const params = new URLSearchParams(window.location.search);
             const sceneName = params.get("sceneName");
+            currentSceneName = sceneName;
             console.log(sceneName);
             loadSceneDetails(sceneName);
+
+            const showID = params.get("showID");
+            currentShowID = showID;
         });
+
+
     </script>
 </body>
 

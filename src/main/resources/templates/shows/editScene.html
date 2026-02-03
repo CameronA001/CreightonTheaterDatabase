@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Scene - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/showScript.js"></script>
+    <script src="/common.js"></script>
+</head>
+
+<body class="page-background">
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="history.back()" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">Back</button>
+
+    <h1 style="text-align: center;">EDIT SCENE</h1>
+
+    <form id="edit-scene-form">
+        <label for="newScenename" class="addElementLabel">Scene Name:</label>
+        <input type="text" id="newScenename" name="newScenename" class="formInput" required>
+
+        <label for="act" class="addElementLabel">Act:</label>
+        <input type="text" id="act" name="act" class="formInput" required>
+
+        <label for="locationset" class="addElementLabel">Location/Set:</label>
+        <input type="text" id="locationset" name="locationset" class="formInput" required>
+
+        <label for="song" class="addElementLabel">Song (optional):</label>
+        <input type="text" id="song" name="song" class="formInput">
+
+        <label for="bookscriptpages" class="addElementLabel">Book/Script Pages (optional):</label>
+        <input type="text" id="bookscriptpages" name="bookscriptpages" class="formInput">
+
+        <label for="crewinshow" class="addElementLabel">Crew in Scene (optional):</label>
+        <input type="text" id="crewinshow" name="crewinshow" class="formInput">
+        <!-- TODO:Create crew lookup function -->
+
+
+        <input type="hidden" id="showID" name="showID">
+
+        <button type="button" onclick="editScene()" class="basicButton" id="editSceneButton">
+            Update Scene
+        </button>
+
+    </form>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeEditScenePage();
+        });
+    </script>
+
+</body>
+
+</html>

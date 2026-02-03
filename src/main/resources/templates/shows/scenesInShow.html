@@ -18,6 +18,8 @@
 
     <h1 id="show-title"></h1>
 
+    <button onclick="addSceneRedirect()" class="basicButton" style="float: right;">Add Scene</button>
+
     <!-- Scenes Table -->
     <table>
         <thead>
@@ -42,6 +44,12 @@
             const showID = params.get("showID");
             loadScenesInShow(showID);
         });
+
+        function addSceneRedirect() {
+            const params = new URLSearchParams(window.location.search);
+            const showID = params.get("showID");
+            window.location.href = `/show/addScene?showID=${encodeURIComponent(showID)}`;
+        }
     </script>
 </body>
 

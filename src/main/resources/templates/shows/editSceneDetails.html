@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Scene Details - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/showScript.js"></script>
+    <script src="/common.js"></script>
+</head>
+
+<body class="page-background">
+
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="history.back()" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">Back</button>
+
+    <h1 style="text-align: center;">EDIT SCENE DETAILS</h1>
+
+    <form id="edit-scene-details-form">
+        <input type="hidden" id="scenename" name="scenename">
+        <input type="hidden" id="charactername" name="charactername">
+        <input type="hidden" id="netid" name="netid">
+        <input type="hidden" id="showID" name="showID">
+
+        <label class="addElementLabel">Scene Name: <span id="scene-display"></span></label>
+
+        <label class="addElementLabel">Character: <span id="character-display"></span></label>
+        <label class="addElementLabel">Actor NetID: <span id="netid-display"></span></label>
+
+        <label for="costumechange" class="addElementLabel">Costume Change:</label>
+        <input type="text" id="costumechange" name="costumechange" class="formInput">
+
+        <label for="costumeworn" class="addElementLabel">Costume Worn:</label>
+        <input type="text" id="costumeworn" name="costumeworn" class="formInput">
+
+        <label for="characterlocation" class="addElementLabel">Character Location:</label>
+        <input type="text" id="characterlocation" name="characterlocation" class="formInput">
+
+        <label for="changelocation" class="addElementLabel">Change Location:</label>
+        <input type="text" id="changelocation" name="changelocation" class="formInput">
+
+        <label for="changetime" class="addElementLabel">Change Time:</label>
+        <input type="text" id="changetime" name="changetime" class="formInput">
+
+        <label for="notes" class="addElementLabel">Additional Notes:</label>
+        <textarea id="notes" name="notes" class="formInput" rows="4"></textarea>
+
+        <button type="button" onclick="editSceneDetails()" class="basicButton" id="editSceneDetailsButton">
+            Update Scene Details
+        </button>
+
+    </form>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeEditSceneDetailsPage();
+            // Display read-only fields
+            const urlParams = new URLSearchParams(window.location.search);
+            document.getElementById('scene-display').textContent = urlParams.get('sceneName');
+            document.getElementById('character-display').textContent = urlParams.get('characterName');
+            document.getElementById('netid-display').textContent = urlParams.get('netID');
+        });
+    </script>
+
+</body>
+
+</html>

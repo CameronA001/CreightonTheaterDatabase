@@ -32,10 +32,9 @@ const CHARACTER_FILTER_OPTIONS = [
 function buildCharacterRow(character) {
   return `
     <td>
-      <select class="netid-select" onchange="handleCharacterDropdown(this.value, '${
-        character.charactername
-      }')">
+      <select class="netid-select" onchange="handleCharacterDropdown(this.value, '${character.charactername}', '${character.showid}', '${character.netid}')">
         <option value="" selected>${character.charactername}</option>
+        <option value="edit">Edit Character</option>
         <option value="delete">Delete Character</option>
       </select>
     </td>
@@ -149,15 +148,40 @@ function initializeCharacterFilters() {
  * Handles character dropdown menu selections
  * @param {string} selectedValue - The selected option value
  * @param {string} characterName - The character's name
+ * @param {string} showID - The show ID
+ * @param {string} netID - The actor's netID
  */
-function handleCharacterDropdown(selectedValue, characterName) {
+function handleCharacterDropdown(selectedValue, characterName, showID, netID) {
   if (!selectedValue) return;
 
-  if (selectedValue === "delete") {
-    // Navigate to delete endpoint
-    window.location.href = `/characters/delete?characterName=${encodeURIComponent(
-      characterName,
-    )}`;
+  if (selectedValue === "edit") {
+    window.location.href = `/characters/editPage?characterName=${encodeURIComponent(characterName)}&showID=${encodeURIComponent(showID)}&netID=${encodeURIComponent(netID)}`;
+  } else if (selectedValue === "delete") {
+    if (confirm("Are you sure you want to delete this character?")) {
+      fetch(
+        `/characters/delete?characterName=${encodeURIComponent(
+          characterName,
+        )}&showID=${encodeURIComponent(showID)}&netID=${encodeURIComponent(
+          netID,
+        )}`,
+        {
+          method: "DELETE",
+        },
+      )
+        .then((response) => {
+          if (response.ok) {
+            alert("Character deleted successfully.");
+            window.location.reload();
+          } else {
+            return response.text().then((text) => {
+              throw new Error(text);
+            });
+          }
+        })
+        .catch((error) => {
+          alert("Error deleting character: " + error.message);
+        });
+    }
   }
 
   // Reset dropdown to selected state after navigation decision
@@ -198,6 +222,51 @@ async function addCharacter() {
 }
 
 // ============================================================================
+// EDIT CHARACTER
+// ============================================================================
+
+/**
+ * Edits an existing character
+ */
+async function editCharacter() {
+  const formData = new URLSearchParams();
+
+  // Get URL parameters for old values
+  const urlParams = new URLSearchParams(window.location.search);
+  const oldCharacterName = urlParams.get("characterName");
+  const oldShowID = urlParams.get("showID");
+  const oldNetID = urlParams.get("netID");
+
+  // Get form values for new values
+  const newCharacterName = document.getElementById("characterName");
+  const newShowID = document.getElementById("showID");
+  const newNetID = document.getElementById("netIDInput");
+
+  if (!newCharacterName || !newShowID || !newNetID) {
+    showMessage("Please fill in all required fields.", true);
+    return;
+  }
+
+  // Append old values
+  formData.append("oldCharacterName", oldCharacterName);
+  formData.append("oldShowID", oldShowID);
+  formData.append("oldNetID", oldNetID);
+
+  // Append new values
+  formData.append("newCharacterName", newCharacterName.value);
+  formData.append("newShowID", newShowID.value);
+  formData.append("newNetID", newNetID.value);
+
+  await submitForm(
+    "/characters/edit",
+    formData,
+    "Character updated successfully!",
+    "/characters/loadpage",
+    "edit-character-form",
+  );
+}
+
+// ============================================================================
 // INITIALIZATION
 // ============================================================================
 
@@ -224,4 +293,70 @@ function initializeAddCharacterPage() {
   showInput.addEventListener("input", function () {
     findShows(this.value, "showname", "show-select", "addCharacterButton");
   });
+}
+
+/**
+ * Initializes the edit character page with autocomplete functionality and pre-filled data
+ */
+function initializeEditCharacterPage() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const characterName = urlParams.get("characterName");
+  const showID = urlParams.get("showID");
+  const netID = urlParams.get("netID");
+
+  if (characterName && showID && netID) {
+    // Fetch character data and populate form
+    fetch(
+      `/characters/getCharacter?characterName=${encodeURIComponent(
+        characterName,
+      )}&showID=${encodeURIComponent(showID)}&netID=${encodeURIComponent(
+        netID,
+      )}`,
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // Populate form fields
+        document.getElementById("characterName").value = data.charactername;
+        document.getElementById("showID").value = data.showid;
+        document.getElementById("netIDInput").value = data.netid;
+        document.getElementById("firstName").value = data.firstname;
+        document.getElementById("lastName").value = data.lastname;
+
+        // Initialize autocomplete with current values
+        findStudents(
+          data.netid,
+          "netid",
+          "student-select",
+          "editCharacterButton",
+        );
+        findShows("showid", data.showid, "show-select", "editCharacterButton");
+      })
+      .catch((error) => {
+        console.error("Error loading character data:", error);
+        showMessage("Error loading character data", true);
+      });
+  }
+
+  // Initialize autocomplete functionality
+  setupStudentAutocomplete("student-select", "editCharacterButton");
+  setupShowAutocomplete("show-select", "editCharacterButton");
+
+  const netInput = document.getElementById("netIDInput");
+  if (netInput) {
+    netInput.addEventListener("input", function () {
+      findStudents(
+        this.value,
+        "netid",
+        "student-select",
+        "editCharacterButton",
+      );
+    });
+  }
+
+  const showInput = document.getElementById("showID");
+  if (showInput) {
+    showInput.addEventListener("input", function () {
+      findShows(this.value, "showname", "show-select", "editCharacterButton");
+    });
+  }
 }

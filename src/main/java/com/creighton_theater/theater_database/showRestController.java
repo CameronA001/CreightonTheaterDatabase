@@ -1,10 +1,12 @@
 package com.creighton_theater.theater_database;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -124,8 +126,8 @@ public class showRestController {
     /**
      * Loads scenes for a specific show
      * 
-     * @param showID
-     * @return
+     * @param showID The show ID
+     * @return List of scenes in the show
      */
     @GetMapping("/getScenesInShow")
     public ResponseEntity<List<Map<String, Object>>> getScenesInShow(@RequestParam String showID) {
@@ -139,7 +141,8 @@ public class showRestController {
                         sc.locationset,
                         sc.song,
                         sc.bookscriptpages,
-                        sc.crewinshow
+                        sc.crewinshow,
+                        sc.showid
                     FROM scene sc
                     JOIN shows s ON sc.showid = s.showid
                     WHERE s.showid = ?
@@ -191,7 +194,6 @@ public class showRestController {
      * @param showID The ID of the show to delete
      * @return Response indicating success or failure of deletion
      */
-
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteShow(@RequestParam String showID) {
         try {
@@ -214,6 +216,12 @@ public class showRestController {
         }
     }
 
+    /**
+     * Retrieves characters in a specific scene
+     * 
+     * @param sceneName The name of the scene
+     * @return List of characters with their details in the scene
+     */
     @GetMapping("/getSceneDetails")
     public ResponseEntity<List<Map<String, Object>>> getCharactersInScene(@RequestParam String sceneName) {
         try {
@@ -225,15 +233,17 @@ public class showRestController {
                         cs.costumeworn,
                         cs.characterlocation,
                         cs.changelocation,
-                        cs.changelengthoftime,
-                        cs.additionalnotes,
-                        cs.scenename
+                        cs.changelengthoftime AS changetime,
+                        cs.additionalnotes AS notes,
+                        cs.scenename,
+                        cs.netid,
+                        cs.showid
                     FROM character_in_scene cs
                     JOIN shows s on cs.showid = s.showid
                     JOIN student st ON cs.netid = st.netid
                     WHERE cs.scenename LIKE CONCAT('%', ?, '%')
                     ORDER BY cs.charactername
-                                        """;
+                    """;
 
             List<Map<String, Object>> characters = jdbcTemplate.queryForList(sql, new Object[] { sceneName });
             return ResponseEntity.ok(characters);
@@ -243,5 +253,311 @@ public class showRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    // TODO: add scene function
+
+    /**
+     * Adds a new scene to a show
+     * 
+     * @param scenename       The name of the scene
+     * @param act             The act number
+     * @param locationset     The location/set
+     * @param song            Song in the scene (optional)
+     * @param bookscriptpages Book/script pages
+     * @param crewinshow      Crew needed in scene
+     * @param showID          The show ID
+     * @return Response indicating success or failure
+     */
+    @PostMapping("/addScene")
+    public ResponseEntity<Map<String, String>> addScene(
+            @RequestParam String scenename,
+            @RequestParam String act,
+            @RequestParam String locationset,
+            @RequestParam(required = false) String song,
+            @RequestParam(required = false) String bookscriptpages,
+            @RequestParam(required = false) String crewinshow,
+            @RequestParam String showID) {
+
+        Map<String, String> response = new HashMap<>();
+
+        try {
+            String sql = """
+                    INSERT INTO scene (scenename, act, locationset, song, bookscriptpages, crewinshow, showid)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """;
+
+            int showIdInt = Integer.parseInt(showID);
+            int actInt = Integer.parseInt(act);
+            jdbcTemplate.update(sql, scenename, actInt, locationset, song, bookscriptpages, crewinshow, showIdInt);
+
+            response.put("status", "success");
+            response.put("message", "Scene added successfully!");
+            return ResponseEntity.ok(response);
+
+        } catch (DataIntegrityViolationException e) {
+            String message = e.getRootCause() != null ? e.getRootCause().getMessage() : e.getMessage();
+
+            response.put("status", "error");
+
+            if (message != null && message.toLowerCase().contains("foreign key")) {
+                response.put("message", "Cannot add scene: referenced showID does not exist.");
+            } else if (message != null && message.toLowerCase().contains("duplicate")) {
+                response.put("message", "This scene already exists for this show");
+            } else {
+                response.put("message", message);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+        } catch (DataAccessException e) {
+            System.err.println("Error adding scene: " + e.getMessage());
+            response.put("status", "error");
+            response.put("message", "Error adding scene: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    /**
+     * Edits a scene's information
+     * 
+     * @param scenename       The current scene name
+     * @param newScenename    The new scene name
+     * @param act             The act number
+     * @param locationset     The location/set
+     * @param song            Song in the scene
+     * @param bookscriptpages Book/script pages
+     * @param crewinshow      Crew needed in scene
+     * @param showID          The show ID
+     * @return Response indicating success or failure
+     */
+    @PostMapping("/editScene")
+    public ResponseEntity<Map<String, String>> editScene(
+            @RequestParam String scenename,
+            @RequestParam String newScenename,
+            @RequestParam String act,
+            @RequestParam String locationset,
+            @RequestParam(required = false) String song,
+            @RequestParam(required = false) String bookscriptpages,
+            @RequestParam(required = false) String crewinshow,
+            @RequestParam String showID) {
+
+        Map<String, String> response = new HashMap<>();
+
+        try {
+            String sql = """
+                    UPDATE scene
+                    SET scenename = ?, "act" = ?, locationset = ?, song = ?, bookscriptpages = ?, crewinshow = ?
+                    WHERE scenename = ? AND showid = ?
+                    """;
+
+            int showIdInt = Integer.parseInt(showID);
+            int actInt = Integer.parseInt(act);
+
+            System.out.println("Updating scene:");
+            System.out.println("Original sceneName: '" + scenename + "'");
+            System.out.println("showID: " + showIdInt);
+
+            int rowsAffected = jdbcTemplate.update(sql, newScenename, actInt, locationset, song, bookscriptpages,
+                    crewinshow, scenename, showIdInt);
+
+            if (rowsAffected > 0) {
+                response.put("status", "success");
+                response.put("message", "Scene updated successfully!");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("status", "error");
+                response.put("message", "Scene not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+        } catch (DataAccessException e) {
+            System.err.println("Error editing scene: " + e.getMessage());
+            response.put("status", "error");
+            response.put("message", "Error editing scene: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * Adds a character to a scene with costume/location details
+     * 
+     * @param scenename         The scene name
+     * @param charactername     The character name
+     * @param netid             The actor's netID
+     * @param showID            The show ID
+     * @param costumechange     Whether there's a costume change
+     * @param costumeworn       Description of costume worn
+     * @param characterlocation Character's location in scene
+     * @param changelocation    Location of costume change
+     * @param changetime        Time for costume change
+     * @param notes             Additional notes
+     * @return Response indicating success or failure
+     */
+    @PostMapping("/addSceneDetails")
+    public ResponseEntity<Map<String, String>> addSceneDetails(
+            @RequestParam String scenename,
+            @RequestParam String charactername,
+            @RequestParam String netid,
+            @RequestParam String showID,
+            @RequestParam(required = false) String costumechange,
+            @RequestParam(required = false) String costumeworn,
+            @RequestParam(required = false) String characterlocation,
+            @RequestParam(required = false) String changelocation,
+            @RequestParam(required = false) String changetime,
+            @RequestParam(required = false) String notes) {
+
+        Map<String, String> response = new HashMap<>();
+
+        try {
+            String sql = """
+                    INSERT INTO character_in_scene
+                    (scenename, charactername, netid, showid, costumechange, costumeworn,
+                     characterlocation, changelocation, changelengthoftime, additionalnotes)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """;
+
+            int showIdInt = Integer.parseInt(showID);
+            jdbcTemplate.update(sql, scenename, charactername, netid, showIdInt, costumechange, costumeworn,
+                    characterlocation, changelocation, changetime, notes);
+
+            response.put("status", "success");
+            response.put("message", "Scene details added successfully!");
+            return ResponseEntity.ok(response);
+
+        } catch (DataIntegrityViolationException e) {
+            String message = e.getRootCause() != null ? e.getRootCause().getMessage() : e.getMessage();
+
+            response.put("status", "error");
+
+            if (message != null && message.toLowerCase().contains("foreign key")) {
+                response.put("message",
+                        "Cannot add scene details: referenced scene, character, or show does not exist.");
+            } else if (message != null && message.toLowerCase().contains("duplicate")) {
+                response.put("message", "This character is already in this scene");
+            } else {
+                response.put("message", message);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+        } catch (DataAccessException e) {
+            System.err.println("Error adding scene details: " + e.getMessage());
+            response.put("status", "error");
+            response.put("message", "Error adding scene details: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    /**
+     * Edits scene details for a character in a scene
+     * 
+     * @param scenename         The scene name
+     * @param charactername     The character name
+     * @param netid             The actor's netID
+     * @param showID            The show ID
+     * @param costumechange     Whether there's a costume change
+     * @param costumeworn       Description of costume worn
+     * @param characterlocation Character's location in scene
+     * @param changelocation    Location of costume change
+     * @param changetime        Time for costume change
+     * @param notes             Additional notes
+     * @return Response indicating success or failure
+     */
+    @PostMapping("/editSceneDetails")
+    public ResponseEntity<Map<String, String>> editSceneDetails(
+            @RequestParam String scenename,
+            @RequestParam String charactername,
+            @RequestParam String netid,
+            @RequestParam String showID,
+            @RequestParam(required = false) String costumechange,
+            @RequestParam(required = false) String costumeworn,
+            @RequestParam(required = false) String characterlocation,
+            @RequestParam(required = false) String changelocation,
+            @RequestParam(required = false) String changetime,
+            @RequestParam(required = false) String notes) {
+
+        Map<String, String> response = new HashMap<>();
+
+        try {
+            String sql = """
+                    UPDATE character_in_scene
+                    SET costumechange = ?, costumeworn = ?, characterlocation = ?,
+                        changelocation = ?, changelengthoftime = ?, additionalnotes = ?
+                    WHERE scenename = ? AND charactername = ? AND netid = ? AND showid = ?
+                    """;
+
+            int showIdInt = Integer.parseInt(showID);
+            int rowsAffected = jdbcTemplate.update(sql, costumechange, costumeworn, characterlocation, changelocation,
+                    changetime, notes, scenename, charactername, netid, showIdInt);
+
+            if (rowsAffected > 0) {
+                response.put("status", "success");
+                response.put("message", "Scene details updated successfully!");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("status", "error");
+                response.put("message", "Scene details not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+        } catch (DataAccessException e) {
+            System.err.println("Error editing scene details: " + e.getMessage());
+            response.put("status", "error");
+            response.put("message", "Error editing scene details: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * Deletes a scene from the database
+     * 
+     * @param sceneName The name of the scene to delete
+     * @param showID    The show ID
+     * @return Response indicating success or failure
+     */
+    @DeleteMapping("/deleteScene")
+    public ResponseEntity<String> deleteScene(
+            @RequestParam String sceneName,
+            @RequestParam String showID) {
+        try {
+            int showIdInt = Integer.parseInt(showID);
+            String sql = "DELETE FROM scene WHERE scenename = ? AND showid = ?";
+
+            int rowsAffected = jdbcTemplate.update(sql, sceneName, showIdInt);
+
+            if (rowsAffected > 0) {
+                return ResponseEntity.ok("Scene deleted successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Scene not found.");
+            }
+
+        } catch (DataAccessException e) {
+            System.err.println("Error deleting scene: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting scene.");
+        }
+    }
+
+    @DeleteMapping("/deleteSceneDetails")
+    public ResponseEntity<String> deleteSceneDetails(
+            @RequestParam String scenename,
+            @RequestParam String charactername,
+            @RequestParam String netid,
+            @RequestParam String showID) {
+        try {
+            int showIdInt = Integer.parseInt(showID);
+            String sql = "DELETE FROM character_in_scene WHERE scenename = ? AND charactername = ? AND netid = ? AND showid = ?";
+
+            int rowsAffected = jdbcTemplate.update(sql, scenename, charactername, netid, showIdInt);
+
+            if (rowsAffected > 0) {
+                return ResponseEntity.ok("Scene details deleted successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Scene details not found.");
+            }
+
+        } catch (DataAccessException e) {
+            System.err.println("Error deleting scene details: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting scene details.");
+        }
+    }
 }
