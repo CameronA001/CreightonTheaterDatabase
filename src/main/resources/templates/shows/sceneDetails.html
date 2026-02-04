@@ -49,7 +49,6 @@
             const params = new URLSearchParams(window.location.search);
             const sceneName = params.get("sceneName");
             currentSceneName = sceneName;
-            console.log(sceneName);
             loadSceneDetails(sceneName);
 
             const showID = params.get("showID");

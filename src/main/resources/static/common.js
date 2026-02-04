@@ -515,3 +515,70 @@ function handleDropdownNavigation(selectedValue, routeMap, idValue) {
     window.location.href = url;
   }
 }
+
+async function fillInCharacterSelect(showID, selectID, buttonID) {
+  try {
+    const response = await fetch(
+      `/shows/getCharactersInShow?showID=${encodeURIComponent(showID)}`,
+    );
+    const data = await response.json();
+    const select = document.getElementById(selectID);
+    const button = document.getElementById(buttonID);
+    const netIDInput = document.getElementById("netID");
+
+    if (!select) return 0;
+    select.innerHTML = "";
+
+    if (data.length === 0) {
+      const noneFound = document.createElement("option");
+      noneFound.textContent = "No characters found";
+      select.appendChild(noneFound);
+      select.size = 0;
+      if (button) button.disabled = true;
+      if (netIDInput) netIDInput.value = "";
+      return 0;
+    }
+
+    data.forEach((character, index) => {
+      const option = document.createElement("option");
+      option.value = character.charactername + "|" + character.netid;
+      option.textContent =
+        character.charactername + "  (Actor name:" + character.actorname + ")";
+      select.appendChild(option);
+
+      // Set netID input to first character by default
+      if (index === 0 && netIDInput) {
+        netIDInput.value = character.netid;
+      }
+    });
+
+    select.size = Math.min(data.length, 4);
+    if (button) button.disabled = false;
+
+    return data.length;
+  } catch (error) {
+    console.error("Error searching for shows:", error);
+    return 0;
+  }
+}
+
+function fillInElements(optionValue) {
+  const selector = document.getElementById("character-select");
+  selector.value = optionValue;
+  selector.size = 1;
+
+  const selectedCharacterName = document.getElementById(
+    "selected-character-name",
+  );
+  x;
+  const netIDInput = document.getElementById("netid");
+
+  const selectedOption = selector.options[selector.selectedIndex];
+  selectedCharacterName.textContent = selectedOption.textContent;
+
+  const realCharacterName = selectedOption.value.split("|")[0];
+  document.getElementById("charactername").value = realCharacterName;
+
+  const netID = selectedOption.value.split("|")[1];
+  netIDInput.value = netID;
+}

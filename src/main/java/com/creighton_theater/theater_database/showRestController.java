@@ -217,6 +217,38 @@ public class showRestController {
     }
 
     /**
+     * Retrieves characters in a specific show
+     * 
+     * @param showID
+     * @return
+     */
+    @GetMapping("/getCharactersInShow")
+    public ResponseEntity<List<Map<String, Object>>> getCharactersInShow(@RequestParam String showID) {
+        try {
+            String sql = """
+                    SELECT
+                        c.charactername,
+                        st.firstname || ' ' || st.lastname AS actorName,
+                        c.netid,
+                        c.showid
+                    FROM characters c
+                    JOIN shows s on c.showid = s.showid
+                    JOIN student st ON c.netid = st.netid
+                    WHERE s.showid = ?
+                    ORDER BY c.charactername
+                    """;
+
+            int showIdInt = Integer.parseInt(showID);
+            List<Map<String, Object>> characters = jdbcTemplate.queryForList(sql, new Object[] { showIdInt });
+            return ResponseEntity.ok(characters);
+
+        } catch (DataAccessException e) {
+            System.err.println("Error fetching characters for show: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    /**
      * Retrieves characters in a specific scene
      * 
      * @param sceneName The name of the scene

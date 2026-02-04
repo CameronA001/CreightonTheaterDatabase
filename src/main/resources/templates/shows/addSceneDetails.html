@@ -15,35 +15,22 @@
     <button onclick="history.back()" class="basicButton"
         style="font-size: smaller; margin-bottom: var(--space-md);">Back</button>
 
-
-    <!-- TODO: Add character lookup function -->
     <h1 style="text-align: center;">ADD CHARACTER TO SCENE</h1>
 
     <form id="add-scene-details-form">
         <input type="hidden" id="scenename" name="scenename">
         <input type="hidden" id="showID" name="showID">
-
-        <div class="input-with-button">
-            <label for="netIDInput" class="addElementLabel">NetID:</label>
-            <input type="text" id="netIDInput" name="netID" class="formInput" placeholder="Search for student" required>
-            <button type="button" class="square-button"
-                onclick="clearInput('netIDInput'); clearInput('firstName'); clearInput('lastName'); findStudents('', 'netid', 'student-select', 'addSceneDetailsButton');"
-                title="Clear search">
-                X</button>
-        </div>
-
-        <label for="firstName" class="addElementLabel">First Name:</label>
-        <input type="text" id="firstName" name="firstName" class="formInput">
-
-        <label for="lastName" class="addElementLabel">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" class="formInput">
+        <input type="hidden" id="netid" name="netid">
+        <input type="hidden" id="charactername" name="charactername">
 
         <div style="text-align: center;">
-            <select size="5" id="student-select"
-                onclick="selectStudent(this, 'student-select', 'addSceneDetailsButton')" class="table-select">
+            <select size="5" id="character-select" class="table-select" onclick="fillInElements(this.value)">
                 <option value=""></option>
             </select>
         </div>
+
+        <h3 id="selected-character-name"></h3>
+        <br><br>
 
         <label for="costumechange" class="addElementLabel">Costume Change:</label>
         <input type="text" id="costumechange" name="costumechange" class="formInput">
@@ -72,8 +59,19 @@
     <script>
         window.addEventListener('DOMContentLoaded', function () {
             initializeAddSceneDetailsPage();
+
+            const params = new URLSearchParams(window.location.search);
+            const showID = params.get("showID");
+
+            if (showID) {
+                document.getElementById('showID').value = showID;
+                fillInCharacterSelect(showID, 'character-select', 'addSceneDetailsButton');
+            } else {
+                console.error("showID missing from URL");
+            }
         });
     </script>
+
 
 </body>
 

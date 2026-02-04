@@ -308,10 +308,14 @@ function handleSceneDetailDropdown(
     if (
       confirm("Are you sure you want to remove this character from this scene?")
     ) {
+      console.log(characterName + "character");
+      console.log(sceneName + "scene");
+      console.log(netID + "netid");
+      console.log(showID + "showid");
       fetch(
-        `/shows/deleteSceneDetails?characterName=${encodeURIComponent(
+        `/shows/deleteSceneDetails?charactername=${encodeURIComponent(
           characterName,
-        )}&sceneName=${encodeURIComponent(sceneName)}&netID=${encodeURIComponent(netID)}&showID=${encodeURIComponent(showID)}`,
+        )}&scenename=${encodeURIComponent(sceneName)}&netid=${encodeURIComponent(netID)}&showID=${encodeURIComponent(showID)}`,
         {
           method: "DELETE",
         },
