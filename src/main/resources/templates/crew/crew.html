@@ -37,11 +37,30 @@
         </table>
     </div>
     <script>
-        //dynamically updates the page as the user types into filter-input
         const filterInput = document.getElementById("filter-input");
+
         filterInput.addEventListener("input", () => {
-            processFilter();
-        });</script>
+            const filterValue = filterInput.value.trim();
+
+            // Crew-specific filter
+            fetch(`/crew/filterBy?value=${encodeURIComponent(filterValue)}`)
+                .then((response) => {
+                    if (!response.ok) throw new Error("Failed to filter crew");
+                    return response.json();
+                })
+                .then((data) => {
+                    // Populate the crew table with filtered results
+                    populateTable("showCrew-table-body", data, buildShowCrewRow);
+                })
+                .catch((error) => {
+                    console.error("Error filtering crew:", error);
+                    // Clear table if there’s an error
+                    populateTable("crew-table-body", [], buildjm CrewRow);
+                });
+        });
+    </script>
+
+
 
 
 </body>
