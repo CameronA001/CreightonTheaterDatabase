@@ -1,0 +1,95 @@
+<!-- ============================================================================ -->
+<!-- addCharacters.html - Add new character form -->
+<!-- ============================================================================ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Character - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/characterScript.js"></script>
+</head>
+
+<body class="page-background">
+    <!-- Navigation -->
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="location.href='/characters/loadpage'" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">
+        Back to Character List
+    </button>
+
+    <h1>ADD CHARACTER PAGE</h1>
+
+    <form id="add-character-form">
+        <!-- Student Selection with Autocomplete -->
+        <div class="input-with-button">
+            <label for="netIDInput" class="addElementLabel">NetID:</label>
+            <input type="text" id="netIDInput" name="netID" class="formInput" placeholder="Search for student" required>
+            <button type="button" class="square-button"
+                onclick="clearInput('netIDInput'); clearInput('firstName'); clearInput('lastName'); findStudents('', 'netid', 'student-select', 'addCharacterButton');"
+                title="Clear search">
+                X</button>
+        </div>
+
+        <label for="firstName" class="addElementLabel">First Name:</label>
+        <input type="text" id="firstName" name="firstName" class="formInput">
+
+        <label for="lastName" class="addElementLabel">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" class="formInput">
+
+        <!-- Student autocomplete dropdown -->
+        <div style="text-align: center;">
+            <select size="5" id="student-select" onclick="selectStudent(this, 'student-select', 'addCharacterButton')"
+                class="table-select">
+                <option value=""></option>
+            </select>
+        </div>
+
+        <!-- Character Name -->
+        <label for="characterName" class="addElementLabel">Character Name:</label>
+        <input type="text" id="characterName" name="characterName" class="formInput" placeholder="e.g., Romeo" required>
+        <br><br>
+
+        <!-- Show Selection with Autocomplete -->
+        <div class="input-with-button">
+            <label for="showName" class="addElementLabel">Show Name:</label>
+            <input type="text" id="showName" name="showName" class="formInput" placeholder="Search for show" required>
+            <button type="button" class="square-button"
+                onclick="clearInput('showName'); clearInput('yearSemester'); findShows('showName', '', 'show-select', 'addCharacterButton');"
+                title="Clear search">
+                ×
+            </button>
+        </div>
+
+        <label for="yearSemester" class="addElementLabel">Year Semester:</label>
+        <input type="text" id="yearSemester" name="yearSemester" class="formInput" placeholder="e.g., Fall 2023">
+        <br><br>
+
+        <!-- Hidden field for show ID -->
+        <label for="showID" class="addElementLabel">Show ID:</label>
+        <input type="number" id="showID" name="showID" class="formInput" readonly>
+
+        <!-- Show autocomplete dropdown -->
+        <div style="text-align: center;">
+            <select size="4" id="show-select" onclick="selectShow(this, 'show-select', 'addCharacterButton')"
+                class="table-select">
+                <option value=""></option>
+            </select>
+        </div>
+
+        <button type="button" onclick="addCharacter()" class="basicButton" id="addCharacterButton">
+            Add Character
+        </button>
+    </form>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeAddCharacterPage();
+        });
+    </script>
+</body>
+
+</html>

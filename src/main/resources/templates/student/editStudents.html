@@ -1,0 +1,80 @@
+<!-- ============================================================================ -->
+<!-- editStudents.html - Refactored -->
+<!-- ============================================================================ -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/studentScript.js"></script>
+</head>
+
+<body class="page-background">
+    <!-- Navigation -->
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="location.href='/student/loadpage'" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">
+        Back to Student List
+    </button>
+
+    <h1>EDIT STUDENT PAGE</h1>
+
+    <form id="edit-student-form">
+        <!-- NetID (Editable) -->
+        <label for="netID" class="addElementLabel">NetID:</label>
+        <input type="text" id="netID" name="netID" required th:value="${student.netID}" class="formInput">
+        <br><br>
+
+        <!-- First Name -->
+        <label for="firstName" class="addElementLabel">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required th:value="${student.firstName}" class="formInput">
+        <br><br>
+
+        <!-- Last Name -->
+        <label for="lastName" class="addElementLabel">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required th:value="${student.lastName}" class="formInput">
+        <br><br>
+
+        <!-- Grade Level -->
+        <label for="gradeLevel" class="addElementLabel">Grade:</label>
+        <input type="text" id="gradeLevel" name="gradeLevel" required th:value="${student.gradeLevel}"
+            class="formInput">
+        <br><br>
+
+        <!-- Pronouns -->
+        <label for="pronouns" class="addElementLabel">Pronouns:</label>
+        <input type="text" id="pronouns" name="pronouns" th:value="${student.pronouns}" class="formInput">
+        <br><br>
+
+        <!-- Special Notes -->
+        <label for="specialNotes" class="addElementLabel">Special Notes:</label>
+        <input type="text" id="specialNotes" name="specialNotes" th:value="${student.specialNotes}" class="formInput">
+        <br><br>
+
+        <!-- Email -->
+        <label for="email" class="addElementLabel">Email:</label>
+        <input type="email" id="email" name="email" th:value="${student.email}" class="formInput">
+        <br><br>
+
+        <!-- Allergies/Sensitivities -->
+        <label for="allergies" class="addElementLabel">Allergies/Sensitivities:</label>
+        <input type="text" id="allergies" name="allergies_sensitivities" th:value="${student.allergies_sensitivities}"
+            class="formInput">
+        <br><br>
+
+        <!-- 
+            IMPORTANT: The old netID is passed via Thymeleaf as a data attribute
+            This is used to identify which student to update in the database
+        -->
+        <button type="button" th:data-old-netid="${student.netID}"
+            onclick="editStudent(this.getAttribute('data-old-netid'))" class="basicButton">
+            Edit Student
+        </button>
+    </form>
+</body>
+
+</html>

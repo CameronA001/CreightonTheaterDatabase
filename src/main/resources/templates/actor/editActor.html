@@ -1,0 +1,164 @@
+<!-- ============================================================================ -->
+<!-- editActor.html - Edit existing actor -->
+<!-- ============================================================================ -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Actor - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/actorScript.js"></script>
+</head>
+
+<body class="page-background">
+    <!-- Navigation -->
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="location.href='/actors/loadpage'" class="basicButton"
+        style="font-size: smaller; margin-bottom: var(--space-md);">
+        Back to Actor List
+    </button>
+
+    <h1>EDIT ACTOR PAGE</h1>
+
+    <form id="edit-actor-form">
+        <!-- READ-ONLY FIELDS (Display only, not editable) -->
+        <label class="addElementLabel">NetID:</label>
+        <p class="displayField" th:text="${actor.netID}" style="font-weight: bold;"></p>
+        <br>
+
+        <label class="addElementLabel">First Name:</label>
+        <p class="displayField" th:text="${actor.firstName}"></p>
+        <br>
+
+        <label class="addElementLabel">Last Name:</label>
+        <p class="displayField" th:text="${actor.lastName}"></p>
+        <br><br>
+
+        <!-- EDITABLE FIELDS -->
+        <label class="addElementLabel">Years Acting Experience:</label>
+        <input type="number" id="yearsActingExperience" name="yearsActingExperience"
+            th:value="${actor.yearsActingExperience}" class="formInput">
+        <br><br>
+
+        <!-- All other fields follow same pattern -->
+        <label class="addElementLabel">Skin Tone:</label>
+        <input type="text" id="skinTone" name="skinTone" th:value="${actor.skinTone}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Piercings:</label>
+        <input type="text" id="piercings" name="piercings" th:value="${actor.piercings}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Hair Color:</label>
+        <input type="text" id="hairColor" name="hairColor" th:value="${actor.hairColor}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Previous Injuries:</label>
+        <input type="text" id="previousInjuries" name="previousInjuries" th:value="${actor.previousInjuries}"
+            class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Special Notes:</label>
+        <input type="text" id="specialNotes" name="specialNotes" th:value="${actor.specialNotes}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Height:</label>
+        <input type="text" id="height" name="height" th:value="${actor.height}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Ring Size:</label>
+        <input type="text" id="ringSize" name="ringSize" th:value="${actor.ringSize}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Shoe Size:</label>
+        <input type="text" id="shoeSize" name="shoeSize" th:value="${actor.shoeSize}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Head Circumference:</label>
+        <input type="text" id="headCirc" name="headCirc" th:value="${actor.headCirc}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Neck Base:</label>
+        <input type="text" id="neckBase" name="neckBase" th:value="${actor.neckBase}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Chest:</label>
+        <input type="text" id="chest" name="chest" th:value="${actor.chest}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Waist:</label>
+        <input type="text" id="waist" name="waist" th:value="${actor.waist}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">High Hip:</label>
+        <input type="text" id="highHip" name="highHip" th:value="${actor.highHip}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Low Hip:</label>
+        <input type="text" id="lowHip" name="lowHip" th:value="${actor.lowHip}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Armseye to Armseye (Front):</label>
+        <input type="text" id="armseyeToArmseyeFront" name="armseyeToArmseyeFront"
+            th:value="${actor.armseyeToArmseyeFront}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Neck to Waist (Front):</label>
+        <input type="text" id="neckToWaistFront" name="neckToWaistFront" th:value="${actor.neckToWaistFront}"
+            class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Armseye to Armseye (Back):</label>
+        <input type="text" id="armseyeToArmseyeBack" name="armseyeToArmseyeBack"
+            th:value="${actor.armseyeToArmseyeBack}" class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Neck to Waist (Back):</label>
+        <input type="text" id="neckToWaistBack" name="neckToWaistBack" th:value="${actor.neckToWaistBack}"
+            class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Center Back to Wrist:</label>
+        <input type="text" id="centerBackToWrist" name="centerBackToWrist" th:value="${actor.centerBackToWrist}"
+            class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Outsleeve to Wrist:</label>
+        <input type="text" id="outsleeveToWrist" name="outsleeveToWrist" th:value="${actor.outsleeveToWrist}"
+            class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Outseam (Below Knee):</label>
+        <input type="text" id="outseamBelowKnee" name="outseamBelowKnee" th:value="${actor.outseamBelowKnee}"
+            class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Outseam to Ankle:</label>
+        <input type="text" id="outseamToAnkle" name="outseamToAnkle" th:value="${actor.outseamToAnkle}"
+            class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Outseam to Floor:</label>
+        <input type="text" id="outseamToFloor" name="outseamToFloor" th:value="${actor.outseamToFloor}"
+            class="formInput">
+        <br><br>
+
+        <label class="addElementLabel">Other Notes:</label>
+        <input type="text" id="otherNotes" name="otherNotes" th:value="${actor.otherNotes}" class="formInput">
+        <br><br>
+
+        <!-- 
+            IMPORTANT: Pass the netID via data attribute 
+            This ensures the correct actor is updated
+        -->
+        <button type="button" th:data-netid="${actor.netID}" onclick="editActor(this.getAttribute('data-netid'))"
+            class="basicButton">
+            Edit Actor
+        </button>
+    </form>
+</body>
+
+</html>

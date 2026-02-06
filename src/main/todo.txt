@@ -1,0 +1,21 @@
+-fix editStudent page (netID so that it updates across all tables)
+-Fix delete student so that it fixes all foreign key references as well
+
+-When you search, you still need the select on netID
+-edit actor
+-delete actor
+-edit crew
+-delete crew
+-delete character
+-Actors and crew and character page for shows
+-Find out how to add photo file
+-figure out non-student for crew
+
+- dressing list for character
+        -clothing, accessories, laundry instructions
+        -Make it so that you can copy characters to new shows
+        -Show dressing list for actor/character
+        -If actor connected to multiple characters
+        -Connect to costume database
+-could be one costume assigned to multiple characters
+-Add ability to go to actor from actor

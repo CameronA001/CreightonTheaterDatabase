@@ -1,0 +1,56 @@
+<!-- ============================================================================ -->
+<!-- shows.html - Main show listing page -->
+<!-- ============================================================================ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shows - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/showScript.js"></script> <!-- Contains show functions too -->
+</head>
+
+<body class="page-background">
+    <!-- Navigation -->
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+
+    <h1>SHOW PAGE</h1>
+
+    <!-- Filter/Search Controls -->
+
+
+    <input type="text" placeholder="Search by Show Name" id="filter-input" class="search-bar">
+    <select id="filter-column" onchange="clearInput('filter-input'); loadShows(); updatePlaceholder();"
+        class="filter-select"></select>
+    <button onclick="location.href='/show/add'" class="basicButton" style=" float: right;">Add New Show</button>
+
+    <!-- Show Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Show ID</th>
+                <th>Show Name</th>
+                <th>Year/Semester</th>
+                <th>Director</th>
+                <th>Genre</th>
+                <th>Playwright</th>
+            </tr>
+        </thead>
+        <tbody id="show-table-body">
+            <!-- Populated by JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeShowFilters();
+            loadShows();
+        });
+    </script>
+</body>
+
+</html>

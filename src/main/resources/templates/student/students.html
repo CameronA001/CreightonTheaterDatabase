@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/studentScript.js"></script>
+</head>
+
+<body class="page-background">
+    <!-- Navigation -->
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+
+    <h1>STUDENTS PAGE</h1>
+
+    <!-- Filter/Search Controls -->
+
+    <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
+    <select id="filter-column" onchange="clearInput('filter-input'); loadStudents(); updatePlaceholder();"
+        class="filter-select"></select>
+    <button onclick="location.href='/addStudent'" style="float: right;" class="basicButton">
+        Add Student
+    </button>
+
+
+
+    <!-- Student Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>NetID</th>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Pronouns</th>
+                <th>Special Notes</th>
+                <th>Email</th>
+                <th>Allergies/Sensitivities</th>
+            </tr>
+        </thead>
+        <tbody id="student-table-body">
+        </tbody>
+    </table>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeStudentFilters();
+            loadStudents();
+        });
+    </script>
+</body>
+
+</html>

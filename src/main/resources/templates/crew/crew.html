@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/crewScript.js"></script>
+</head>
+
+<body onload="loadCrew();" class="page-background">
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <h1 style="text-align: center;">Crew Page</h1>
+    <button onclick="location.href='/crew/add'" class="basicButton" style="float: right;">Add New Crew</button>
+    <label for="filter-input" style="margin-right: 10px;">Filter By NetID:</label>
+    <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
+
+    <div class="wide-table-container">
+        <table class="styled-table" style="border-collapse:collapse">
+            <thead>
+                <tr>
+                    <th>NetID</th>
+                    <th class="sticky">Name</th>
+                    <th>Wig Trained</th>
+                    <th>Makeup Trained</th>
+                    <th>Music Reading</th>
+                    <th>Lighting</th>
+                    <th>Sound</th>
+                    <th>Specialty</th>
+                    <th>Notes</th>
+
+
+                </tr>
+            </thead>
+            <tbody id="crew-table-body">
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const filterInput = document.getElementById("filter-input");
+
+        filterInput.addEventListener("input", () => {
+            const filterValue = filterInput.value.trim();
+
+            // Crew-specific filter
+            fetch(`/crew/filterBy?value=${encodeURIComponent(filterValue)}`)
+                .then((response) => {
+                    if (!response.ok) throw new Error("Failed to filter crew");
+                    return response.json();
+                })
+                .then((data) => {
+                    // Populate the crew table with filtered results
+                    populateTable("showCrew-table-body", data, buildShowCrewRow);
+                })
+                .catch((error) => {
+                    console.error("Error filtering crew:", error);
+                    // Clear table if there’s an error
+                    populateTable("crew-table-body", [], buildjm CrewRow);
+                });
+        });
+    </script>
+
+
+
+
+</body>

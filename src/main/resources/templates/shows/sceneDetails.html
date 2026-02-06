@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shows - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/showScript.js"></script>
+</head>
+
+<body class="page-background">
+    <!-- Navigation -->
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+    <button onclick="history.back()" class="basicButton">Back</button>
+
+    <h1 id="scene-title"></h1>
+
+    <button onclick="addCharacterToSceneRedirect()" class="basicButton" style="float: right;">Add Character to
+        Scene</button>
+
+    <!-- Scenes Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Character Name</th>
+                <th>Actor Name</th>
+                <th>Costume Change</th>
+                <th>Costume Worn</th>
+                <th>Character Location</th>
+                <th>Change Location</th>
+                <th>Change Time</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody id="scenes-table-body">
+            <!-- Populated by JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Initialize page
+        let currentSceneName = "";
+        let currentShowID = "";
+
+        window.addEventListener('DOMContentLoaded', function () {
+            const params = new URLSearchParams(window.location.search);
+            const sceneName = params.get("sceneName");
+            currentSceneName = sceneName;
+            loadSceneDetails(sceneName);
+
+            const showID = params.get("showID");
+            currentShowID = showID;
+        });
+
+
+    </script>
+</body>
+
+</html>

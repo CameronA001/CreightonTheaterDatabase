@@ -1,0 +1,59 @@
+<!-- ============================================================================ -->
+<!-- character.html - Main character listing page -->
+<!-- ============================================================================ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Characters - Creighton Theater Database</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common.js"></script>
+    <script src="/characterScript.js"></script>
+</head>
+
+<body class="page-background">
+    <button onclick="location.href='/'" class="basicButton">Home</button>
+
+    <h1>CHARACTERS PAGE</h1>
+
+    <!-- Filter/Search Controls -->
+
+    <input type="text" placeholder="Search by NetID" id="filter-input" class="search-bar">
+
+    <select id="filter-column" onchange="clearInput('filter-input'); processFilter(); updatePlaceholder();"
+        class="filter-select">
+    </select>
+
+    <button onclick="location.href='/characters/addpage'" style="float: right;" class="basicButton">
+        Add Character
+    </button>
+
+
+
+    <!-- Character Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Character Name</th>
+                <th>Show Name</th>
+                <th>Show Semester</th>
+                <th>Student Name</th>
+                <th>NetID</th>
+                <th>Show ID</th>
+            </tr>
+        </thead>
+        <tbody id="character-table-body">
+        </tbody>
+    </table>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            initializeCharacterFilters();
+            loadCharacters();
+        });
+    </script>
+</body>
+
+</html>
